@@ -1,15 +1,15 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-const Container = styled.div`
-  background-color: aliceblue;
-  width: 100px;
-  height: 100px;
+const Background = styled.div`
+  width: 100vw;
+  height: 100vh;
 `
 
 const App = () => {
   return (
-    <Container />
+    <Background><Outlet /></Background>
   );
 };
 

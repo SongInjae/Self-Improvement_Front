@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { original_yellow, pastel_orange } from '../../constants';
+import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
 import { Link } from 'react-router-dom';
 
 const LoginWrapper = styled.div`
@@ -8,7 +8,7 @@ const LoginWrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: ${original_yellow};
+  color: ${ORIGINAL_YELLOW};
   font-family: 'MainText';
   display: flex;
   flex-direction: column;
@@ -23,8 +23,8 @@ const LoginBox = styled.div`
   box-sizing: border-box;
 `;
 const LoginTitle = styled.div`
-  margin-top: 35px;
-  margin-bottom: 80px;
+  margin-top: 60px;
+  margin-bottom: 60px;
   font-family: 'MainLogo';
   font-size: 50px;
   width: 100%;
@@ -40,22 +40,24 @@ const LabelId = styled.div`
   display: inline-block;
 `;
 const InputId = styled.input`
-  border: 1px solid ${original_yellow};
+  border: 1px solid ${ORIGINAL_YELLOW};
   border-radius: 5px;
   width: 260px;
   height: 45px;
   padding: 10px;
   box-sizing: border-box;
+  outline: none;
 `;
 const InputPwd = styled.input`
   width: 260px;
   height: 45px;
   margin-top: 15px;
   border: none;
-  background-color: ${original_yellow};
+  background-color: ${ORIGINAL_YELLOW};
   border-radius: 5px;
   padding: 10px;
   box-sizing: border-box;
+  outline: none;
   &::placeholder {
     font-family: 'MainText';
     color: white;
@@ -70,37 +72,39 @@ const LabelCheckBox = styled.label`
   margin-left: 5px;
 `;
 const InputCheckBox = styled.input`
-  accent-color: ${original_yellow};
+  accent-color: ${ORIGINAL_YELLOW};
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid ${original_yellow};
+  border: 2px solid ${ORIGINAL_YELLOW};
   border-radius: 2px;
   background-clip: content-box;
   padding: 3px;
   &:checked {
-    background-color: ${original_yellow};
+    background-color: ${ORIGINAL_YELLOW};
   }
 `;
 const LoginButton = styled.button`
   width: 190px;
   height: 60px;
-  background-color: ${original_yellow};
+  background-color: ${ORIGINAL_YELLOW};
   border: none;
   border-radius: 60px;
-  margin: 40px auto 15px;
+  margin: 30px auto 20px;
   color: white;
   font-family: 'MainText';
+  font-size: 15px;
+  cursor: pointer;
 `;
 const TextWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
 const NoMemberText = styled.div`
-  color: ${pastel_orange};
+  color: ${PASTEL_ORANGE};
 `;
 const SignUpLink = styled(Link)`
-  color: ${original_yellow};
+  color: ${ORIGINAL_YELLOW};
   text-decoration: none;
   margin-left: 5px;
 `;
@@ -115,13 +119,13 @@ const LoginPage = () => {
         <InputPwd type="password" placeholder="비밀번호 입력" />
         <CheckBoxWrapper>
           <InputCheckBox type="checkbox" id="input_checkbox" />
-          <LabelCheckBox for="input_checkbox">자동로그인</LabelCheckBox>
+          <LabelCheckBox htmlFor="input_checkbox">자동로그인</LabelCheckBox>
         </CheckBoxWrapper>
       </LoginBox>
       <LoginButton>로그인</LoginButton>
       <TextWrapper>
         <NoMemberText>회원이 아니신가요?</NoMemberText>
-        <SignUpLink>회원가입 하기</SignUpLink>
+        <SignUpLink to="/register">회원가입 하기</SignUpLink>
       </TextWrapper>
     </LoginWrapper>
   );

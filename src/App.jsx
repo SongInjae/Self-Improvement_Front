@@ -3,8 +3,10 @@ import { Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 const Background = styled.div`
-  width: 100vw;
+  max-width: 425px;
   height: 100vh;
+  border: 1px solid black;
+  margin: 0 auto;
 `
 
 const App = () => {

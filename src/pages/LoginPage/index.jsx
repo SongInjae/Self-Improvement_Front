@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
 import { Link } from 'react-router-dom';
 
-const LoginWrapper = styled.div`
+export const BoxWrapper = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -13,7 +13,7 @@ const LoginWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const LoginBox = styled.div`
+export const FormBox = styled.div`
   display: flex;
   flex-direction: column;
   border: 1px solid;
@@ -30,16 +30,17 @@ const LoginTitle = styled.div`
   width: 100%;
   text-align: center;
 `;
-const LabelId = styled.div`
+export const LabelTmp = styled.div`
   position: relative;
   top: 10px;
   left: 10px;
-  width: 80px;
+  width: 60px;
+  font-size: 12px;
   text-align: center;
   background-color: white;
   display: inline-block;
 `;
-const InputId = styled.input`
+export const InputTmp = styled.input`
   border: 1px solid ${ORIGINAL_YELLOW};
   border-radius: 5px;
   width: 260px;
@@ -48,7 +49,7 @@ const InputId = styled.input`
   box-sizing: border-box;
   outline: none;
 `;
-const InputPwd = styled.input`
+export const InputPwd = styled.input`
   width: 260px;
   height: 45px;
   margin-top: 15px;
@@ -58,6 +59,7 @@ const InputPwd = styled.input`
   padding: 10px;
   box-sizing: border-box;
   outline: none;
+  color: white;
   &::placeholder {
     font-family: 'MainText';
     color: white;
@@ -84,7 +86,7 @@ const InputCheckBox = styled.input`
     background-color: ${ORIGINAL_YELLOW};
   }
 `;
-const LoginButton = styled.button`
+export const SubmitButton = styled.button`
   width: 190px;
   height: 60px;
   background-color: ${ORIGINAL_YELLOW};
@@ -96,14 +98,14 @@ const LoginButton = styled.button`
   font-size: 15px;
   cursor: pointer;
 `;
-const TextWrapper = styled.div`
+export const TextWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
-const NoMemberText = styled.div`
+export const NoValueText = styled.div`
   color: ${PASTEL_ORANGE};
 `;
-const SignUpLink = styled(Link)`
+export const NoValueLink = styled(Link)`
   color: ${ORIGINAL_YELLOW};
   text-decoration: none;
   margin-left: 5px;
@@ -111,23 +113,23 @@ const SignUpLink = styled(Link)`
 
 const LoginPage = () => {
   return (
-    <LoginWrapper>
-      <LoginBox>
+    <BoxWrapper>
+      <FormBox>
         <LoginTitle>WePlan</LoginTitle>
-        <LabelId>아이디 입력</LabelId>
-        <InputId type="text" id="input_id" />
+        <LabelTmp>아이디 입력</LabelTmp>
+        <InputTmp type="text" id="input_id" />
         <InputPwd type="password" placeholder="비밀번호 입력" />
         <CheckBoxWrapper>
           <InputCheckBox type="checkbox" id="input_checkbox" />
           <LabelCheckBox htmlFor="input_checkbox">자동로그인</LabelCheckBox>
         </CheckBoxWrapper>
-      </LoginBox>
-      <LoginButton>로그인</LoginButton>
+      </FormBox>
+      <SubmitButton>로그인</SubmitButton>
       <TextWrapper>
-        <NoMemberText>회원이 아니신가요?</NoMemberText>
-        <SignUpLink to="/register">회원가입 하기</SignUpLink>
+        <NoValueText>회원이 아니신가요?</NoValueText>
+        <NoValueLink to="/register">회원가입 하기</NoValueLink>
       </TextWrapper>
-    </LoginWrapper>
+    </BoxWrapper>
   );
 };
 

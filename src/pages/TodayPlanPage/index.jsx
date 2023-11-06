@@ -57,7 +57,7 @@ const RadioWrapper = styled.div`
   overflow-x: auto;
   margin-top: 0.5rem;
 `;
-const Radio = styled.div<{ check?: boolean }>`
+const Radio = styled.div`
   background-color: ${({ check }) => (check ? ORIGINAL_YELLOW : PASTEL_ORANGE)};
   padding: 0.5rem 1rem;
   color: white;

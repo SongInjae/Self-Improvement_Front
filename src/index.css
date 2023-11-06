@@ -1,8 +1,18 @@
 @font-face {
-    font-family: 'MainLogo';
-    src: url('./assets/font/SDSamliphopangcheTTFOutline.ttf');
+  font-family: 'MainLogo';
+  src: url('./assets/font/SDSamliphopangcheTTFOutline.ttf');
 }
 @font-face {
-    font-family: 'MainText';
-    src: url('./assets/font/SDSamliphopangcheTTFBasic.ttf');
+  font-family: 'MainText';
+  src: url('./assets/font/SDSamliphopangcheTTFBasic.ttf');
+}
+@font-face {
+  font-family: 'NEXON Lv1 Gothic OTF';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff')
+    format('woff');
+  font-weight: 700;
+}
+
+* {
+  font-family: 'NEXON Lv1 Gothic OTF' !important;
 }

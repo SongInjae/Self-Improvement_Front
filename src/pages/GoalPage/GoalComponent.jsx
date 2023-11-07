@@ -102,7 +102,6 @@ const GoalComponent = () => {
 
     return (
         <GoalComponentBox>
-            
             <GoalBox>토익 800점 이상</GoalBox>
             <CompleteBox
                 marginLeft={marginLeft}

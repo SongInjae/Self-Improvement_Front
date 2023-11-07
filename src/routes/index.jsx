@@ -2,6 +2,7 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import { LoginPage, RegisterPage, AddGoalPage, GoalPage, EditGoalPage } from '../pages';
+import TodayPlanPage from '../pages/TodayPlanPage';
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,14 @@ export const router = createBrowserRouter([
       {
         path: 'register',
         element: <RegisterPage />,
+      },
+      {
+      path: 'main',
+      element: <MainPage />,
+      },
+      {
+        path: 'todayplan',
+        element: <TodayPlanPage />,
       },
       {
         path: 'addgoal',

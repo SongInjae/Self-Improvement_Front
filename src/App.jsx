@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
+import BottomNavigation from './components/BottomNavigation';
 
 const Background = styled.div`
   max-width: 425px;
@@ -14,6 +15,7 @@ const App = () => {
   return (
     <Background>
       <Outlet />
+      <BottomNavigation />
     </Background>
   );
 };

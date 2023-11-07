@@ -8,6 +8,7 @@ const Background = styled.div`
   height: 100vh;
   border: 1px solid black;
   margin: 0 auto;
+  position: relative;
 `;
 
 const App = () => {

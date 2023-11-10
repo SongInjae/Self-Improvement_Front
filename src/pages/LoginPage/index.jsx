@@ -13,7 +13,7 @@ export const BoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-export const FormBox = styled.div`
+export const FormBox = styled.form`
   display: flex;
   flex-direction: column;
   border: 1px solid;

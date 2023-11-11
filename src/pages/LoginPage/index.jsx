@@ -4,80 +4,81 @@ import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
 import { Link } from 'react-router-dom';
 
 export const BoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: ${ORIGINAL_YELLOW};
   font-family: 'MainText';
-  display: flex;
-  flex-direction: column;
 `;
 export const FormBox = styled.form`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+  padding: 1.5rem;
   border: 1px solid;
-  border-radius: 10px;
-  padding: 20px;
-  width: 300px;
+  border-radius: 0.5rem;
   box-sizing: border-box;
 `;
 const LoginTitle = styled.div`
-  margin-top: 60px;
-  margin-bottom: 60px;
+  width: 100%;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
   font-family: 'MainLogo';
   font-size: 50px;
-  width: 100%;
   text-align: center;
 `;
-export const LabelTmp = styled.div`
+export const LabelTmp = styled.label`
+  display: inline-block;
   position: relative;
-  top: 10px;
-  left: 10px;
-  width: 60px;
-  font-size: 12px;
+  top: 0.5rem;
+  right: 5.5rem;
+  width: 3.5rem;
+  font-size: 0.7rem;
   text-align: center;
   background-color: white;
-  display: inline-block;
 `;
 export const InputTmp = styled.input`
+  width: 16rem;
+  height: 3rem;
+  margin: 0 0.5rem;
+  padding: 1rem;
   border: 1px solid ${ORIGINAL_YELLOW};
-  border-radius: 5px;
-  width: 260px;
-  height: 45px;
-  padding: 10px;
+  border-radius: 0.5rem;
   box-sizing: border-box;
   outline: none;
+  font-family: 'MainText';
+  color: ${ORIGINAL_YELLOW};
 `;
-export const InputPwd = styled.input`
-  width: 260px;
-  height: 45px;
-  margin-top: 15px;
+export const InputPwd = styled(InputTmp)`
+  margin-top: 1rem;
   border: none;
-  background-color: ${ORIGINAL_YELLOW};
-  border-radius: 5px;
-  padding: 10px;
-  box-sizing: border-box;
-  outline: none;
   color: white;
+  background-color: ${ORIGINAL_YELLOW};
+  box-sizing: border-box;
+
   &::placeholder {
     font-family: 'MainText';
     color: white;
   }
 `;
 const CheckBoxWrapper = styled.div`
-  margin-top: 15px;
   display: flex;
   align-items: center;
+  margin-top: 1rem;
 `;
 const LabelCheckBox = styled.label`
-  margin-left: 5px;
+  margin-left: 0.25rem;
 `;
 const InputCheckBox = styled.input`
+  width: 1rem;
+  height: 1rem;
   accent-color: ${ORIGINAL_YELLOW};
   appearance: none;
-  width: 18px;
-  height: 18px;
   border: 2px solid ${ORIGINAL_YELLOW};
   border-radius: 2px;
   background-clip: content-box;
@@ -87,15 +88,14 @@ const InputCheckBox = styled.input`
   }
 `;
 export const SubmitButton = styled.button`
-  width: 190px;
-  height: 60px;
+  width: 12rem;
+  height: 4rem;
+  margin: 2rem auto;
   background-color: ${ORIGINAL_YELLOW};
   border: none;
-  border-radius: 60px;
-  margin: 30px auto 20px;
+  border-radius: 5rem;
   color: white;
   font-family: 'MainText';
-  font-size: 15px;
   cursor: pointer;
 `;
 export const TextWrapper = styled.div`
@@ -108,7 +108,7 @@ export const NoValueText = styled.div`
 export const NoValueLink = styled(Link)`
   color: ${ORIGINAL_YELLOW};
   text-decoration: none;
-  margin-left: 5px;
+  margin-left: 0.25rem;
 `;
 
 const LoginPage = () => {

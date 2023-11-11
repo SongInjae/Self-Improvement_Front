@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
 import { Link } from 'react-router-dom';
+import postLogin from '../../apis/auth/login';
 
 export const BoxWrapper = styled.div`
   display: flex;
@@ -67,6 +68,7 @@ export const InputPwd = styled(InputTmp)`
   }
 `;
 const CheckBoxWrapper = styled.div`
+  align-self: flex-start;
   display: flex;
   align-items: center;
   margin-top: 1rem;
@@ -83,6 +85,7 @@ const InputCheckBox = styled.input`
   border-radius: 2px;
   background-clip: content-box;
   padding: 3px;
+
   &:checked {
     background-color: ${ORIGINAL_YELLOW};
   }
@@ -112,19 +115,38 @@ export const NoValueLink = styled(Link)`
 `;
 
 const LoginPage = () => {
+  const [id, setId] = useState('');
+  const [pwd, setPwd] = useState('');
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    await postLogin({ email: id, password: pwd });
+    navigate('/main');
+  };
+
   return (
     <BoxWrapper>
       <FormBox>
         <LoginTitle>WePlan</LoginTitle>
         <LabelTmp>아이디 입력</LabelTmp>
-        <InputTmp type="text" id="input_id" />
-        <InputPwd type="password" placeholder="비밀번호 입력" />
+        <InputTmp
+          type="text"
+          id="input_id"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        />
+        <InputPwd
+          type="password"
+          placeholder="비밀번호 입력"
+          value={pwd}
+          onChange={(e) => setPwd(e.target.value)}
+        />
         <CheckBoxWrapper>
           <InputCheckBox type="checkbox" id="input_checkbox" />
           <LabelCheckBox htmlFor="input_checkbox">자동로그인</LabelCheckBox>
         </CheckBoxWrapper>
       </FormBox>
-      <SubmitButton>로그인</SubmitButton>
+      <SubmitButton onClick={handleFormSubmit}>로그인</SubmitButton>
       <TextWrapper>
         <NoValueText>회원이 아니신가요?</NoValueText>
         <NoValueLink to="/register">회원가입 하기</NoValueLink>

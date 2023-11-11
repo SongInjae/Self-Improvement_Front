@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'MainLogo';
+  src: url('./assets/font/SDSamliphopangcheTTFOutline.ttf');
+}
+@font-face {
+  font-family: 'MainText';
+  src: url('./assets/font/SDSamliphopangcheTTFBasic.ttf');
+}
+@font-face {
+  font-family: 'MainTitle';
+  src: url('src/assets/font/GothicA1-Black.ttf');
+}
+@font-face {
+  font-family: 'MainBold';
+  src: url('src/assets/font/GothicA1-Bold.ttf');
+}
+@font-face {
+  font-family: 'MainMedium';
+  src: url('src/assets/font/GothicA1-Medium.ttf');
+}
+@font-face {
+  font-family: 'MainLight';
+  src: url('src/assets/font/GothicA1-Light.ttf');
+}

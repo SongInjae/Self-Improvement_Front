@@ -1,15 +1,22 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
+import BottomNavigation from './components/BottomNavigation';
 
-const Container = styled.div`
-  background-color: aliceblue;
-  width: 100px;
-  height: 100px;
-`
+const Background = styled.div`
+  max-width: 425px;
+  height: 100vh;
+  border: 1px solid black;
+  margin: 0 auto;
+  position: relative;
+`;
 
 const App = () => {
   return (
-    <Container />
+    <Background>
+      <Outlet />
+      <BottomNavigation />
+    </Background>
   );
 };
 

@@ -16,7 +16,7 @@ const TodoWrapper = styled.div`
   position: relative;
   display: flex;
 `;
-const TodoItem = styled.div<{ check: boolean }>`
+const TodoItem = styled.div`
   width: 95%;
   height: 3rem;
   margin: 0 auto;
@@ -27,7 +27,7 @@ const TodoItem = styled.div<{ check: boolean }>`
   background-color: ${({ check }) => (check ? ORIGINAL_YELLOW : PASTEL_ORANGE)};
   box-sizing: border-box;
 `;
-const Checkbox = styled.div<{ check: boolean }>`
+const Checkbox = styled.div`
   position: absolute;
   right: 2rem;
   bottom: 50%;

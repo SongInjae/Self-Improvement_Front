@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
 import RepeatModal from '../../components/RepeatModal';
 import { useState } from 'react';
+import postTodayPlan from '../../apis/schedule/postTodayPlan';
+import { useNavigate } from 'react-router-dom';
 
 const TodayPlanContainer = styled.form`
   display: flex;
@@ -81,8 +83,18 @@ const SubmitButton = styled.button`
 `;
 
 const TodayPlanPage = () => {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const interest_list = [
+
+  const [title, setTitle] = useState('');
+  const [detail, setDetail] = useState('');
+  const [alarmTime, setAlarmTime] = useState('');
+  const [repeatDays, setRepeatDays] = useState([]);
+  const [lastDate, setLastDate] = useState('');
+  const [selectedInterest, setSelectedInterest] = useState('주식');
+  const [tags, setTags] = useState([]);
+
+  const interestList = [
     {
       interest: '주식',
       checked: false,
@@ -97,11 +109,11 @@ const TodayPlanPage = () => {
     },
     {
       interest: '재테크',
-      checked: true,
+      checked: false,
     },
     {
       interest: '운동',
-      checked: true,
+      checked: false,
     },
     {
       interest: '공무원',
@@ -112,21 +124,60 @@ const TodayPlanPage = () => {
       checked: false,
     },
   ];
+
+  const filteredList = interestList.map(({ interest }) => ({
+    interest,
+    checked: interest === selectedInterest,
+  }));
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    await postTodayPlan({
+      title,
+      detail,
+      alarmTime,
+      repeatDays,
+      lastDate,
+      selectedInterest,
+      tags,
+    });
+    navigate('/main');
+  };
+
   return (
     <>
       <TodayPlanContainer>
-        <InputStyled type="text" placeholder="계획 제목 추가" />
-        <InputStyled type="text" placeholder="세부 계획 추가" />
+        <InputStyled
+          type="text"
+          placeholder="계획 제목 추가"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <InputStyled
+          type="text"
+          placeholder="세부 계획 추가"
+          value={detail}
+          onChange={(e) => setDetail(e.target.value)}
+        />
         <HalfInputWrapper>
-          <HalfInput type="time" placeholder="시간 설정" />
+          <HalfInput
+            type="time"
+            placeholder="시간 설정"
+            value={alarmTime}
+            onChange={(e) => setAlarmTime(e.target.value)}
+          />
           <RepeatInput onClick={() => setShowModal(true)} />
         </HalfInputWrapper>
         <FieldSet>
           <Title>관심사 선택</Title>
           <RadioWrapper>
-            {interest_list.map((interest) => (
-              <Radio key={interest.interest} check={interest.checked}>
-                {interest.interest}
+            {filteredList.map(({ interest, checked }) => (
+              <Radio
+                key={interest}
+                check={checked}
+                onClick={() => setSelectedInterest(interest)}
+              >
+                {interest}
               </Radio>
             ))}
           </RadioWrapper>
@@ -137,7 +188,7 @@ const TodayPlanPage = () => {
             <Radio>+</Radio>
           </RadioWrapper>
         </FieldSet>
-        <SubmitButton type="submit">완료</SubmitButton>
+        <SubmitButton onClick={handleFormSubmit}>완료</SubmitButton>
       </TodayPlanContainer>
       <RepeatModal showModal={showModal} setShowModal={setShowModal} />
     </>

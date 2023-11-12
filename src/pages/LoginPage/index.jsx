@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import postLogin from '../../apis/auth/login';
 
 export const BoxWrapper = styled.div`
@@ -115,6 +115,7 @@ export const NoValueLink = styled(Link)`
 `;
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [id, setId] = useState('');
   const [pwd, setPwd] = useState('');
 

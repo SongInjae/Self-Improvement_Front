@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-
 import styled from '@emotion/styled';
-import { useForm } from 'react-hook-form';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
 import {
   BoxWrapper,
   FormBox,
@@ -15,95 +12,99 @@ import {
   NoValueLink,
 } from '../LoginPage';
 import postRegister from '../../apis/auth/register';
-import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  validateName,
+  validatePwdCheck,
+  validatePwd,
+} from '../../utils/validate';
+import { AUTH } from '../../constants/errorMessage';
 
 const RegisterTitle = styled.div`
-  margin-top: 30px;
-  margin-bottom: 30px;
-  font-size: 50px;
   width: 100%;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-size: 3rem;
   text-align: center;
 `;
-const TagContainer = styled.div`
-  border: 1px solid ${ORIGINAL_YELLOW};
-  padding: 10px;
-  border-radius: 5px;
-`;
-const Tag = styled.button`
-  font-family: 'MainText';
-  color: white;
-  border-radius: 20px;
-  border: none;
-  background-color: ${ORIGINAL_YELLOW};
-  padding: 5px 10px;
-  margin-right: 5px;
-  margin-top: 5px;
-  cursor: pointer;
+
+const ErrorMessage = styled.p`
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  color: red;
+  font-size: 0.5rem;
 `;
 
 const RegisterPage = () => {
-  const tagArr = [
-    '어학',
-    '경제',
-    '코딩',
-    '공무원',
-    '수능',
-    '운동',
-    '창업',
-    '버킷리스트',
-  ];
-  const [tags, setTags] = useState([]);
-  const formRef = useRef();
-  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const [id, setId] = useState('');
+  const [pwd, setPwd] = useState('');
+  const [nickName, setNickName] = useState('');
 
-  const handleTagClick = (e) => {
-    const newTag = e.target.textContent;
+  const [pwdError, setPwdError] = useState('');
+  const [pwdCheckError, setPwdCheckError] = useState('');
+  const [nickNameError, setNickNameError] = useState('');
 
-    if (tags.includes(newTag)) {
-      setTags(tags.filter((tag) => tag !== newTag));
-      return;
-    } else if (tags.length >= 3) {
-      alert('태그는 3개여야합니다.');
-      return;
+  const checkValidation = () => {
+    if (!validatePwd(pwd)) {
+      setPwdError(AUTH.PASSWORD);
     } else {
-      setTags([...tags, newTag]);
+      setPwdError('');
     }
+
+    if (!validateName(nickName)) {
+      setNickNameError(AUTH.NINK_NAME);
+    } else {
+      setNickNameError('');
+    }
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    checkValidation();
+
+    if (pwdError !== '' || nickNameError !== '') return;
+
+    await postRegister({ email: id, password: pwd, name: nickName });
+    navigate('/login');
   };
 
   return (
     <BoxWrapper>
-      <FormBox ref={formRef} onSubmit={handleSubmit(handleRegisterSubmit)}>
+      <FormBox>
         <RegisterTitle>간단 회원가입</RegisterTitle>
-        <LabelTmp>아이디 입력</LabelTmp>
-        <InputTmp type="text" id="input_id" />
+        <LabelTmp htmlFor="input_id">아이디 입력</LabelTmp>
+        <InputTmp
+          type="text"
+          id="input_id"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        />
         <InputPwd
           type="password"
           placeholder="비밀번호 입력"
-          onChange={handlePwdChange}
+          value={pwd}
+          onChange={(e) => setPwd(e.target.value)}
         />
-        <InputPwd type="password" placeholder="비밀번호 확인" />
-        <LabelTmp>닉네임 입력</LabelTmp>
-        <InputTmp {...register('name')} type="text" id="input_nickName" />
-        <LabelTmp>관심사 입력</LabelTmp>
-        <TagContainer>
-          {tagArr.map((tag, idx) => (
-            <Tag
-              key={idx}
-              onClick={handleTagClick}
-              style={{
-                backgroundColor: tags.includes(tag)
-                  ? PASTEL_ORANGE
-                  : ORIGINAL_YELLOW,
-              }}
-            >
-              {tag}
-            </Tag>
-          ))}
-        </TagContainer>
+        {pwdError && <ErrorMessage>{pwdError}</ErrorMessage>}
+        <InputPwd
+          type="password"
+          placeholder="비밀번호 확인"
+          onChange={(e) =>
+            setPwdCheckError(validatePwdCheck(e.target.value, pwd))
+          }
+        />
+        {pwdCheckError && <ErrorMessage>{pwdCheckError}</ErrorMessage>}
+        <LabelTmp htmlFor="input_nickName">닉네임 입력</LabelTmp>
+        <InputTmp
+          type="text"
+          id="input_nickName"
+          value={nickName}
+          onChange={(e) => setNickName(e.target.value)}
+        />
+        {nickNameError && <ErrorMessage>{nickNameError}</ErrorMessage>}
       </FormBox>
-      <SubmitButton onClick={handleSubmitButtonClick}>
-        회원가입 하기
-      </SubmitButton>
+      <SubmitButton onClick={handleFormSubmit}>회원가입 하기</SubmitButton>
       <TextWrapper>
         <NoValueText>이미 회원이신가요?</NoValueText>
         <NoValueLink to="/login">로그인</NoValueLink>

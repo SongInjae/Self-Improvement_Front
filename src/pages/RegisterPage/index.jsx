@@ -56,9 +56,6 @@ const RegisterPage = () => {
   const formRef = useRef();
   const { register, handleSubmit } = useForm();
 
-  const handlePwdChange = (e) => {
-    e.target.value;
-  };
   const handleTagClick = (e) => {
     const newTag = e.target.textContent;
 
@@ -73,31 +70,18 @@ const RegisterPage = () => {
     }
   };
 
-  const handleRegisterSubmit = (data) => {
-    postRegister(data);
-  };
-
-  const handleSubmitButtonClick = (e) => {
-    e.preventDefault();
-    formRef.current.submit();
-  };
-
   return (
     <BoxWrapper>
       <FormBox ref={formRef} onSubmit={handleSubmit(handleRegisterSubmit)}>
         <RegisterTitle>간단 회원가입</RegisterTitle>
         <LabelTmp>아이디 입력</LabelTmp>
-        <InputTmp {...register('email')} type="text" id="input_id" />
+        <InputTmp type="text" id="input_id" />
         <InputPwd
           type="password"
           placeholder="비밀번호 입력"
           onChange={handlePwdChange}
         />
-        <InputPwd
-          {...register('password')}
-          type="password"
-          placeholder="비밀번호 확인"
-        />
+        <InputPwd type="password" placeholder="비밀번호 확인" />
         <LabelTmp>닉네임 입력</LabelTmp>
         <InputTmp {...register('name')} type="text" id="input_nickName" />
         <LabelTmp>관심사 입력</LabelTmp>

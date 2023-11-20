@@ -9,17 +9,27 @@ import { useNavigate } from 'react-router-dom';
 const TodoWrapper = styled.div`
   position: relative;
   display: flex;
+  flex-direction: column;
+  width: 95%;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  border-radius: 2rem;
+  box-sizing: border-box;
+  background-color: ${({ check }) => (check ? ORIGINAL_YELLOW : PASTEL_ORANGE)};
 `;
 const TodoItem = styled.div`
-  width: 95%;
-  height: 3rem;
-  margin: 0 auto;
-  padding-left: 1rem;
-  line-height: 3rem;
-  border-radius: 2rem;
   color: white;
-  background-color: ${({ check }) => (check ? ORIGINAL_YELLOW : PASTEL_ORANGE)};
-  box-sizing: border-box;
+  font-family: 'MainBold';
+`;
+const TagWrapper = styled.div`
+  display: flex;
+  margin-top: 0.3rem;
+`;
+const Tag = styled.div`
+  font-size: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: lightgray;
+  padding: 0.3rem;
 `;
 const Checkbox = styled.div`
   position: absolute;
@@ -68,12 +78,27 @@ const TodoList = () => {
 
     getData();
   }, [selectDay]);
+
+  const handleCheckChange = (idx) => {
+    setTodoList((prevState) => {
+      const newState = [...prevState];
+      newState[idx] = {
+        ...newState[idx],
+        checked: !prevState[idx].checked,
+      };
+
+      return newState;
+    });
+  };
   return (
     <>
       {todoList.map((item, idx) => (
-        <TodoWrapper key={item.title}>
-          <TodoItem check={item.check}>{item.title}</TodoItem>
-          <Checkbox check={item.check} />
+        <TodoWrapper key={item.title} check={item.checked}>
+          <TodoItem>{item.title}</TodoItem>
+          <Checkbox
+            check={item.checked}
+            onClick={() => handleCheckChange(idx)}
+          />
         </TodoWrapper>
       ))}
       <AddTodo onClick={() => navigate('/todayplan')}>+</AddTodo>

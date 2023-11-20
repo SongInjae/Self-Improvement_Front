@@ -20,8 +20,9 @@ const calendarHandler = [
 
   http.get('api/todayPlan/:date', async ({ params }) => {
     const { date } = params;
-
-    return HttpResponse.json(todayPlan[date], { status: 200 });
+    if (todayPlan[date])
+      return HttpResponse.json(todayPlan[date], { status: 200 });
+    else return HttpResponse.json([], { status: 200 });
   }),
 ];
 

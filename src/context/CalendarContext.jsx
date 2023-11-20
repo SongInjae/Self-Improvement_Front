@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { createContext, useEffect, useMemo, useState } from 'react';
+import { transformDate } from '../utils/transform';
 
 const CalendarContext = createContext({
   state: {
@@ -17,7 +18,7 @@ const CalendarContext = createContext({
 
 const CalendarContextProvider = ({ children }) => {
   const [current, setCurrent] = useState(new Date());
-  const [selectDay, setSelectDay] = useState();
+  const [selectDay, setSelectDay] = useState(new Date());
   const [month, setMonth] = useState(format(current, 'MMM'));
   const [year, setYear] = useState(format(current, 'yyyy'));
 

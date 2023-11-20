@@ -2,6 +2,7 @@ import React from 'react';
 import Calendar from '../../components/Calendar';
 import styled from '@emotion/styled';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
+import { CalendarContextProvider } from '../../context/CalendarContext';
 
 const MainContainer = styled.div``;
 const TodoContainer = styled.div`
@@ -79,18 +80,20 @@ const MainPage = () => {
     },
   ];
   return (
-    <MainContainer>
-      <Calendar />
-      <TodoContainer>
-        {todo_list.map((item) => (
-          <TodoWrapper key={item.todo}>
-            <TodoItem check={item.check}>{item.todo}</TodoItem>
-            <Checkbox check={item.check} />
-          </TodoWrapper>
-        ))}
-      </TodoContainer>
-      <AddTodo>+</AddTodo>
-    </MainContainer>
+    <CalendarContextProvider>
+      <MainContainer>
+        <Calendar />
+        <TodoContainer>
+          {todo_list.map((item) => (
+            <TodoWrapper key={item.todo}>
+              <TodoItem check={item.check}>{item.todo}</TodoItem>
+              <Checkbox check={item.check} />
+            </TodoWrapper>
+          ))}
+        </TodoContainer>
+        <AddTodo>+</AddTodo>
+      </MainContainer>
+    </CalendarContextProvider>
   );
 };
 

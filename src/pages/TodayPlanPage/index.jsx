@@ -5,6 +5,7 @@ import RepeatModal from '../../components/RepeatModal';
 import { useState } from 'react';
 import postTodayPlan from '../../apis/schedule/postTodayPlan';
 import { useNavigate } from 'react-router-dom';
+import { transformDate } from '../../utils/transform';
 
 const TodayPlanContainer = styled.form`
   display: flex;
@@ -120,7 +121,7 @@ const TodayPlanPage = () => {
   const [lastDate, setLastDate] = useState('');
   const [selectedInterest, setSelectedInterest] = useState('주식');
   const [tags, setTags] = useState([]);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(transformDate(new Date()));
 
   const interestList = [
     {
@@ -141,10 +142,6 @@ const TodayPlanPage = () => {
     },
     {
       interest: '운동',
-      checked: false,
-    },
-    {
-      interest: '공무원',
       checked: false,
     },
     {
@@ -239,7 +236,11 @@ const TodayPlanPage = () => {
           <Title>태그 추가</Title>
           <RadioWrapper>
             {tags.map((_, idx) => (
-              <RadioInput type="text" onBlur={(e) => handleInputBlur(e, idx)} />
+              <RadioInput
+                key={idx}
+                type="text"
+                onBlur={(e) => handleInputBlur(e, idx)}
+              />
             ))}
             <Radio onClick={() => handlePlusClick()}>+</Radio>
           </RadioWrapper>

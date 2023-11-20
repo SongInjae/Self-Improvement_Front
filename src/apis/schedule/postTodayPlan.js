@@ -8,6 +8,7 @@ const postTodayPlan = async ({
   lastDate,
   selectedInterest,
   tags,
+  date,
 }) => {
   await axiosClient.post('api/todayPlan', {
     title,
@@ -17,6 +18,7 @@ const postTodayPlan = async ({
     lastDate,
     selectedInterest,
     tags,
+    date,
   });
 };
 

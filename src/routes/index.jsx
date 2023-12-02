@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import { LoginPage, RegisterPage, MainPage } from '../pages';
 import TodayPlanPage from '../pages/TodayPlanPage';
+import SharePlanPage from '../pages/SharePlanPage';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: 'todayplan',
         element: <TodayPlanPage />,
+      },
+      {
+        path: 'shareplan',
+        element: <SharePlanPage />,
       },
     ],
   },

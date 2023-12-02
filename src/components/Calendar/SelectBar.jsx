@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import styled from '@emotion/styled';
+import CalendarContext from '../../context/CalendarContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -31,7 +32,11 @@ const SelectStyled = styled.select`
   }
 `;
 
-const SelectBar = ({ month, setMonth, year, setYear }) => {
+const SelectBar = () => {
+  const { state, action } = useContext(CalendarContext);
+  const { month, year } = state;
+  const { setMonth, setYear } = action;
+
   const todayYear = new Date().getUTCFullYear();
   const monthBox = useRef();
   const yearBox = useRef();

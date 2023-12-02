@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useState } from 'react';
 import { ORIGINAL_YELLOW } from '../../constants';
 
 const ModalBackground = styled.div`
@@ -63,6 +63,10 @@ const DateWrapper = styled.div`
   align-items: center;
   gap: 1rem;
 `;
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.7rem;
+`;
 const SubmitButton = styled.button`
   padding: 0.5rem 1rem;
   border: none;
@@ -70,40 +74,68 @@ const SubmitButton = styled.button`
   background-color: ${ORIGINAL_YELLOW};
 `;
 
-const RepeatModal = ({ showModal, setShowModal }) => {
+const RepeatModal = ({
+  showModal,
+  setShowModal,
+  repeatDays,
+  setRepeatDays,
+  lastDate,
+  setLastDate,
+}) => {
+  const [error, setError] = useState('');
   const days = [
     {
-      value: 'monday',
+      value: '월',
       text: '월요일',
     },
     {
-      value: 'tuesday',
+      value: '화',
       text: '화요일',
     },
     {
-      value: 'wednesday',
+      value: '수',
       text: '수요일',
     },
     {
-      value: 'thursday',
+      value: '목',
       text: '목요일',
     },
     {
-      value: 'friday',
+      value: '금',
       text: '금요일',
     },
     {
-      value: 'saturday',
+      value: '토',
       text: '토요일',
     },
     {
-      value: 'sunday',
+      value: '일',
       text: '일요일',
     },
   ];
 
+  const handleCheckBoxChange = (e) => {
+    setRepeatDays((prevState) => {
+      const newState = [...prevState];
+      if (newState.includes(e.target.value)) {
+        return newState.filter((option) => option !== e.target.value);
+      } else {
+        newState.push(e.target.value);
+        return newState;
+      }
+    });
+  };
+
   const handleBackGroundClick = (e) => {
     e.stopPropagation();
+    if (repeatDays.length === 0 && lastDate !== '') {
+      setError('모두 선택하거나, 모두 선택하지 않아야합니다.');
+      return;
+    }
+    if (repeatDays.length !== 0 && lastDate === '') {
+      setError('모두 선택하거나, 모두 선택하지 않아야합니다.');
+      return;
+    }
     setShowModal(false);
   };
 
@@ -119,6 +151,7 @@ const RepeatModal = ({ showModal, setShowModal }) => {
                   name="day"
                   value={item.value}
                   id={item.value}
+                  onChange={handleCheckBoxChange}
                 />
                 <DayLabel htmlFor={item.value} />
                 <span>{item.text}</span>
@@ -127,9 +160,14 @@ const RepeatModal = ({ showModal, setShowModal }) => {
           </DaysWrapper>
           <DateWrapper>
             <label htmlFor="data">종료일</label>
-            <input type="date" id="date" />
+            <input
+              type="date"
+              id="date"
+              onChange={(e) => setLastDate(e.target.value)}
+            />
           </DateWrapper>
         </ContentWrapper>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <SubmitButton type="button" onClick={handleBackGroundClick}>
           확인
         </SubmitButton>

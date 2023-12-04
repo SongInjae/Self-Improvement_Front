@@ -5,6 +5,7 @@ import RepeatModal from '../../components/RepeatModal';
 import { useState } from 'react';
 import postTodayPlan from '../../apis/schedule/postTodayPlan';
 import { useNavigate } from 'react-router-dom';
+import { transformDate } from '../../utils/transform';
 
 const TodayPlanContainer = styled.form`
   display: flex;
@@ -18,7 +19,6 @@ const InputStyled = styled.input`
   border-bottom: 1px solid ${ORIGINAL_YELLOW};
   outline: none;
   padding: 1rem;
-  box-sizing: border-box;
 
   &:first-child {
     border: 1px solid ${ORIGINAL_YELLOW};
@@ -41,11 +41,22 @@ const HalfInput = styled(InputStyled)`
     border-top-right-radius: 0;
   }
 `;
+const DateInput = styled(InputStyled)`
+  align-self: end;
+  width: 50%;
+  text-align: end;
+  border-left: 1px solid ${ORIGINAL_YELLOW};
+  border-bottom-left-radius: 1rem;
+`;
 const RepeatInput = styled.div`
+  display: flex;
+  align-items: center;
   width: 50%;
   height: 3.5rem;
   border-bottom: 1px solid ${ORIGINAL_YELLOW};
   box-sizing: border-box;
+  color: gray;
+  padding-left: 1rem;
 `;
 const FieldSet = styled.div`
   border-bottom: 1px solid ${ORIGINAL_YELLOW};
@@ -68,6 +79,22 @@ const Radio = styled.div`
   border-radius: 1rem;
   flex-shrink: 0;
 `;
+const RadioInput = styled.input`
+  width: 3rem;
+  background-color: ${ORIGINAL_YELLOW};
+  padding: 0 1rem;
+  color: white;
+  font-size: 0.8rem;
+  border-radius: 1rem;
+  border: none;
+  outline: none;
+`;
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.7rem;
+  align-self: center;
+  margin-top: 1rem;
+`;
 const SubmitButton = styled.button`
   align-self: end;
   width: 5rem;
@@ -85,6 +112,7 @@ const SubmitButton = styled.button`
 const TodayPlanPage = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState('');
 
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
@@ -93,6 +121,7 @@ const TodayPlanPage = () => {
   const [lastDate, setLastDate] = useState('');
   const [selectedInterest, setSelectedInterest] = useState('주식');
   const [tags, setTags] = useState([]);
+  const [date, setDate] = useState(transformDate(new Date()));
 
   const interestList = [
     {
@@ -119,10 +148,6 @@ const TodayPlanPage = () => {
       interest: '공무원',
       checked: false,
     },
-    {
-      interest: '공무원',
-      checked: false,
-    },
   ];
 
   const filteredList = interestList.map(({ interest }) => ({
@@ -130,8 +155,30 @@ const TodayPlanPage = () => {
     checked: interest === selectedInterest,
   }));
 
+  const handlePlusClick = () => {
+    setTags((prevState) => {
+      const newState = [...prevState];
+      newState.push('');
+      return newState;
+    });
+  };
+
+  const handleInputBlur = (e, idx) => {
+    setTags((prevState) => {
+      const newState = [...prevState];
+      newState[idx] = e.target.value;
+      return newState;
+    });
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (!title || !detail) {
+      setError('제목과 세부사항은 필수입니다.'); //TODO Toast구현;
+      return;
+    }
+
     await postTodayPlan({
       title,
       detail,
@@ -140,6 +187,7 @@ const TodayPlanPage = () => {
       lastDate,
       selectedInterest,
       tags,
+      date,
     });
     navigate('/main');
   };
@@ -166,7 +214,9 @@ const TodayPlanPage = () => {
             value={alarmTime}
             onChange={(e) => setAlarmTime(e.target.value)}
           />
-          <RepeatInput onClick={() => setShowModal(true)} />
+          <RepeatInput onClick={() => setShowModal(true)}>
+            {repeatDays.length !== 0 ? repeatDays.join(', ') : '반복'}
+          </RepeatInput>
         </HalfInputWrapper>
         <FieldSet>
           <Title>관심사 선택</Title>
@@ -185,12 +235,32 @@ const TodayPlanPage = () => {
         <FieldSet>
           <Title>태그 추가</Title>
           <RadioWrapper>
-            <Radio>+</Radio>
+            {tags.map((_, idx) => (
+              <RadioInput
+                key={idx}
+                type="text"
+                onBlur={(e) => handleInputBlur(e, idx)}
+              />
+            ))}
+            <Radio onClick={() => handlePlusClick()}>+</Radio>
           </RadioWrapper>
         </FieldSet>
+        <DateInput
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <SubmitButton onClick={handleFormSubmit}>완료</SubmitButton>
       </TodayPlanContainer>
-      <RepeatModal showModal={showModal} setShowModal={setShowModal} />
+      <RepeatModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        repeatDays={repeatDays}
+        setRepeatDays={setRepeatDays}
+        lastDate={lastDate}
+        setLastDate={setLastDate}
+      />
     </>
   );
 };

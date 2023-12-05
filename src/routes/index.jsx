@@ -9,6 +9,7 @@ import {
   SharePlanPage,
   PostPage,
   PostDetailPage,
+  AddGoalPage, GoalPage, EditGoalPage,
 } from '../pages';
 
 export const router = createBrowserRouter([
@@ -25,12 +26,24 @@ export const router = createBrowserRouter([
         element: <RegisterPage />,
       },
       {
-        path: 'main',
-        element: <MainPage />,
+      path: 'main',
+      element: <MainPage />,
       },
       {
         path: 'todayplan',
         element: <TodayPlanPage />,
+      },
+      {
+        path: 'addgoal',
+        element: <AddGoalPage />,
+      },
+      {
+        path: 'goal',
+        element: <GoalPage />,
+      },
+      {
+        path: 'editgoal',
+        element: <EditGoalPage />,
       },
       {
         path: 'shareplan',

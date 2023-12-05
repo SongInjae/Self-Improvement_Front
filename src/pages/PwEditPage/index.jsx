@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import Icon from '../../components/common/Icon';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';

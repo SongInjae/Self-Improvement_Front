@@ -1,39 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
-import { useState } from 'react';
-import GoalComponent from './GoalComponent';
+import GoalList from './GoalList';
+import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 
 const BoxWrapper = styled.div`
     display: flex;
     flex-direction: column;
-`;
-
-const HeadBox = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-
-const ProgressGraph= styled.div`
-    margin: 10%;
-    margin-bottom: 10px;
-    text-align: center;
-    font-size: 20px;
-    color: black;
-`;
-
-const Date= styled.div`
-    margin: 10%;
-    margin-bottom: 10px;
-    text-align: center;
-    font-family: 'MainLogo';
-    font-size: 30px;
-    color: black;
-`;
-
-const HorizontalLine = styled.hr`
-    border-top: 1px solid lightgray;
-    width: 420px;
 `;
 
 const GoalWrapper = styled.div`
@@ -51,21 +23,56 @@ const GoalWrapper = styled.div`
     }
 `;
 
+const IconWrapper = styled.div`
+    margin-left: 15%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    color: Gainsboro;
+`;
+
+const Icon = styled.button`
+    cursor: pointer;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    &:hover {
+        color: #000; /* 마우스 오버 시 색상 변경 가능 */
+    }
+`;
+
+const Year = styled.div`
+    text-align: center;
+    font-size: 30px;
+    margin-left: 80px;
+    margin-right: 80px;
+    margin-top: 8px;
+    color: black;
+`;
+
 const YearPage = () => {
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+    const handleYearChange = (amount) => {
+        const newYear = currentYear + amount;
+        setCurrentYear(newYear);
+    };
+
 
     return (
         <BoxWrapper>
-            <HeadBox>
-                <ProgressGraph>
-                    연간 원형 그래프
-                </ProgressGraph>
-                <Date>
-                    2023년 11월 5일 (일)
-                </Date>
-            </HeadBox>
-            <HorizontalLine />
+            <IconWrapper>
+                <Icon onClick={() => handleYearChange(-1)}>
+                    <CiCircleChevLeft size={40} />
+                </Icon>
+                <Year>{currentYear}</Year>
+                <Icon onClick={() => handleYearChange(1)}>
+                    <CiCircleChevRight size={40} />
+                </Icon>
+            </IconWrapper>
             <GoalWrapper>
-                <GoalComponent />
+                <GoalList  Goals={Goals} />
             </GoalWrapper>
         </BoxWrapper>
     );

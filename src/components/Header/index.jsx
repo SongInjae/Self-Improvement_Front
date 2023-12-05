@@ -11,10 +11,12 @@ const HeaderContainer = styled.div`
   height: 3rem;
   padding: 1rem 0;
 `;
+
 const Title = styled.p`
   font-size: 1.5rem;
   font-family: ${({ isKorean }) => (isKorean ? 'MainLight' : 'MainTitle')};
 `;
+
 const Component = styled.div`
   display: flex;
   justify-content: center;
@@ -23,17 +25,22 @@ const Component = styled.div`
   width: 2.5rem;
   height: 2.5rem;
 `;
+
 const LeftComponent = styled(Component)`
   left: 1rem;
+  cursor: ${({ isPrev }) => (isPrev ? 'pointer' : 'default')};
 `;
+
 const RightComponent = styled(Component)`
-  right: 1rem;
+  right: -8.5rem;
+  cursor: ${({ isOption }) => (isOption ? 'pointer' : 'default')};
 `;
+
 const IconStyled = styled(Icon)`
   cursor: pointer;
 `;
 
-const Header = ({ title, isKorean, isPrev, isPlus, isOption }) => {
+const Header = ({ title, isKorean, isPrev, isPlus, isOption, onClick }) => {
   const navigate = useNavigate();
 
   const handlePrevClick = () => {
@@ -46,14 +53,17 @@ const Header = ({ title, isKorean, isPrev, isPlus, isOption }) => {
     navigate('/addgoal');
   };
 
-
-  const Plus = <IconStyled name="plus-circle" size="1.3rem" onClick={handlePlusClick} />;
-  const Option = <IconStyled name="settings" size="1.3rem" />;
-  const Prev = <IconStyled name="chevron-left" size="1.5rem" onClick={handlePrevClick} />;
+  const Plus = (
+    <IconStyled name="plus-circle" size="1.3rem" onClick={handlePlusClick} />
+  );
+  const Option = <IconStyled name="settings" size="1.5rem" onClick={onClick} />;
+  const Prev = (
+    <IconStyled name="chevron-left" size="1.5rem" onClick={handlePrevClick} />
+  );
 
   return (
     <HeaderContainer>
-      <LeftComponent>{isPrev && Prev}</LeftComponent>
+      <LeftComponent isPrev={isPrev}>{isPrev && Prev}</LeftComponent>
       <Title isKorean={isKorean}>{title}</Title>
       <RightComponent>
         {isPlus ? Plus : isOption ? Option : null}
@@ -61,5 +71,4 @@ const Header = ({ title, isKorean, isPrev, isPlus, isOption }) => {
     </HeaderContainer>
   );
 };
-
 export default Header;

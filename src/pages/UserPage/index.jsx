@@ -3,11 +3,7 @@ import Icon from '../../components/common/Icon';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-<<<<<<< HEAD
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
-=======
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
->>>>>>> 42cbf67 (fix: 재효 중간점검)
 import ColorContext from '../../context/SettingColor';
 import getProfileEdit from '../../apis/profileedit/getprofileedit';
 

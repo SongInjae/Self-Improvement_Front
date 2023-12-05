@@ -1,8 +1,15 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
-import { LoginPage, RegisterPage, AddGoalPage, GoalPage, EditGoalPage } from '../pages';
-import TodayPlanPage from '../pages/TodayPlanPage';
+import {
+  LoginPage,
+  RegisterPage,
+  MainPage,
+  TodayPlanPage,
+  SharePlanPage,
+  PostPage,
+  AddGoalPage, GoalPage, EditGoalPage,
+} from '../pages';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +43,14 @@ export const router = createBrowserRouter([
       {
         path: 'editgoal',
         element: <EditGoalPage />,
+      },
+      {
+        path: 'shareplan',
+        element: <SharePlanPage />,
+      },
+      {
+        path: 'board',
+        element: <PostPage />,
       },
     ],
   },

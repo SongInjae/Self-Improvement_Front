@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
-import RepeatModal from '../../components/RepeatModal';
-import { useState } from 'react';
-import postTodayPlan from '../../apis/schedule/postTodayPlan';
 import { useNavigate } from 'react-router-dom';
+
+import RepeatModal from '../../components/RepeatModal';
+import Header from '../../components/Header';
+import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
+import { INTEREST_LIST } from '../../constants/interest';
+import postTodayPlan from '../../apis/schedule/postTodayPlan';
 import { transformDate } from '../../utils/transform';
 
 const TodayPlanContainer = styled.form`
   display: flex;
   flex-direction: column;
-  margin-top: 5rem;
 `;
 const InputStyled = styled.input`
+  position: relative;
   width: 100%;
   box-sizing: border-box;
   border: none;
@@ -20,10 +22,17 @@ const InputStyled = styled.input`
   outline: none;
   padding: 1rem;
 
-  &:first-child {
+  &:nth-child(2) {
     border: 1px solid ${ORIGINAL_YELLOW};
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
+  }
+
+  &[type='date']::-webkit-calendar-picker-indicator {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
   }
 `;
 const HalfInputWrapper = styled.div`
@@ -42,11 +51,14 @@ const HalfInput = styled(InputStyled)`
   }
 `;
 const DateInput = styled(InputStyled)`
-  align-self: end;
+  align-self: center;
+  bottom: 0.5rem;
   width: 50%;
-  text-align: end;
-  border-left: 1px solid ${ORIGINAL_YELLOW};
-  border-bottom-left-radius: 1rem;
+  text-align: center;
+  border: none;
+  font-size: 0.7rem;
+  padding-top: 0;
+  font-family: 'MainTitle';
 `;
 const RepeatInput = styled.div`
   display: flex;
@@ -123,34 +135,7 @@ const TodayPlanPage = () => {
   const [tags, setTags] = useState([]);
   const [date, setDate] = useState(transformDate(new Date()));
 
-  const interestList = [
-    {
-      interest: '주식',
-      checked: false,
-    },
-    {
-      interest: '어학',
-      checked: true,
-    },
-    {
-      interest: '수능',
-      checked: false,
-    },
-    {
-      interest: '재테크',
-      checked: false,
-    },
-    {
-      interest: '운동',
-      checked: false,
-    },
-    {
-      interest: '공무원',
-      checked: false,
-    },
-  ];
-
-  const filteredList = interestList.map(({ interest }) => ({
+  const filteredList = INTEREST_LIST.map(({ interest }) => ({
     interest,
     checked: interest === selectedInterest,
   }));
@@ -194,7 +179,14 @@ const TodayPlanPage = () => {
 
   return (
     <>
+      <Header title="TODAY PLAN" isPrev />
       <TodayPlanContainer>
+        <DateInput
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          pattern="\d{4}-\d{2}-\d{2}"
+        />
         <InputStyled
           type="text"
           placeholder="계획 제목 추가"
@@ -245,11 +237,6 @@ const TodayPlanPage = () => {
             <Radio onClick={() => handlePlusClick()}>+</Radio>
           </RadioWrapper>
         </FieldSet>
-        <DateInput
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
         {error && <ErrorMessage>{error}</ErrorMessage>}
         <SubmitButton onClick={handleFormSubmit}>완료</SubmitButton>
       </TodayPlanContainer>

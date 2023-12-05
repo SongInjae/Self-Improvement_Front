@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Icon from '../common/Icon';
-import { ORIGINAL_YELLOW } from '../../constants';
+import { ORIGINAL_YELLOW } from '../../constants/color';
 
 const NavigationContainer = styled.div`
   display: flex;

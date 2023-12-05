@@ -10,7 +10,7 @@ import {
   isToday,
   isSameDay,
 } from 'date-fns';
-import { ORIGINAL_YELLOW } from '../../constants';
+import { ORIGINAL_YELLOW } from '../../constants/color';
 import CalendarContext from '../../context/CalendarContext';
 
 const Wrapper = styled.tbody`

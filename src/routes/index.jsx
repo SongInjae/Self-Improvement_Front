@@ -1,9 +1,13 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
-import { LoginPage, RegisterPage, MainPage } from '../pages';
-import TodayPlanPage from '../pages/TodayPlanPage';
-import SharePlanPage from '../pages/SharePlanPage';
+import {
+  LoginPage,
+  RegisterPage,
+  MainPage,
+  TodayPlanPage,
+  SharePlanPage,
+} from '../pages';
 
 export const router = createBrowserRouter([
   {

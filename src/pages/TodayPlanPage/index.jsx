@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
-import RepeatModal from '../../components/RepeatModal';
-import { useState } from 'react';
-import postTodayPlan from '../../apis/schedule/postTodayPlan';
 import { useNavigate } from 'react-router-dom';
-import { transformDate } from '../../utils/transform';
+
+import RepeatModal from '../../components/RepeatModal';
 import Header from '../../components/Header';
+import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
+import { INTEREST_LIST } from '../../constants/interest';
+import postTodayPlan from '../../apis/schedule/postTodayPlan';
+import { transformDate } from '../../utils/transform';
 
 const TodayPlanContainer = styled.form`
   display: flex;
   flex-direction: column;
-  //margin-top: 5rem;
 `;
 const InputStyled = styled.input`
   position: relative;
@@ -135,34 +135,7 @@ const TodayPlanPage = () => {
   const [tags, setTags] = useState([]);
   const [date, setDate] = useState(transformDate(new Date()));
 
-  const interestList = [
-    {
-      interest: '주식',
-      checked: false,
-    },
-    {
-      interest: '어학',
-      checked: true,
-    },
-    {
-      interest: '수능',
-      checked: false,
-    },
-    {
-      interest: '재테크',
-      checked: false,
-    },
-    {
-      interest: '운동',
-      checked: false,
-    },
-    {
-      interest: '공무원',
-      checked: false,
-    },
-  ];
-
-  const filteredList = interestList.map(({ interest }) => ({
+  const filteredList = INTEREST_LIST.map(({ interest }) => ({
     interest,
     checked: interest === selectedInterest,
   }));

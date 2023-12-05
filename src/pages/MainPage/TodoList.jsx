@@ -3,7 +3,7 @@ import getTodayPlan from '../../apis/schedule/getTodayPlan';
 import CalendarContext from '../../context/CalendarContext';
 import { transformDate } from '../../utils/transform';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
+import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import { useNavigate } from 'react-router-dom';
 
 const TodoWrapper = styled.div`

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
-import { ORIGINAL_YELLOW } from '../../constants';
+import { ORIGINAL_YELLOW } from '../../constants/color';
 
 const ModalBackground = styled.div`
   position: absolute;

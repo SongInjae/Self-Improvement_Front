@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
+import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import { Link, useNavigate } from 'react-router-dom';
 import postLogin from '../../apis/auth/login';
 

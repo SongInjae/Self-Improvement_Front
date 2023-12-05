@@ -1,5 +1,5 @@
 import { createContext, useState, useMemo } from 'react';
-import { ORIGINAL_YELLOW } from '../constants/index.js';
+import { ORIGINAL_YELLOW } from '../constants/color';
 
 const ColorContext = createContext({
   state: {

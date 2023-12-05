@@ -3,7 +3,7 @@ import Icon from '../../components/common/Icon';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
+import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
 import setProfilePicUrl from '../PostUploadPage';
 

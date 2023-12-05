@@ -1,12 +1,7 @@
 import React, { useContext, useState } from 'react';
-import Icon from '../../components/common/Icon';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
-import postRegister from '../../apis/auth/register';
-import { useForm } from 'react-hook-form';
-import { useRef } from 'react';
 import ColorContext from '../../context/SettingColor';
 
 const Wrapper = styled.div`

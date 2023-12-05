@@ -8,7 +8,14 @@ import {
   TodayPlanPage,
   SharePlanPage,
   PostPage,
-  AddGoalPage, GoalPage, EditGoalPage,
+  PostDetailPage,
+  AddGoalPage,
+  GoalPage,
+  UserPage,
+  SettingPage,
+  PwEditPage,
+  PostUploadPage,
+  ProfileEditPage,
 } from '../pages';
 
 export const router = createBrowserRouter([
@@ -25,8 +32,8 @@ export const router = createBrowserRouter([
         element: <RegisterPage />,
       },
       {
-      path: 'main',
-      element: <MainPage />,
+        path: 'main',
+        element: <MainPage />,
       },
       {
         path: 'todayplan',
@@ -41,16 +48,36 @@ export const router = createBrowserRouter([
         element: <GoalPage />,
       },
       {
-        path: 'editgoal',
-        element: <EditGoalPage />,
-      },
-      {
         path: 'shareplan',
         element: <SharePlanPage />,
       },
       {
         path: 'board',
         element: <PostPage />,
+      },
+      {
+        path: 'board/detail/:id',
+        element: <PostDetailPage />,
+      },
+      {
+        path: 'user',
+        element: <UserPage />,
+      },
+      {
+        path: 'setting',
+        element: <SettingPage />,
+      },
+      {
+        path: 'pwedit',
+        element: <PwEditPage />,
+      },
+      {
+        path: 'postupload',
+        element: <PostUploadPage />,
+      },
+      {
+        path: 'profileedit',
+        element: <ProfileEditPage />,
       },
     ],
   },

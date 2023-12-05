@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import Icon from '../common/Icon';
 
 const HeaderContainer = styled.div`
@@ -33,9 +34,22 @@ const IconStyled = styled(Icon)`
 `;
 
 const Header = ({ title, isKorean, isPrev, isPlus, isOption }) => {
-  const Plus = <IconStyled name="plus-circle" size="1.3rem" />;
+  const navigate = useNavigate();
+
+  const handlePrevClick = () => {
+    // Prev 아이콘이 클릭되었을 때 GoalPage로 이동
+    navigate(-1);
+  };
+
+  const handlePlusClick = () => {
+    // Plus 아이콘이 클릭되었을 때 AddGoalPage로 이동
+    navigate('/addgoal');
+  };
+
+
+  const Plus = <IconStyled name="plus-circle" size="1.3rem" onClick={handlePlusClick} />;
   const Option = <IconStyled name="settings" size="1.3rem" />;
-  const Prev = <IconStyled name="chevron-left" size="1.5rem" />;
+  const Prev = <IconStyled name="chevron-left" size="1.5rem" onClick={handlePrevClick} />;
 
   return (
     <HeaderContainer>

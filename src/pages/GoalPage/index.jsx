@@ -1,42 +1,15 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import getAddGoal from '../../apis/Goal/getAddGoal';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
-import { Link } from 'react-router-dom';
 import AllPage from './AllPage';
 import YearPage from './YearPage';
-import SeasonPage from './SeasonPage';
 import MonthPage from './MonthPage';
+import Header from '../../components/Header';
 
 const BoxWrapper = styled.div`
     display: flex;
     flex-direction: column;
-`;
-
-const TitleWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    margin-top: 15%;
-`;
-
-const Title = styled.div`
-    margin-left: 15%;
-    margin-top: 2%;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    text-align: center;
-    font-family: 'MainLogo';
-    font-size: 30px;
-    color: black;
-`;
-
-const AddButton = styled.button`
-    margin-right: 8%;
-    background-color: ${ORIGINAL_YELLOW};
-    border-radius: 25px;
-    border: 1px solid ${ORIGINAL_YELLOW};
-    padding: 20px 20px;
-    cursor: pointer;
 `;
 
 const ButtonWrapper = styled.div`
@@ -45,7 +18,8 @@ const ButtonWrapper = styled.div`
 `;
 
 const AllPageButton = styled.button`
-    width: 105px;
+    font-family: 'MainMedium';
+    width: 140px;
     height: 30px;
     text-align: center;
     border: none;
@@ -54,16 +28,8 @@ const AllPageButton = styled.button`
 `;
 
 const YearPageButton = styled.button`
-    width: 105px;
-    height: 30px;
-    text-align: center;
-    border: none;
-    cursor: pointer;
-    background-color: white;
-`;
-
-const SeasonPageButton = styled.button`
-    width: 105px;
+    font-family: 'MainMedium';
+    width: 140px;
     height: 30px;
     text-align: center;
     border: none;
@@ -72,7 +38,8 @@ const SeasonPageButton = styled.button`
 `;
 
 const MonthPageButton = styled.button`
-    width: 105px;
+    font-family: 'MainMedium';
+    width: 140px;
     height: 30px;
     text-align: center;
     border: none;
@@ -88,8 +55,8 @@ const HorizontalLine = styled.hr`
 const ShortHorizontalLine = styled.hr`
     margin-top: -10px;
     margin-left: ${props => props.marginLeft || '0'}px;
-    border-top: 3px solid gray;
-    width: 108px;
+    border-top: 2px solid gray;
+    width: 143px;
 `;
 
 const ContentsBox = styled.div`
@@ -99,9 +66,9 @@ const ContentsBox = styled.div`
 `;
 
 const GoalPage = () => {
+    const navigate = useNavigate();
     const [visibleAllPage, setVisibleAllPage] = useState(true);
     const [visibleYearPage, setVisibleYearPage] = useState(false);
-    const [visibleSeasonPage, setVisibleSeasonPage] = useState(false);
     const [visibleMonthPage, setVisibleMonthPage] = useState(false);
     const [shortHorizontalLineLeft, setShortHorizontalLineLeft] = useState(0);
 
@@ -110,7 +77,6 @@ const GoalPage = () => {
         // Set the visibility of the pages
         setVisibleAllPage(page === 'all');
         setVisibleYearPage(page === 'year');
-        setVisibleSeasonPage(page === 'season');
         setVisibleMonthPage(page === 'month');
 
         switch (page) {
@@ -118,25 +84,17 @@ const GoalPage = () => {
                 setShortHorizontalLineLeft(0);
                 break;
             case 'year':
-                setShortHorizontalLineLeft(105);
-                break;
-            case 'season':
-                setShortHorizontalLineLeft(210);
+                setShortHorizontalLineLeft(140);
                 break;
             case 'month':
-                setShortHorizontalLineLeft(315);
+                setShortHorizontalLineLeft(280);
                 break;
         }
     };
 
     return(
         <BoxWrapper>
-            <TitleWrapper>
-                <Title>PLAN</Title>
-                <AddButton>
-                
-                </AddButton>
-            </TitleWrapper>
+            <Header title="PLAN" isPlus />
             <HorizontalLine />
             <ButtonWrapper>
                 <AllPageButton 
@@ -157,15 +115,6 @@ const GoalPage = () => {
                 >
                     연간 목표
                 </YearPageButton>
-                <SeasonPageButton 
-                    onClick={()=>{
-                        if (!visibleSeasonPage) {
-                            handleButtonClicked('season');
-                        }
-                    }}
-                >
-                    분기 목표
-                </SeasonPageButton>
                 <MonthPageButton 
                     onClick={()=>{
                         if (!visibleMonthPage) {
@@ -181,7 +130,6 @@ const GoalPage = () => {
             <ContentsBox>
                 {visibleAllPage && <AllPage/>}
                 {visibleYearPage && <YearPage/>}
-                {visibleSeasonPage && <SeasonPage/>}
                 {visibleMonthPage && <MonthPage/>}
             </ContentsBox>
         </BoxWrapper>

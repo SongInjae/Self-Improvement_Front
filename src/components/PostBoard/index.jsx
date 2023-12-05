@@ -6,9 +6,10 @@ import { FaFileImage } from 'react-icons/fa6';
 const PostBoardContainer = styled.div`
   clear: right;
   width: 100%;
-  height: calc(100% - 11.5rem);
+  height: calc(100% - 5rem);
 `;
 const PostWrapper = styled.div`
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   overflow: auto;
@@ -30,6 +31,30 @@ const PostBoard = () => {
   return (
     <PostBoardContainer>
       <PostWrapper>
+        <DefaultImageWrapper>
+          <FaFileImage size={'40%'} />
+        </DefaultImageWrapper>
+        <DefaultImageWrapper>
+          <FaFileImage size={'40%'} />
+        </DefaultImageWrapper>
+        <DefaultImageWrapper>
+          <FaFileImage size={'40%'} />
+        </DefaultImageWrapper>
+        <DefaultImageWrapper>
+          <FaFileImage size={'40%'} />
+        </DefaultImageWrapper>
+        <DefaultImageWrapper>
+          <FaFileImage size={'40%'} />
+        </DefaultImageWrapper>
+        <DefaultImageWrapper>
+          <FaFileImage size={'40%'} />
+        </DefaultImageWrapper>
+        <DefaultImageWrapper>
+          <FaFileImage size={'40%'} />
+        </DefaultImageWrapper>
+        <DefaultImageWrapper>
+          <FaFileImage size={'40%'} />
+        </DefaultImageWrapper>
         <DefaultImageWrapper>
           <FaFileImage size={'40%'} />
         </DefaultImageWrapper>

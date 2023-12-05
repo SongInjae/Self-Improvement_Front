@@ -7,6 +7,7 @@ import {
   MainPage,
   TodayPlanPage,
   SharePlanPage,
+  PostPage,
 } from '../pages';
 
 export const router = createBrowserRouter([
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: 'shareplan',
         element: <SharePlanPage />,
+      },
+      {
+        path: 'board',
+        element: <PostPage />,
       },
     ],
   },

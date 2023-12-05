@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { FaUserCircle } from 'react-icons/fa';
-import MemoCorner from '../../assets/image/Corner.svg';
 
 const MemosContainer = styled.div`
   display: flex;

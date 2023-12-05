@@ -1,7 +1,6 @@
 import React from 'react';
 import Calendar from '../../components/Calendar';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW } from '../../constants';
 import { CalendarContextProvider } from '../../context/CalendarContext';
 import TodoList from './TodoList';
 

@@ -11,6 +11,11 @@ import {
   PostDetailPage,
   AddGoalPage,
   GoalPage,
+  UserPage,
+  SettingPage,
+  PwEditPage,
+  PostUploadPage,
+  ProfileEditPage,
 } from '../pages';
 
 export const router = createBrowserRouter([
@@ -53,6 +58,26 @@ export const router = createBrowserRouter([
       {
         path: 'board/detail/:id',
         element: <PostDetailPage />,
+      },
+      {
+        path: 'user',
+        element: <UserPage />,
+      },
+      {
+        path: 'setting',
+        element: <SettingPage />,
+      },
+      {
+        path: 'pwedit',
+        element: <PwEditPage />,
+      },
+      {
+        path: 'postupload',
+        element: <PostUploadPage />,
+      },
+      {
+        path: 'profileedit',
+        element: <ProfileEditPage />,
       },
     ],
   },

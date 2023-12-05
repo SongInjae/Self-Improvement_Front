@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
+<<<<<<< HEAD
 import {
   LoginPage,
   RegisterPage,
@@ -10,6 +11,10 @@ import {
   PostPage,
   AddGoalPage, GoalPage, EditGoalPage,
 } from '../pages';
+=======
+import { LoginPage, RegisterPage, AddGoalPage, GoalPage, MainPage } from '../pages';
+import TodayPlanPage from '../pages/TodayPlanPage';
+>>>>>>> 8730d5e (feat: HAGYOUNG)
 
 export const router = createBrowserRouter([
   {

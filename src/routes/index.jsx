@@ -8,6 +8,7 @@ import {
   TodayPlanPage,
   SharePlanPage,
   PostPage,
+  PostDetailPage,
 } from '../pages';
 
 export const router = createBrowserRouter([
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
       {
         path: 'board',
         element: <PostPage />,
+      },
+      {
+        path: 'board/detail/:id',
+        element: <PostDetailPage />,
       },
     ],
   },

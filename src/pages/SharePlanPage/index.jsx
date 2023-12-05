@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchInput from '../../components/SearchInput';
+import SearchInput from '../../components/common/SearchInput';
 import Tags from '../../components/Tags';
 import { INTEREST_LIST } from '../../constants/interest';
 import Memos from '../../components/Memos';

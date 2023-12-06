@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { FaUserCircle } from 'react-icons/fa';
+import UserInfo from '../UserInfo';
 
 const MemosContainer = styled.div`
   display: flex;
@@ -9,13 +9,6 @@ const MemosContainer = styled.div`
   margin-top: 1rem;
   font-family: 'MainMedium';
 `;
-// const Memo = styled.div`
-//   position: relative;
-//   width: 40%;
-//   padding: 1rem;
-//   border: 1rem solid gray inset;
-//   box-shadow: 0px 0px 0px 4px #2d3648 inset;
-// `;
 const Memo = styled.div`
   position: relative;
   width: 80%;
@@ -23,19 +16,6 @@ const Memo = styled.div`
   padding: 1rem;
   border: 1px solid #d9d9d9;
   box-shadow: 4px 4px 3px 1px rgba(0, 0, 0, 0.25);
-`;
-const UserInfoWrapper = styled.div`
-  display: flex;
-  gap: 0.3rem;
-  margin-bottom: 1rem;
-`;
-const UserProfile = styled.img``;
-const UserName = styled.div``;
-const UserFollower = styled.div`
-  position: relative;
-  bottom: -0.3rem;
-  text-align: end;
-  font-size: 0.7rem;
 `;
 const TodoList = styled.div``;
 const TodoWrapper = styled.div`
@@ -57,11 +37,7 @@ const Memos = () => {
   return (
     <MemosContainer>
       <Memo>
-        <UserInfoWrapper>
-          <FaUserCircle />
-          <UserName>송인재</UserName>
-          <UserFollower>114 Follwer</UserFollower>
-        </UserInfoWrapper>
+        <UserInfo isFollwer />
         <TodoList>
           <TodoWrapper>
             <TodoItem>

@@ -4,12 +4,11 @@ import UserInfo from '../../components/UserInfo';
 import Header from '../../components/Header';
 import { FaRegHeart, FaRegComment } from 'react-icons/fa';
 
-const PostDetailContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+const PostDetailContainer = styled.div``;
+const HeaderStyled = styled(Header)`
+  border-bottom: 1px solid gray;
 `;
 const UserInfoStyled = styled(UserInfo)`
-  border-top: 1px solid gray;
   padding: 1rem;
 `;
 const PostImg = styled.img`
@@ -52,7 +51,7 @@ const PostContent = styled.div`
 const PostDetailPage = () => {
   return (
     <PostDetailContainer>
-      <Header title="피드" isPrev isKorean />
+      <HeaderStyled title="피드" isPrev isKorean />
       <UserInfoStyled />
       <PostImg />
       <PostSnsWrapper>

@@ -16,6 +16,7 @@ import {
   PwEditPage,
   PostUploadPage,
   ProfileEditPage,
+  PostCommentPage,
 } from '../pages';
 
 export const router = createBrowserRouter([
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
       {
         path: 'board/detail/:id',
         element: <PostDetailPage />,
+      },
+      {
+        path: 'board/detail/:id/comment',
+        element: <PostCommentPage />,
       },
       {
         path: 'user',

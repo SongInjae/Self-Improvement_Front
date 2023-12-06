@@ -22,6 +22,7 @@ const TodoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-top: 1rem;
   font-family: 'MainLight';
   font-size: 0.8rem;
 `;

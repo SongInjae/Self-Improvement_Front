@@ -5,7 +5,6 @@ import { FaUserCircle } from 'react-icons/fa';
 const UserInfoWrapper = styled.div`
   display: flex;
   gap: 0.3rem;
-  margin-bottom: 1rem;
 `;
 const UserProfile = styled.img``;
 const UserName = styled.div``;
@@ -16,9 +15,9 @@ const UserFollower = styled.div`
   font-size: 0.7rem;
 `;
 
-const UserInfo = ({ isFollwer = false }) => {
+const UserInfo = ({ isFollwer = false, ...props }) => {
   return (
-    <UserInfoWrapper>
+    <UserInfoWrapper {...props}>
       <FaUserCircle />
       <UserName>송인재</UserName>
       {isFollwer && <UserFollower>114 Follwer</UserFollower>}

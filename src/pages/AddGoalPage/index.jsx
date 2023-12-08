@@ -266,7 +266,14 @@ const AddGoalPage = () => {
         )}
         {visibleMonth && (
           <div>
-            <Title>월간 목표</Title>
+            <TitleBox>
+              <Title>월간 목표</Title>
+              <CounterBox>
+                <CounterButton onClick={handleDecrement}>-</CounterButton>
+                {year}
+                <CounterButton onClick={handleIncrement}>+</CounterButton>
+              </CounterBox>
+            </TitleBox>
             <MonthInputBox>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month, index) => (
                 <React.Fragment key={index}>

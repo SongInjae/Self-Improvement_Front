@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import getAddGoal from '../../apis/Goal/getAddGoal';
 import styled from '@emotion/styled';
 import GoalList from './GoalList';
+import { SlRocket } from 'react-icons/sl';
 import {
     CircularProgressbarWithChildren
   } from "react-circular-progressbar";
@@ -173,7 +174,9 @@ const AllPage = () => {
             </HeadBox>
             <HorizontalLine />
             <GoalWrapper>
-                <GoalList Goals={Goals} />
+                {Goals ==null ?
+                (<GoalList Goals={Goals} />):
+                (<SlRocket size={200} style={{ color: 'Gainsboro', marginLeft: '20%', marginTop: '10%' }} />)}
             </GoalWrapper>
         </BoxWrapper>
     );

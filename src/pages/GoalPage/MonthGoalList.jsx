@@ -9,7 +9,7 @@ margin-bottom: 30px;
 margin-left: 10px;
 `;
 
-const YearGoalList = ({Goals}) => {
+const MonthGoalList = ({Goals}) => {
   return (
     <GoalWrapper className="GoalList">
       {Goals.map(todo => (
@@ -19,4 +19,4 @@ const YearGoalList = ({Goals}) => {
   );
 };
 
-export default YearGoalList;
+export default MonthGoalList;

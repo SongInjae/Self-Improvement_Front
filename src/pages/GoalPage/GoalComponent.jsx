@@ -91,35 +91,12 @@ const Icon = styled.button`
   }
 `;
 
-const GoalComponent = ({
-  isYearButtonClicked,
-  isMonthButtonClicked,
-  onDelete,
-}) => {
+const GoalComponent = ({ todo }) => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [marginLeft, setMarginLeft] = useState(0);
   const [visibleDetail, setVisibleDetail] = useState(false);
-  const [goalData, setGoalData] = useState(null);
-  const combinedVisibility = isYearButtonClicked && isMonthButtonClicked;
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        // Call the getAddGoal function with the appropriate parameters
-        const data = await getAddGoal({
-          year: 2023,
-          yearGoal: 'exampleGoal',
-          monthGoals: 'exampleMonth',
-        });
-        setGoalData(data); // Set the goal data in the state
-      } catch (error) {
-        // Handle errors if needed
-        console.error('Error fetching goal data:', error);
-      }
-    };
-
-    getData(); // Call the fetchData function when selectDay changes
-  }, []);
+  const{year, yearGoal, MonthGoals}=todo;
 
   const handleIconClick = () => {
     const shouldDelete = window.confirm('삭제하시겠습니까?');
@@ -130,15 +107,15 @@ const GoalComponent = ({
 
   return (
     <GoalComponentBox>
-      {goalData.year != null ? (
+      {year != null ? (
         <GoalBox isClicked={isCompleted}>
-          {isCompleted ? 'C O M P L E T E ! ! !' : goalData.yearGoal}
+          {isCompleted ? 'C O M P L E T E ! ! !' : yearGoal}
         </GoalBox>
       ) : (
         <GoalBox isClicked={isCompleted}>
           {isCompleted
             ? 'C O M P L E T E ! ! !'
-            : goalData.monthGoals[month - 1]}{' '}
+            : monthGoals[month - 1]}{' '}
           {/* Assuming monthGoals is an object with a month property */}
         </GoalBox>
       )}
@@ -154,7 +131,7 @@ const GoalComponent = ({
       >
         <SlRocket size={30} />
       </CompleteBox>
-      {goalData.year != null
+      {year != null
         ? null
         : visibleDetail && (
             <DetailGoal>

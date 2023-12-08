@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import GoalList from './GoalList';
+import MonthGoalList from './MonthGoalList';
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
+import { SlRocket } from 'react-icons/sl';
 
 const BoxWrapper = styled.div`
     display: flex;
@@ -61,6 +62,23 @@ const monthNames = [
 ];
 
 const MonthPage = () => {
+    const [Goals, setGoals] = useState([]);
+
+    useEffect(() => {
+        const getData = async () => {
+          try {
+            // Call the getAddGoal function with the appropriate parameters
+            const data = await getAddGoal({ year: 2023, yearGoal: 'exampleGoal', monthGoals: 'exampleMonth' });
+            setGoals(data); // Set the goal data in the state
+          } catch (error) {
+            // Handle errors if needed
+            console.error("Error fetching goal data:", error);
+          }
+        };
+    
+        getData(); // Call the fetchData function when selectDay changes
+      }, []);
+
     const [currentMonth, setCurrentMonth] = useState(10); 
 
     const handleMonthChange = (amount) => {
@@ -84,7 +102,9 @@ const MonthPage = () => {
                 </Icon>
             </IconWrapper>
             <GoalWrapper>
-                <GoalList Goals={Goals} />
+                {Goals == null ?
+                (<MonthGoalList  Goals={Goals} />) :
+                 (<SlRocket size={200} style={{ color: 'Gainsboro', marginLeft: '20%', marginTop: '10%' }} />)}   
             </GoalWrapper>
         </BoxWrapper>
     );

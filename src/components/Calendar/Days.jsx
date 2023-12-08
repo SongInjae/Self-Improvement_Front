@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from '@emotion/styled';
 import {
   startOfMonth,
@@ -10,7 +10,8 @@ import {
   isToday,
   isSameDay,
 } from 'date-fns';
-import { ORIGINAL_YELLOW } from '../../constants';
+import { ORIGINAL_YELLOW } from '../../constants/color';
+import CalendarContext from '../../context/CalendarContext';
 
 const Wrapper = styled.tbody`
   width: 100%;
@@ -44,18 +45,26 @@ const Day = styled.td`
   background-color: ${({ selectDay }) => selectDay && `${ORIGINAL_YELLOW}`};
 `;
 
-const Days = ({ currentMonth, selectDay, onClick }) => {
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(currentMonth);
+const Days = () => {
+  const { state, action } = useContext(CalendarContext);
+  const { current, selectDay, year, month } = state;
+  const { setSelectDay } = action;
+
+  const monthStart = startOfMonth(current);
+  const monthEnd = endOfMonth(current);
   const firstDay = startOfWeek(monthStart);
   const lastDay = endOfWeek(monthEnd);
   const days = eachDayOfInterval({ start: firstDay, end: lastDay });
+
+  const handleDayClick = (e) => {
+    setSelectDay(new Date(`${year}-${month}-${e.target.textContent}`));
+  };
 
   const weeks = [];
   let week = [];
 
   days.forEach((day) => {
-    const isDisabled = day.getMonth() !== currentMonth.getMonth();
+    const isDisabled = day.getMonth() !== current.getMonth();
 
     week.push(
       <Day
@@ -63,7 +72,7 @@ const Days = ({ currentMonth, selectDay, onClick }) => {
         disabled={isDisabled}
         today={isToday(day)}
         selectDay={isSameDay(day, selectDay)}
-        onClick={onClick}
+        onClick={handleDayClick}
       >
         {format(day, 'd')}
       </Day>,

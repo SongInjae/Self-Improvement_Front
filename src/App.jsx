@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
 import BottomNavigation from './components/BottomNavigation';
+import { ColorContexttProvider } from './context/SettingColor';
 
 const Background = styled.div`
   max-width: 425px;
@@ -9,14 +10,17 @@ const Background = styled.div`
   border: 1px solid black;
   margin: 0 auto;
   position: relative;
+  box-sizing: border-box;
 `;
 
 const App = () => {
   return (
-    <Background>
-      <Outlet />
-      <BottomNavigation />
-    </Background>
+    <ColorContexttProvider>
+      <Background>
+        <Outlet />
+        <BottomNavigation />
+      </Background>
+    </ColorContexttProvider>
   );
 };
 

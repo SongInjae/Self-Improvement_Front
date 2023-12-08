@@ -1,27 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants';
+import { useNavigate } from 'react-router-dom';
+
 import RepeatModal from '../../components/RepeatModal';
-import { useState } from 'react';
+import Header from '../../components/Header';
+import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
+import { INTEREST_LIST } from '../../constants/interest';
+import postTodayPlan from '../../apis/schedule/postTodayPlan';
+import { transformDate } from '../../utils/transform';
 
 const TodayPlanContainer = styled.form`
   display: flex;
   flex-direction: column;
-  margin-top: 5rem;
 `;
 const InputStyled = styled.input`
+  position: relative;
   width: 100%;
   box-sizing: border-box;
   border: none;
   border-bottom: 1px solid ${ORIGINAL_YELLOW};
   outline: none;
   padding: 1rem;
-  box-sizing: border-box;
 
-  &:first-child {
+  &:nth-child(2) {
     border: 1px solid ${ORIGINAL_YELLOW};
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
+  }
+
+  &[type='date']::-webkit-calendar-picker-indicator {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
   }
 `;
 const HalfInputWrapper = styled.div`
@@ -39,11 +50,25 @@ const HalfInput = styled(InputStyled)`
     border-top-right-radius: 0;
   }
 `;
+const DateInput = styled(InputStyled)`
+  align-self: center;
+  bottom: 0.5rem;
+  width: 50%;
+  text-align: center;
+  border: none;
+  font-size: 0.7rem;
+  padding-top: 0;
+  font-family: 'MainTitle';
+`;
 const RepeatInput = styled.div`
+  display: flex;
+  align-items: center;
   width: 50%;
   height: 3.5rem;
   border-bottom: 1px solid ${ORIGINAL_YELLOW};
   box-sizing: border-box;
+  color: gray;
+  padding-left: 1rem;
 `;
 const FieldSet = styled.div`
   border-bottom: 1px solid ${ORIGINAL_YELLOW};
@@ -66,6 +91,22 @@ const Radio = styled.div`
   border-radius: 1rem;
   flex-shrink: 0;
 `;
+const RadioInput = styled.input`
+  width: 3rem;
+  background-color: ${ORIGINAL_YELLOW};
+  padding: 0 1rem;
+  color: white;
+  font-size: 0.8rem;
+  border-radius: 1rem;
+  border: none;
+  outline: none;
+`;
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.7rem;
+  align-self: center;
+  margin-top: 1rem;
+`;
 const SubmitButton = styled.button`
   align-self: end;
   width: 5rem;
@@ -81,52 +122,104 @@ const SubmitButton = styled.button`
 `;
 
 const TodayPlanPage = () => {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const interest_list = [
-    {
-      interest: '주식',
-      checked: false,
-    },
-    {
-      interest: '어학',
-      checked: true,
-    },
-    {
-      interest: '수능',
-      checked: false,
-    },
-    {
-      interest: '재테크',
-      checked: true,
-    },
-    {
-      interest: '운동',
-      checked: true,
-    },
-    {
-      interest: '공무원',
-      checked: false,
-    },
-    {
-      interest: '공무원',
-      checked: false,
-    },
-  ];
+  const [error, setError] = useState('');
+
+  const [title, setTitle] = useState('');
+  const [detail, setDetail] = useState('');
+  const [alarmTime, setAlarmTime] = useState('');
+  const [repeatDays, setRepeatDays] = useState([]);
+  const [lastDate, setLastDate] = useState('');
+  const [selectedInterest, setSelectedInterest] = useState('주식');
+  const [tags, setTags] = useState([]);
+  const [date, setDate] = useState(transformDate(new Date()));
+
+  const filteredList = INTEREST_LIST.map(({ interest }) => ({
+    interest,
+    checked: interest === selectedInterest,
+  }));
+
+  const handlePlusClick = () => {
+    setTags((prevState) => {
+      const newState = [...prevState];
+      newState.push('');
+      return newState;
+    });
+  };
+
+  const handleInputBlur = (e, idx) => {
+    setTags((prevState) => {
+      const newState = [...prevState];
+      newState[idx] = e.target.value;
+      return newState;
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!title || !detail) {
+      setError('제목과 세부사항은 필수입니다.'); //TODO Toast구현;
+      return;
+    }
+
+    await postTodayPlan({
+      title,
+      detail,
+      alarmTime,
+      repeatDays,
+      lastDate,
+      selectedInterest,
+      tags,
+      date,
+    });
+    navigate('/main');
+  };
+
   return (
     <>
+      <Header title="TODAY PLAN" isPrev />
       <TodayPlanContainer>
-        <InputStyled type="text" placeholder="계획 제목 추가" />
-        <InputStyled type="text" placeholder="세부 계획 추가" />
+        <DateInput
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          pattern="\d{4}-\d{2}-\d{2}"
+        />
+        <InputStyled
+          type="text"
+          placeholder="계획 제목 추가"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <InputStyled
+          type="text"
+          placeholder="세부 계획 추가"
+          value={detail}
+          onChange={(e) => setDetail(e.target.value)}
+        />
         <HalfInputWrapper>
-          <HalfInput type="time" placeholder="시간 설정" />
-          <RepeatInput onClick={() => setShowModal(true)} />
+          <HalfInput
+            type="time"
+            placeholder="시간 설정"
+            value={alarmTime}
+            onChange={(e) => setAlarmTime(e.target.value)}
+          />
+          <RepeatInput onClick={() => setShowModal(true)}>
+            {repeatDays.length !== 0 ? repeatDays.join(', ') : '반복'}
+          </RepeatInput>
         </HalfInputWrapper>
         <FieldSet>
           <Title>관심사 선택</Title>
           <RadioWrapper>
-            {interest_list.map((interest) => (
-              <Radio key={interest.interest} check={interest.checked}>
-                {interest.interest}
+            {filteredList.map(({ interest, checked }) => (
+              <Radio
+                key={interest}
+                check={checked}
+                onClick={() => setSelectedInterest(interest)}
+              >
+                {interest}
               </Radio>
             ))}
           </RadioWrapper>
@@ -134,12 +227,27 @@ const TodayPlanPage = () => {
         <FieldSet>
           <Title>태그 추가</Title>
           <RadioWrapper>
-            <Radio>+</Radio>
+            {tags.map((_, idx) => (
+              <RadioInput
+                key={idx}
+                type="text"
+                onBlur={(e) => handleInputBlur(e, idx)}
+              />
+            ))}
+            <Radio onClick={() => handlePlusClick()}>+</Radio>
           </RadioWrapper>
         </FieldSet>
-        <SubmitButton type="submit">완료</SubmitButton>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+        <SubmitButton onClick={handleFormSubmit}>완료</SubmitButton>
       </TodayPlanContainer>
-      <RepeatModal showModal={showModal} setShowModal={setShowModal} />
+      <RepeatModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        repeatDays={repeatDays}
+        setRepeatDays={setRepeatDays}
+        lastDate={lastDate}
+        setLastDate={setLastDate}
+      />
     </>
   );
 };

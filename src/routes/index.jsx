@@ -1,8 +1,23 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
-import { LoginPage, RegisterPage, MainPage } from '../pages';
-import TodayPlanPage from '../pages/TodayPlanPage';
+import {
+  LoginPage,
+  RegisterPage,
+  MainPage,
+  TodayPlanPage,
+  SharePlanPage,
+  PostPage,
+  PostDetailPage,
+  AddGoalPage,
+  GoalPage,
+  UserPage,
+  SettingPage,
+  PwEditPage,
+  PostUploadPage,
+  ProfileEditPage,
+  PostCommentPage,
+} from '../pages';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +39,50 @@ export const router = createBrowserRouter([
       {
         path: 'todayplan',
         element: <TodayPlanPage />,
+      },
+      {
+        path: 'addgoal',
+        element: <AddGoalPage />,
+      },
+      {
+        path: 'goal',
+        element: <GoalPage />,
+      },
+      {
+        path: 'shareplan',
+        element: <SharePlanPage />,
+      },
+      {
+        path: 'board',
+        element: <PostPage />,
+      },
+      {
+        path: 'board/detail/:id',
+        element: <PostDetailPage />,
+      },
+      {
+        path: 'board/detail/:id/comment',
+        element: <PostCommentPage />,
+      },
+      {
+        path: 'user',
+        element: <UserPage />,
+      },
+      {
+        path: 'setting',
+        element: <SettingPage />,
+      },
+      {
+        path: 'pwedit',
+        element: <PwEditPage />,
+      },
+      {
+        path: 'postupload',
+        element: <PostUploadPage />,
+      },
+      {
+        path: 'profileedit',
+        element: <ProfileEditPage />,
       },
     ],
   },

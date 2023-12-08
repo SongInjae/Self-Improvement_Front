@@ -63,7 +63,7 @@ const RegisterPage = () => {
     e.preventDefault();
     checkValidation();
 
-    if (pwd !== '' || nickName !== '') return;
+    if (pwdError !== '' || nickNameError !== '') return;
 
     await postRegister({ email: id, password: pwd, name: nickName });
     navigate('/login');

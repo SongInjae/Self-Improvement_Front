@@ -131,10 +131,12 @@ const ToggleInput = styled.input`
 
 const ProfileNextIcon = styled(Icon)`
   margin-right: 20px;
+  cursor: pointer;
 `;
 
 const PwNextIcon = styled(Icon)`
   margin-right: 20px;
+  cursor: pointer;
 `;
 
 const ColorChoiceIcon = styled(Icon)`
@@ -142,6 +144,7 @@ const ColorChoiceIcon = styled(Icon)`
   border-radius: 100%;
   border: 3px solid ${({ color }) => color};
   background-color: ${({ color }) => color};
+  cursor: pointer;
 `;
 
 const ColorChoice = styled(Github)`

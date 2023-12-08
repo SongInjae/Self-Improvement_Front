@@ -1,10 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Icon from '../../components/common/Icon';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
-import putProfileEdit from '../../apis/auth/profileedit';
+import putProfileEdit from '../../apis/profileedit/putprofileedit';
+import getProfileEdit from '../../apis/profileedit/getprofileedit';
 import ColorContext from '../../context/SettingColor';
 
 const Wrapper = styled.div`
@@ -231,6 +232,11 @@ const ProfileEditPage = () => {
   const [profilePicUrl, setProfilePicUrl] = useState(
     'src/assets/image/profileimg.png',
   );
+
+  useEffect(() => {
+    const getprofile = getProfileEdit();
+    console.log(getprofile);
+  }, []);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];

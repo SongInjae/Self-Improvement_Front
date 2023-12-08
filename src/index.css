@@ -8,21 +8,17 @@
 }
 @font-face {
   font-family: 'MainTitle';
-  src: url('src/assets/font/GothicA1-Black.ttf');
+  src: url('/src/assets/font/GothicA1-Black.ttf');
 }
 @font-face {
   font-family: 'MainBold';
-  src: url('src/assets/font/GothicA1-Bold.ttf');
+  src: url('/src/assets/font/GothicA1-Bold.ttf');
 }
 @font-face {
   font-family: 'MainMedium';
-  src: url('src/assets/font/GothicA1-Medium.ttf');
+  src: url('/src/assets/font/GothicA1-Medium.ttf');
 }
 @font-face {
   font-family: 'MainLight';
-  src: url('src/assets/font/GothicA1-Light.ttf');
-}
-
-* {
-  font-family: 'MainMedium' !important;
+  src: url('/src/assets/font/GothicA1-Light.ttf');
 }

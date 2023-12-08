@@ -2,7 +2,7 @@ import React from 'react';
 import Calendar from '../../components/Calendar';
 import styled from '@emotion/styled';
 import { CalendarContextProvider } from '../../context/CalendarContext';
-import TodoList from './TodoList';
+import TodoList from '../../components/TodoList';
 
 const MainContainer = styled.div``;
 const TodoContainer = styled.div`

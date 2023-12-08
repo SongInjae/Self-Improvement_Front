@@ -40,7 +40,15 @@ const IconStyled = styled(Icon)`
   cursor: pointer;
 `;
 
-const Header = ({ title, isKorean, isPrev, isPlus, isOption, onClick }) => {
+const Header = ({
+  title,
+  isKorean,
+  isPrev,
+  isPlus,
+  isOption,
+  onClick,
+  ...props
+}) => {
   const navigate = useNavigate();
 
   const handlePrevClick = () => {
@@ -62,7 +70,7 @@ const Header = ({ title, isKorean, isPrev, isPlus, isOption, onClick }) => {
   );
 
   return (
-    <HeaderContainer>
+    <HeaderContainer {...props}>
       <LeftComponent isPrev={isPrev}>{isPrev && Prev}</LeftComponent>
       <Title isKorean={isKorean}>{title}</Title>
       <RightComponent>

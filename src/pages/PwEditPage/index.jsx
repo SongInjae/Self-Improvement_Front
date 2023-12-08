@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import postRegister from '../../apis/auth/register';
-import { useForm } from 'react-hook-form';
 import { useRef } from 'react';
 import ColorContext from '../../context/SettingColor';
 
@@ -172,7 +171,7 @@ const PwEditPage = () => {
 
   return (
     <Wrapper>
-      <SettingTitle title="비밀번호 변경"></SettingTitle>
+      <SettingTitle isKorean title="비밀번호 변경"></SettingTitle>
       <PEWrapper>
         <CurrentPW>
           <PWTxt>현재 비밀번호</PWTxt>

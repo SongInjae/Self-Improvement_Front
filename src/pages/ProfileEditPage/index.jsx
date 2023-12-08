@@ -229,13 +229,16 @@ const InputFile = styled.input`
 
 const ProfileEditPage = () => {
   const { state, action } = useContext(ColorContext);
-  const [profilePicUrl, setProfilePicUrl] = useState(
-    'src/assets/image/profileimg.png',
-  );
+  const [profilePicUrl, setProfilePicUrl] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [intro, setIntro] = useState('');
 
   useEffect(() => {
     const getprofile = getProfileEdit();
     console.log(getprofile);
+    setProfilePicUrl(getprofile.myProfileImageURL);
+    setNickname(getprofile.memberName);
+    setIntro(getprofile.selfIntroduction);
   }, []);
 
   const handleFileUpload = (event) => {
@@ -255,8 +258,6 @@ const ProfileEditPage = () => {
   const navigateToAnotherPage = () => {
     navigate('/user'); // 이동할 페이지의 경로를 지정
   };
-
-  const [nickname, setNickname] = useState('');
 
   const handleNicknameChange = (event) => {
     const validInput = event.target.value.replace(
@@ -298,7 +299,7 @@ const ProfileEditPage = () => {
 
   return (
     <Wrapper>
-      <SettingTitle title="프로필 수정"></SettingTitle>
+      <SettingTitle isKorean title="프로필 수정"></SettingTitle>
       <Picture>
         <ProfilePic src={profilePicUrl}></ProfilePic>
         <AddPicButton color={state.color}>

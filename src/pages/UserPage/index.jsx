@@ -341,6 +341,7 @@ const UserPage = () => {
   return (
     <Wrapper>
       <PageText
+        isKorean
         isOption
         title="마이 페이지"
         onClick={handleOptionClick}

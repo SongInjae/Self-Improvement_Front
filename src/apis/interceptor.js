@@ -7,3 +7,5 @@ const setToken = (config) => {
 
   return config;
 };
+
+export { setToken };

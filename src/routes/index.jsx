@@ -16,10 +16,7 @@ import {
   PwEditPage,
   PostUploadPage,
   ProfileEditPage,
-<<<<<<< HEAD
   PostCommentPage,
-=======
->>>>>>> 42cbf67 (fix: 재효 중간점검)
 } from '../pages';
 
 export const router = createBrowserRouter([

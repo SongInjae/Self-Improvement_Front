@@ -251,6 +251,9 @@ const ProfileEditPage = () => {
   useEffect(() => {
     const getprofile = getProfileEdit();
     console.log(getprofile);
+    setProfilePicUrl(getprofile.myProfileImageURL);
+    setNickname(getprofile.memberName);
+    setIntro(getprofile.selfIntroduction);
   }, []);
 
   const handleFileUpload = (event) => {

@@ -19,14 +19,16 @@ const PostWrapper = styled.div`
 const PostImg = styled.img`
   width: 100%;
   height: 10rem;
+  cursor: pointer;
 `;
 const DefaultImageWrapper = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 10rem;
   background-color: lightgray;
-  justify-content: center;
-  align-items: center;
+  cursor: pointer;
 `;
 
 const PostBoard = () => {
@@ -40,22 +42,26 @@ const PostBoard = () => {
     };
     getBoardAPI();
   }, []);
-
+  console.log(posts);
   return (
     <PostBoardContainer>
       <PostWrapper>
         {posts &&
-          posts.map(({ imageUrl, articleId }) => (
-            <DefaultImageWrapper
-              onClick={() => navigate(`detail/${articleId}`)}
-            >
-              {imageUrl ? (
-                <PostImg src={imageUrl} />
-              ) : (
-                <FaFileImage size={'40%'} />
-              )}
-            </DefaultImageWrapper>
-          ))}
+          posts.map(({ imageUrl, articleId }) =>
+            imageUrl ? (
+              <PostImg
+                src={imageUrl}
+                onClick={() => navigate(`detail/${articleId}`)}
+              />
+            ) : (
+              <DefaultImageWrapper>
+                <FaFileImage
+                  size={'40%'}
+                  onClick={() => navigate(`detail/${articleId}`)}
+                />
+              </DefaultImageWrapper>
+            ),
+          )}
       </PostWrapper>
     </PostBoardContainer>
   );

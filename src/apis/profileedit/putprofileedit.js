@@ -14,9 +14,8 @@ const putProfileEdit = async ({
     type: 'application/json',
   });
   formData.append('data', data);
-
   formData.append('image', profileImageUrl);
-  //console.log(data, formData);
+
   await axiosClient.put('/api/myinfo', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',

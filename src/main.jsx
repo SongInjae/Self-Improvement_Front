@@ -6,7 +6,6 @@ import './index.css';
 import { worker } from './mocks/broswer';
 
 if (import.meta.env.NODE_ENV === 'development') {
-  console.log('22');
   worker.start();
 }
 

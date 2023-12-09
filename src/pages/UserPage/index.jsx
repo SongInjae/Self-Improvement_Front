@@ -328,7 +328,7 @@ const UserPage = () => {
   useEffect(() => {
     const getprofile = async () => {
       const data = await getProfileEdit();
-      setProfilePicUrl(data.myProfileImageURL);
+      setProfilePicUrl(data.myProfileImageUrl);
       setNickname(data.memberName);
       setIntro(data.selfIntroduction);
       setShowFolCount(data.followCount);

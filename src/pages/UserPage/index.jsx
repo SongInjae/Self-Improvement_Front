@@ -316,10 +316,13 @@ const FLPFollower = styled.div`
 const UserPage = () => {
   const navigate = useNavigate();
   const { state, action } = useContext(ColorContext);
+
   const [showFolList, setShowFolList] = useState(false);
   const [showFolerList, setShowFolerList] = useState(false);
+
   const [showFolCount, setShowFolCount] = useState(false);
   const [showFolerCount, setShowFolerCount] = useState(false);
+
   const [showBackGround, setShowBackGround] = useState(false);
   const [profilePicUrl, setProfilePicUrl] = useState();
   const [nickname, setNickname] = useState('');
@@ -348,11 +351,14 @@ const UserPage = () => {
   };
 
   const handleFollowerClick = () => {
-    setShowFolList(!showFolerList);
+    showFolerList(!showFolerList);
   };
 
   const handleFollowingBGClick = () => {
     setShowFolList(false);
+  };
+
+  const handleFollowerBGClick = () => {
     setShowFolerList(false);
   };
 
@@ -450,7 +456,7 @@ const UserPage = () => {
         </BackGround>
       )}
       {showFolerList && (
-        <BackGround onClick={handleFollowingBGClick}>
+        <BackGround onClick={handleFollowerBGClick}>
           <FolListPage>
             <FLPTopBar></FLPTopBar>
             <FLPText>팔로워 목록</FLPText>

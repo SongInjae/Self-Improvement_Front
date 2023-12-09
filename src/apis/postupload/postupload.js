@@ -6,8 +6,6 @@ const postUpload = async ({ content, imageUrl, tag }) => {
     imageUrl,
     tag,
   });
-
-  localStorage.setItem('token', data.token);
 };
 
 export default postUpload;

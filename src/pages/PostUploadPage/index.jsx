@@ -296,7 +296,9 @@ const PostUploadPage = () => {
 
   return (
     <Wrapper>
-      <SettingTitle title="게시물 업로드">게시물 업로드</SettingTitle>
+      <SettingTitle isKorean title="게시물 업로드">
+        게시물 업로드
+      </SettingTitle>
       <PEWrapper>
         <Post>
           <PostText>게시글 작성</PostText>

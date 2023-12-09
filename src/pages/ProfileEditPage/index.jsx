@@ -249,7 +249,6 @@ const ProfileEditPage = () => {
   }, []);
 
   useEffect(() => {
-<<<<<<< HEAD
     const getprofile = async () => {
       const data = await getProfileEdit();
       setProfilePicUrl(data.myProfileImageURL);
@@ -257,13 +256,6 @@ const ProfileEditPage = () => {
       setIntro(data.selfIntroduction);
     };
     getprofile();
-=======
-    const getprofile = getProfileEdit();
-    console.log(getprofile);
-    setProfilePicUrl(getprofile.myProfileImageURL);
-    setNickname(getprofile.memberName);
-    setIntro(getprofile.selfIntroduction);
->>>>>>> c1ffb22 (fix: 중간점검 2차)
   }, []);
 
   const handleFileUpload = (event) => {

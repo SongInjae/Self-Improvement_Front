@@ -330,7 +330,7 @@ const FLPFollower = styled.div`
   margin-left: auto;
 `;
 
-const UserPage = () => {
+const OUserPage = () => {
   const navigate = useNavigate();
   const { state, action } = useContext(ColorContext);
 
@@ -527,4 +527,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default OUserPage;

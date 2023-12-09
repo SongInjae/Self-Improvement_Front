@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
-import postUpload from '../../apis/postupload/postupload';
+import postpostUpload from '../../apis/postupload/postupload';
 
 const Wrapper = styled.div`
   display: flex;
@@ -212,6 +212,7 @@ const PostUploadPage = () => {
   const navigate = useNavigate();
   const { state, action } = useContext(ColorContext);
   const [text, setText] = useState();
+  const [imgfile, setimgfile] = useState();
   const [tagItem, setTagItem] = useState('');
   const [tagList, setTagList] = useState([]);
 
@@ -221,8 +222,10 @@ const PostUploadPage = () => {
 
   const [pics, setPics] = useState([]);
   const [count, setCount] = useState(0);
+
   const addPic = (event) => {
     const file = event.target.files[0];
+    setimgfile(file);
 
     if (file && pics.length < 3) {
       const reader = new FileReader();
@@ -267,9 +270,10 @@ const PostUploadPage = () => {
     setTagList((prevTagList) => {
       const updatedTagList = [...prevTagList, tagItem];
       setTagItem('');
-      console.log(updatedTagList);
       return updatedTagList;
     });
+
+    console.log(tagList);
   };
 
   const deleteTagItem = (e) => {
@@ -290,7 +294,7 @@ const PostUploadPage = () => {
 
   const handleFormUpload = async (e) => {
     e.preventDefault();
-    await postLogin({ content: text, imageUrl: pics, tag: tagList });
+    await postpostUpload({ content: text, imageUrl: imgfile, tag: tagList });
     navigate('/user');
   };
 
@@ -370,7 +374,9 @@ const PostUploadPage = () => {
       </PEWrapper>
       <Button>
         <CancelButton onClick={navigateToAnotherPage}>취소</CancelButton>
-        <SaveButton color={state.color}>게시</SaveButton>
+        <SaveButton color={state.color} onClick={handleFormUpload}>
+          게시
+        </SaveButton>
       </Button>
     </Wrapper>
   );

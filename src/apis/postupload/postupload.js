@@ -1,11 +1,22 @@
 import { axiosClient } from '../axiosClient';
 
-const postUpload = async ({ content, imageUrl, tag }) => {
-  const { data } = await axiosClient.post('/api/articles', {
+const postpostUpload = async ({ content, imageUrl, tag }) => {
+  const formData = new FormData();
+  const dataRequest = {
     content,
-    imageUrl,
-    tag,
+    tag: tag.join(),
+  };
+  const data = new Blob([JSON.stringify(dataRequest)], {
+    type: 'application/json',
+  });
+  formData.append('data', data);
+  formData.append('image', imageUrl);
+
+  await axiosClient.post('/api/articles', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };
 
-export default postUpload;
+export default postpostUpload;

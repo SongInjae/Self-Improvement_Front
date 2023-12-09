@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import UserInfo from '../../components/UserInfo';
 import Header from '../../components/Header';
 import { FaRegHeart, FaRegComment } from 'react-icons/fa';
+import { useParams } from 'react-router-dom';
+import getBoardDetail from '../../apis/board/getBoardDetail';
 
 const PostDetailContainer = styled.div``;
 const HeaderStyled = styled(Header)`
@@ -14,7 +16,6 @@ const UserInfoStyled = styled(UserInfo)`
 const PostImg = styled.img`
   width: 100%;
   height: 30rem;
-  background-color: red;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
 `;
@@ -49,15 +50,27 @@ const PostContent = styled.div`
 `;
 
 const PostDetailPage = () => {
+  const [post, setPost] = useState('');
+  const { id } = useParams();
+
+  useEffect(() => {
+    const getBoardDetailAPI = async () => {
+      const data = await getBoardDetail({ articleId: id });
+      setPost(data);
+    };
+
+    getBoardDetailAPI();
+  }, []);
+
   return (
     <PostDetailContainer>
       <HeaderStyled title="피드" isPrev isKorean />
       <UserInfoStyled />
-      <PostImg />
+      <PostImg src={post?.imageUrl} />
       <PostSnsWrapper>
         <PostLikeWrapper>
           <FaRegHeart />
-          <PostLikeText>134</PostLikeText>
+          <PostLikeText>{post?.likeCount}</PostLikeText>
         </PostLikeWrapper>
         <PostCommentWrapper>
           <FaRegComment />

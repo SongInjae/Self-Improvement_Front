@@ -249,11 +249,13 @@ const ProfileEditPage = () => {
   }, []);
 
   useEffect(() => {
-    const getprofile = getProfileEdit();
-    console.log(getprofile);
-    setProfilePicUrl(getprofile.myProfileImageURL);
-    setNickname(getprofile.memberName);
-    setIntro(getprofile.selfIntroduction);
+    const getprofile = async () => {
+      const data = await getProfileEdit();
+      setProfilePicUrl(data.myProfileImageURL);
+      setNickname(data.memberName);
+      setIntro(data.selfIntroduction);
+    };
+    getprofile();
   }, []);
 
   const handleFileUpload = (event) => {

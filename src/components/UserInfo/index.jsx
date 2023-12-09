@@ -5,8 +5,14 @@ import { FaUserCircle } from 'react-icons/fa';
 const UserInfoWrapper = styled.div`
   display: flex;
   gap: 0.3rem;
+  cursor: pointer;
 `;
-const UserProfile = styled.img``;
+const UserProfile = styled.img`
+  width: 1rem;
+  height: 1rem;
+  object-fit: cover;
+  border-radius: 50%;
+`;
 const UserName = styled.div``;
 const UserFollower = styled.div`
   position: relative;
@@ -15,12 +21,17 @@ const UserFollower = styled.div`
   font-size: 0.7rem;
 `;
 
-const UserInfo = ({ isFollwer = false, ...props }) => {
+const UserInfo = ({
+  userFollwer = false,
+  userProfileUrl,
+  userName,
+  ...props
+}) => {
   return (
     <UserInfoWrapper {...props}>
-      <FaUserCircle />
-      <UserName>송인재</UserName>
-      {isFollwer && <UserFollower>114 Follwer</UserFollower>}
+      {userProfileUrl ? <UserProfile src={userProfileUrl} /> : <FaUserCircle />}
+      <UserName>{userName ? userName : '사용자 없음'}</UserName>
+      {userFollwer && <UserFollower>{userFollwer} Follwer</UserFollower>}
     </UserInfoWrapper>
   );
 };

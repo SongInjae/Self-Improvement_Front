@@ -1,8 +1,9 @@
-import React from 'react';
 import SearchInput from '../../components/common/SearchInput';
 import SortByPost from '../../components/SortByPost';
 import PostBoard from '../../components/PostBoard';
 import styled from '@emotion/styled';
+import postSearchBoard from '../../apis/board/posSearchBoard';
+import { useState } from 'react';
 
 const PostPageWrapper = styled.div`
   width: 100%;
@@ -10,11 +11,18 @@ const PostPageWrapper = styled.div`
 `;
 
 const PostPage = () => {
+  const [posts, setPosts] = useState(null);
+
+  const handleChangeInput = async ({ debounceValue }) => {
+    if (debounceValue) setPosts(await postSearchBoard({ tags: debounceValue }));
+    else setPosts(null);
+  };
+
   return (
     <PostPageWrapper>
-      <SearchInput />
+      <SearchInput onChange={handleChangeInput} />
       <SortByPost />
-      <PostBoard />
+      <PostBoard data={posts} />
     </PostPageWrapper>
   );
 };

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdOutlineSearch } from 'react-icons/md';
+import useDebounce from '../../../hooks/useDebounce';
 
 const SearchInputContainer = styled.div`
   display: flex;
@@ -20,11 +21,22 @@ const Search = styled.input`
   font-size: 1rem;
 `;
 
-const SearchInput = () => {
+const SearchInput = ({ onChange }) => {
+  const [inputValue, setInputValue] = useState('');
+  const debounceValue = useDebounce({ value: inputValue, delay: 300 });
+
+  useEffect(() => {
+    onChange({ debounceValue });
+  }, [debounceValue]);
+
   return (
     <SearchInputContainer>
       <MdOutlineSearch size="1.5rem" color="gray" />
-      <Search placeholder="Search" />
+      <Search
+        placeholder="Search"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
     </SearchInputContainer>
   );
 };

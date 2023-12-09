@@ -231,17 +231,17 @@ const InputFile = styled.input`
 `;
 
 const ProfileEditPage = () => {
-  const { state, action } = useContext(ColorContext);
-  const [profilePicUrl, setProfilePicUrl] = useState(
-    'src/assets/image/profileimg.png',
-  );
+  const { state } = useContext(ColorContext);
+  const [profilePicUrl, setProfilePicUrl] = useState('');
   const [nickname, setNickname] = useState('');
   const [intro, setIntro] = useState('');
+  const [imageTmp, setImageTmp] = useState('');
 
   useEffect(() => {
     const getprofile = async () => {
       const data = await getProfileEdit();
-      setProfilePicUrl(data.myProfileImageURL);
+      setProfilePicUrl(data.myProfileImageUrl);
+      setImageTmp(data.myProfileImageUrl);
       setNickname(data.memberName);
       setIntro(data.selfIntroduction);
     };
@@ -255,8 +255,7 @@ const ProfileEditPage = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target.result;
-        console.log(e);
-        //setProfilePicUrl(imageUrl);
+        setImageTmp(imageUrl);
       };
       reader.readAsDataURL(file);
     }
@@ -315,7 +314,7 @@ const ProfileEditPage = () => {
     <Wrapper>
       <SettingTitle isKorean title="프로필 수정"></SettingTitle>
       <Picture>
-        <ProfilePic src={profilePicUrl}></ProfilePic>
+        <ProfilePic src={imageTmp}></ProfilePic>
         <AddPicButton color={state.color}>
           <label htmlFor="fileUpload">
             <Icon name="plus" size="30"></Icon>

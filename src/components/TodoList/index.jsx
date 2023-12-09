@@ -74,7 +74,7 @@ const TodoList = () => {
   useEffect(() => {
     const getData = async () => {
       const data = await getTodayPlan({ date: transformDate(selectDay) });
-      setTodoList(data);
+      if (data) setTodoList(data.schedules);
     };
 
     getData();
@@ -85,7 +85,7 @@ const TodoList = () => {
       const newState = [...prevState];
       newState[idx] = {
         ...newState[idx],
-        checked: !prevState[idx].checked,
+        isDone: !prevState[idx].isDone,
       };
 
       return newState;
@@ -93,15 +93,16 @@ const TodoList = () => {
   };
   return (
     <>
-      {todoList.map((item, idx) => (
-        <TodoWrapper key={item.title} check={item.checked}>
-          <TodoItem>{item.title}</TodoItem>
-          <Checkbox
-            check={item.checked}
-            onClick={() => handleCheckChange(idx)}
-          />
-        </TodoWrapper>
-      ))}
+      {todoList &&
+        todoList.map((item, idx) => (
+          <TodoWrapper key={item.headline} check={item.isDone}>
+            <TodoItem>{item.headline}</TodoItem>
+            <Checkbox
+              check={item.isDone}
+              onClick={() => handleCheckChange(idx)}
+            />
+          </TodoWrapper>
+        ))}
       <AddTodo onClick={() => navigate('/todayplan')}>+</AddTodo>
     </>
   );

@@ -1,10 +1,11 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import Icon from '../../components/common/Icon';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
+import postUpload from '../../apis/postupload/postupload';
 
 const Wrapper = styled.div`
   display: flex;
@@ -116,7 +117,6 @@ const DeleteButton = styled.button`
   top: 3px;
   right: 3px;
 `;
-const CautionTxt = styled.div``;
 
 const Button = styled.div`
   display: flex;
@@ -135,6 +135,7 @@ const CancelButton = styled.button`
   border: 2px rgba(128, 128, 128, 0.3);
   font-size: 17px;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 const SaveButton = styled.button`
@@ -146,6 +147,7 @@ const SaveButton = styled.button`
   font-size: 17px;
   font-weight: bold;
   margin-left: 30px;
+  cursor: pointer;
 `;
 
 const AddPicButton = styled.div``;
@@ -154,15 +156,17 @@ const InputFile = styled.input``;
 
 const TagBox = styled.div`
   display: flex;
+  flex-direction: row; /* Set flex-direction to row for horizontal scrolling */
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Prevent wrapping to the next line */
   min-height: 50px;
   padding: 0 10px;
-  border: 2px solid rgba(128, 128, 128, 0.3);
+  border: 2px solid rgba(128, 128, 128, 0.6);
   border-radius: 10px;
-  width: 330px;
-  height: 70px;
-  overscroll-x: auto;
+  width: 100%;
+  height: 71px;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  background-color: rgba(128, 128, 128, 0.1);
 `;
 
 const TagItem = styled.div`
@@ -171,12 +175,12 @@ const TagItem = styled.div`
   justify-content: space-between;
   margin: 5px;
   padding: 5px;
-  background-color: ${ORIGINAL_YELLOW};
+  background-color: ${({ color }) => color};
   border-radius: 5px;
   color: white;
   font-size: 15px;
-  width: auto;
-  min-width: 50px;
+  width: 85px;
+  min-width: 85px;
   height: 30px;
 `;
 
@@ -196,7 +200,7 @@ const TagButton = styled.button`
 
 const TagInput = styled.input`
   display: inline-flex;
-  min-width: 150px;
+  width: 30px;
   background: transparent;
   border: none;
   outline: none;
@@ -207,13 +211,16 @@ const TagInput = styled.input`
 const PostUploadPage = () => {
   const navigate = useNavigate();
   const { state, action } = useContext(ColorContext);
+  const [text, setText] = useState();
+  const [tagItem, setTagItem] = useState('');
+  const [tagList, setTagList] = useState([]);
 
   const navigateToAnotherPage = () => {
     navigate('/user'); // 이동할 페이지의 경로를 지정
   };
 
   const [pics, setPics] = useState([]);
-
+  const [count, setCount] = useState(0);
   const addPic = (event) => {
     const file = event.target.files[0];
 
@@ -224,16 +231,13 @@ const PostUploadPage = () => {
 
         setPics((prevPics) => [
           ...prevPics,
-          <PicBox key={prevPics.length}>
-            <img src={placeholderImageUrl} alt={`Pic ${prevPics.length + 1}`} />
-            <DeleteButton
-              color={state.color}
-              onClick={() => removePic(prevPics.length)}
-            >
-              x
-            </DeleteButton>
-          </PicBox>,
+          {
+            id: count,
+            imageUrl: placeholderImageUrl,
+          },
         ]);
+
+        setCount((prevCount) => prevCount + 1);
       };
 
       reader.readAsDataURL(file);
@@ -242,17 +246,16 @@ const PostUploadPage = () => {
     }
   };
 
-  const removePic = (index) => {
-    // Function to remove a picture based on its index
+  useEffect(() => {
+    console.log(pics);
+  }, [pics]);
+
+  const removePic = (id) => {
     setPics((prevPics) => {
-      const newPics = [...prevPics];
-      newPics.splice(index, 1);
+      const newPics = prevPics.filter((pic) => pic.id !== id);
       return newPics;
     });
   };
-
-  const [tagItem, setTagItem] = useState('');
-  const [tagList, setTagList] = useState([]);
 
   const onKeyPress = (e) => {
     if (e.target.value.length !== 0 && e.key === 'Enter') {
@@ -261,10 +264,12 @@ const PostUploadPage = () => {
   };
 
   const submitTagItem = () => {
-    let updatedTagList = [...tagList];
-    updatedTagList.push(tagItem);
-    setTagList(updatedTagList);
-    setTagItem('');
+    setTagList((prevTagList) => {
+      const updatedTagList = [...prevTagList, tagItem];
+      setTagItem('');
+      console.log(updatedTagList);
+      return updatedTagList;
+    });
   };
 
   const deleteTagItem = (e) => {
@@ -283,21 +288,30 @@ const PostUploadPage = () => {
     fileInputRef.current.click();
   };
 
+  const handleFormUpload = async (e) => {
+    e.preventDefault();
+    await postLogin({ content: text, imageUrl: pics, tag: tagList });
+    navigate('/user');
+  };
+
   return (
     <Wrapper>
       <SettingTitle title="게시물 업로드">게시물 업로드</SettingTitle>
       <PEWrapper>
         <Post>
           <PostText>게시글 작성</PostText>
-          <PostBox maxLength={200}></PostBox>
-          <CautionTxt></CautionTxt>
+          <PostBox
+            maxLength={200}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          ></PostBox>
         </Post>
         <Tag>
           <TagText>태그 추가</TagText>
           <TagBox>
             {tagList.map((tagItem, index) => {
               return (
-                <TagItem key={index}>
+                <TagItem key={index} color={state.color}>
                   <Text>{tagItem}</Text>
                   <TagButton onClick={deleteTagItem}>x</TagButton>
                 </TagItem>
@@ -333,7 +347,23 @@ const PostUploadPage = () => {
               multiple
             />
           </AddPicButton>
-          <Sel_Pic>{pics}</Sel_Pic>
+          <Sel_Pic>
+            {pics.map((pic) => (
+              <div key={pic.id}>
+                {pic.imageUrl && (
+                  <PicBox>
+                    <img src={pic.imageUrl} alt={`Pic ${pic.id}`} />
+                    <DeleteButton
+                      color={state.color}
+                      onClick={() => removePic(pic.id)}
+                    >
+                      x
+                    </DeleteButton>
+                  </PicBox>
+                )}
+              </div>
+            ))}
+          </Sel_Pic>
         </Pic>
       </PEWrapper>
       <Button>

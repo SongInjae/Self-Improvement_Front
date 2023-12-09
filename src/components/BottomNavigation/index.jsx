@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import styled from '@emotion/styled';
 import Icon from '../common/Icon';
-import { ORIGINAL_YELLOW } from '../../constants/color';
 import { useNavigate } from 'react-router-dom';
+import ColorContext from '../../context/SettingColor';
 
 const NavigationContainer = styled.div`
   display: flex;
@@ -13,9 +13,10 @@ const NavigationContainer = styled.div`
   max-width: 425px;
   width: 100%;
   height: 5rem;
-  background-color: ${ORIGINAL_YELLOW};
+  background-color: ${({ color }) => color};
   box-sizing: border-box;
 `;
+
 const IconStyled = styled(Icon)`
   cursor: pointer;
 `;
@@ -31,11 +32,9 @@ const BottomNavigation = () => {
     navigate('/shareplan');
   };
 
-  /*
   const navigateToBoard = () => {
     navigate('/board');
   };
-  */
 
   const navigateToTodayPlan = () => {
     navigate('/todayplan');
@@ -44,9 +43,9 @@ const BottomNavigation = () => {
   const navigateToUser = () => {
     navigate('/user');
   };
-
+  const { state, action } = useContext(ColorContext);
   return (
-    <NavigationContainer>
+    <NavigationContainer color={state.color}>
       <IconStyled
         name="calendar"
         onClick={navigateToGoal}
@@ -65,7 +64,12 @@ const BottomNavigation = () => {
         size={36}
         color="white"
       />
-      <IconStyled name="globe" size={24} color="white" />
+      <IconStyled
+        name="globe"
+        size={24}
+        color="white"
+        onClick={navigateToBoard}
+      />
       <IconStyled
         name="user"
         onClick={navigateToUser}

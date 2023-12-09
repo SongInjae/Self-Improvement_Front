@@ -185,11 +185,13 @@ const SettingPage = () => {
     setSelectedColor(selectedColor);
     action.setColor(selectedColor);
   };
+
   return (
     <Wrapper>
       <SettingTitle
+        isKorean
         title="설정"
-        isPrev={true} // 또는 isPrev를 true로 설정
+        isPrev
         onClick={handlePrevClick}
       ></SettingTitle>
       <SettingWrapper>

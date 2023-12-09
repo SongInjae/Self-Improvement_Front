@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Icon from '../../components/common/Icon';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
-import setProfilePicUrl from '../PostUploadPage';
+import getProfileEdit from '../../apis/profileedit/getprofileedit';
 
 const Wrapper = styled.div`
   display: flex;
@@ -15,7 +15,9 @@ const Wrapper = styled.div`
   height: calc(100% - 5rem);
 `;
 
-const PageText = styled(Header)``;
+const PageText = styled(Header)`
+  width: 100%;
+`;
 
 const ProfileWrapper = styled.div`
   display: flex;
@@ -316,8 +318,24 @@ const UserPage = () => {
   const { state, action } = useContext(ColorContext);
   const [showFolList, setShowFolList] = useState(false);
   const [showFolerList, setShowFolerList] = useState(false);
+  const [showFolCount, setShowFolCount] = useState(false);
+  const [showFolerCount, setShowFolerCount] = useState(false);
   const [showBackGround, setShowBackGround] = useState(false);
+  const [profilePicUrl, setProfilePicUrl] = useState();
+  const [nickname, setNickname] = useState('');
+  const [intro, setIntro] = useState('');
 
+  useEffect(() => {
+    const getprofile = async () => {
+      const data = await getProfileEdit();
+      setProfilePicUrl(data.myProfileImageURL);
+      setNickname(data.memberName);
+      setIntro(data.selfIntroduction);
+      setShowFolCount(data.followCount);
+      setShowFolerCount(data.followerCount);
+    };
+    getprofile();
+  }, []);
   const navigateToAnotherPage = () => {
     navigate('/postupload'); // 이동할 페이지의 경로를 지정
   };
@@ -348,18 +366,18 @@ const UserPage = () => {
       ></PageText>
       <ProfileWrapper>
         <ProfileSet1>
-          <ProfileImg src={'src/assets/image/profileimg.png'}></ProfileImg>
-          <NickName>jxxhyo22</NickName>
+          <ProfileImg src={profilePicUrl}></ProfileImg>
+          <NickName>{nickname}</NickName>
         </ProfileSet1>
         <ProfileSet2>
-          <Introduce>i am human</Introduce>
+          <Introduce>{intro}</Introduce>
           <Follow>
             <Following onClick={handleFollowingClick}>
-              <FolNum>20</FolNum>
+              <FolNum>{showFolCount}</FolNum>
               <FolText>팔로잉</FolText>
             </Following>
             <Follower onClick={handleFollowerClick}>
-              <FolNum>24</FolNum>
+              <FolNum>{showFolerCount}</FolNum>
               <FolText>팔로워</FolText>
             </Follower>
           </Follow>
@@ -439,7 +457,7 @@ const UserPage = () => {
             <FLPBr></FLPBr>
             <FLPList>
               <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
+                <FLPProfile src={profilePicUrl}></FLPProfile>
                 <FLPNickName>songinjae</FLPNickName>
                 <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
               </FLPUser>

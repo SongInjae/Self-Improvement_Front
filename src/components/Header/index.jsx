@@ -66,7 +66,7 @@ const Header = ({
   );
   const Option = <IconStyled name="settings" size="1.5rem" onClick={onClick} />;
   const Prev = (
-    <IconStyled name="chevron-left" size="1.5rem" onClick={handlePrevClick} />
+    <IconStyled name="chevron-left" size="1.5rem" onClick={onClick} />
   );
 
   return (

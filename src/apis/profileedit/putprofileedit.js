@@ -5,10 +5,22 @@ const putProfileEdit = async ({
   profileImageUrl,
   selfIntroduction,
 }) => {
-  await axiosClient.put('/api/myinfo', {
+  const formData = new FormData();
+  const dataRequest = {
     memberName,
-    profileImageUrl,
     selfIntroduction,
+  };
+  const data = new Blob([JSON.stringify(dataRequest)], {
+    type: 'application/json',
+  });
+  formData.append('data', data);
+
+  formData.append('image', profileImageUrl);
+  //console.log(data, formData);
+  await axiosClient.put('/api/myinfo', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };
 

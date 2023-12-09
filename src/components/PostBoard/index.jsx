@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import { useState, useEffect } from 'react';
 import Drop from '../../assets/image/dropdownArrow.svg';
 import { FaFileImage } from 'react-icons/fa6';
+import getBoard from '../../apis/board/getBoard';
+import { useNavigate } from 'react-router-dom';
 
 const PostBoardContainer = styled.div`
   clear: right;
@@ -28,48 +30,32 @@ const DefaultImageWrapper = styled.div`
 `;
 
 const PostBoard = () => {
+  const [posts, setPosts] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getBoardAPI = async () => {
+      const data = await getBoard();
+      setPosts(data);
+    };
+    getBoardAPI();
+  }, []);
+
   return (
     <PostBoardContainer>
       <PostWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
+        {posts &&
+          posts.map(({ imageUrl, articleId }) => (
+            <DefaultImageWrapper
+              onClick={() => navigate(`detail/${articleId}`)}
+            >
+              {imageUrl ? (
+                <PostImg src={imageUrl} />
+              ) : (
+                <FaFileImage size={'40%'} />
+              )}
+            </DefaultImageWrapper>
+          ))}
       </PostWrapper>
     </PostBoardContainer>
   );

@@ -32,7 +32,7 @@ const LeftComponent = styled(Component)`
 `;
 
 const RightComponent = styled(Component)`
-  right: -8.5rem;
+  right: 1rem;
   cursor: ${({ isOption }) => (isOption ? 'pointer' : 'default')};
 `;
 
@@ -62,11 +62,11 @@ const Header = ({
   };
 
   const Plus = (
-    <IconStyled name="plus-circle" size="1.3rem" onClick={handlePlusClick} />
+    <IconStyled name="plus-circle" size="1.8rem" onClick={handlePlusClick} />
   );
   const Option = <IconStyled name="settings" size="1.5rem" onClick={onClick} />;
   const Prev = (
-    <IconStyled name="chevron-left" size="1.5rem" onClick={handlePrevClick} />
+    <IconStyled name="chevron-left" size="1.5rem" onClick={onClick} />
   );
 
   return (

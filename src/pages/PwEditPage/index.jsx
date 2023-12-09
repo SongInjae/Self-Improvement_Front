@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
+import postRegister from '../../apis/auth/register';
+import { useRef } from 'react';
 import ColorContext from '../../context/SettingColor';
 
 const Wrapper = styled.div`
@@ -16,7 +18,7 @@ const PEWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 750px;
+  height:data:image/svg+xml;base64,%20PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNSIgaGVpZ2h0PSIyNSIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWFycm93LXJpZ2h0Ij48bGluZSB4MT0iNSIgeTE9IjEyIiB4Mj0iMTkiIHkyPSIxMiI+PC9saW5lPjxwb2x5bGluZSBwb2ludHM9IjEyIDUgMTkgMTIgMTIgMTkiPjwvcG9seWxpbmU+PC9zdmc+ 750px;
 `;
 
 const CurrentPW = styled.div`
@@ -156,7 +158,7 @@ const PwEditPage = () => {
   };
 
   const navigateToAnotherPage = () => {
-    navigate('/user');
+    navigate('/setting');
   };
 
   const [pwd, setPwd] = useState('');
@@ -169,7 +171,7 @@ const PwEditPage = () => {
 
   return (
     <Wrapper>
-      <SettingTitle title="비밀번호 변경"></SettingTitle>
+      <SettingTitle isKorean title="비밀번호 변경"></SettingTitle>
       <PEWrapper>
         <CurrentPW>
           <PWTxt>현재 비밀번호</PWTxt>

@@ -131,10 +131,12 @@ const ToggleInput = styled.input`
 
 const ProfileNextIcon = styled(Icon)`
   margin-right: 20px;
+  cursor: pointer;
 `;
 
 const PwNextIcon = styled(Icon)`
   margin-right: 20px;
+  cursor: pointer;
 `;
 
 const ColorChoiceIcon = styled(Icon)`
@@ -142,6 +144,7 @@ const ColorChoiceIcon = styled(Icon)`
   border-radius: 100%;
   border: 3px solid ${({ color }) => color};
   background-color: ${({ color }) => color};
+  cursor: pointer;
 `;
 
 const ColorChoice = styled(Github)`
@@ -182,11 +185,13 @@ const SettingPage = () => {
     setSelectedColor(selectedColor);
     action.setColor(selectedColor);
   };
+
   return (
     <Wrapper>
       <SettingTitle
+        isKorean
         title="설정"
-        isPrev={true} // 또는 isPrev를 true로 설정
+        isPrev
         onClick={handlePrevClick}
       ></SettingTitle>
       <SettingWrapper>

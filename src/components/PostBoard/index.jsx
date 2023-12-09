@@ -31,8 +31,8 @@ const DefaultImageWrapper = styled.div`
   cursor: pointer;
 `;
 
-const PostBoard = () => {
-  const [posts, setPosts] = useState('');
+const PostBoard = ({ data }) => {
+  const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,9 +40,14 @@ const PostBoard = () => {
       const data = await getBoard();
       setPosts(data);
     };
-    getBoardAPI();
-  }, []);
-  console.log(posts);
+
+    if (data === null) getBoardAPI();
+  }, [data]);
+
+  useEffect(() => {
+    setPosts(data);
+  }, [data]);
+
   return (
     <PostBoardContainer>
       <PostWrapper>

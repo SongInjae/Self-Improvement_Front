@@ -60,7 +60,7 @@ const PostCommentPage = () => {
   const { id } = useParams();
   const [comments, setComments] = useState(state);
   const [newComment, setNewComment] = useState('');
-  console.log(comments);
+
   const handleSubmitComment = (e) => {
     e.preventDefault();
     const postBoardCommentAPI = async () => {

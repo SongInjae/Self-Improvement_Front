@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const UserInfoWrapper = styled.div`
   display: flex;
@@ -22,13 +23,16 @@ const UserFollower = styled.div`
 `;
 
 const UserInfo = ({
-  userFollwer = false,
-  userProfileUrl,
+  userId,
   userName,
+  userProfileUrl,
+  userFollwer = false,
   ...props
 }) => {
+  const navigate = useNavigate();
+
   return (
-    <UserInfoWrapper {...props}>
+    <UserInfoWrapper onClick={() => navigate(`/page/${userId}`)} {...props}>
       {userProfileUrl ? <UserProfile src={userProfileUrl} /> : <FaUserCircle />}
       <UserName>{userName ? userName : '사용자 없음'}</UserName>
       {userFollwer && <UserFollower>{userFollwer} Follwer</UserFollower>}

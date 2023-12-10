@@ -88,6 +88,7 @@ const PostDetailPage = () => {
     <PostDetailContainer>
       <HeaderStyled title="피드" isPrev isKorean />
       <UserInfoStyled
+        userId={post?.authorId}
         userName={post?.author}
         userProfileUrl={post?.authorProfileImageUrl}
       />

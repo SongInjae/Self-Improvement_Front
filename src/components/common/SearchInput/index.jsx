@@ -21,13 +21,13 @@ const Search = styled.input`
   font-size: 1rem;
 `;
 
-const SearchInput = ({ onChange }) => {
+const SearchInput = ({ isSortChange, onChange }) => {
   const [inputValue, setInputValue] = useState('');
   const debounceValue = useDebounce({ value: inputValue, delay: 300 });
 
   useEffect(() => {
     onChange({ debounceValue });
-  }, [debounceValue]);
+  }, [debounceValue, isSortChange]);
 
   return (
     <SearchInputContainer>

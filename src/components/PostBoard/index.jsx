@@ -14,6 +14,7 @@ const PostWrapper = styled.div`
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 10rem;
   overflow: auto;
 `;
 const PostImg = styled.img`
@@ -31,7 +32,7 @@ const DefaultImageWrapper = styled.div`
   cursor: pointer;
 `;
 
-const PostBoard = ({ data }) => {
+const PostBoard = ({ data, sortStandard }) => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 

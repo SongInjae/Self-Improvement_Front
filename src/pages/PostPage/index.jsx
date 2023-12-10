@@ -29,7 +29,7 @@ const PostPage = () => {
         sortStandard={sortStandard}
         setSortStandard={setSortStandard}
       />
-      <PostBoard data={posts} />
+      <PostBoard data={posts} sortStandard={sortStandard} />
     </PostPageWrapper>
   );
 };

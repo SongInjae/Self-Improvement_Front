@@ -1,13 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
-import Icon from '../../components/common/Icon';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
+import { ORIGINAL_YELLOW } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
 import getProfileEdit from '../../apis/profileedit/getprofileedit';
 import getFollowing from '../../apis/Following/getFollowing';
 import getFollower from '../../apis/follower/getFollower';
+import { FaUserCircle } from 'react-icons/fa';
+import ProfilePost from '../../components/ProfilePost';
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,21 +42,18 @@ const ProfileSet1 = styled.div`
 `;
 
 const ProfileImg = styled.img`
-  width: 110px;
-  height: 110px;
-  margin: 0px 20px;
+  width: 7rem;
+  height: 7rem;
   border-radius: 50%;
   border: 6px solid white;
 `;
 
 const ProfileSet2 = styled.div`
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
 `;
 
 const Introduce = styled.div`
@@ -131,87 +129,12 @@ const ProBr = styled.div`
   }
 `;
 
-const Post = styled.div`
-  position: relative;
-  flex-grow: 1;
-`;
-
-const SelectPost = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid rgba(128, 128, 128, 0.3);
-  width: 100%;
-  height: 45px;
-  justify-content: space-between; /* 양 옆으로 나누기 */
-`;
-
-const PlanButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-`;
-
-const GoalButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-`;
-const PlanIcon = styled(Icon)`
-  width: 25px;
-  height: 25px;
-  margin: 0px 0px 0px 94px;
-`;
-const GoalIcon = styled(Icon)`
-  width: 20px;
-  height: 20px;
-  margin: 0px 98px 0px 0px;
-`;
-
 const Btm = styled.div`
   position: fixed;
   bottom: 0;
   width: 425px;
   height: 83px;
   background-color: ${ORIGINAL_YELLOW};
-`;
-
-const UserPost = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 425px;
-  height: 100%;
-  background-color: rgba(128, 128, 128, 0.08);
-  flex-direction: column;
-`;
-
-const EmptyPost = styled(Icon)`
-  opacity: 0.2;
-`;
-
-const EmptyText = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  margin: 20px;
-  opacity: 0.2;
-`;
-
-const WriteButtonPost = styled(Icon)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  background-color: white;
-  border-radius: 100%;
-  padding: 15px;
-  z-index: 0;
-  position: absolute;
-  bottom: 50px; /* 조정 가능한 값 */
-  right: 20px; /* 조정 가능한 값 */
-  cursor: pointer;
 `;
 
 const BackGround = styled.div`
@@ -342,7 +265,7 @@ const UserPage = () => {
   const [showFolerCount, setShowFolerCount] = useState();
 
   const [showBackGround, setShowBackGround] = useState(false);
-  const [profilePicUrl, setProfilePicUrl] = useState();
+  const [profilePicUrl, setProfilePicUrl] = useState('');
   const [nickname, setNickname] = useState('');
   const [intro, setIntro] = useState('');
   const [id, setId] = useState('');
@@ -381,10 +304,6 @@ const UserPage = () => {
     getprofile();
   }, []);
 
-  const navigateToAnotherPage = () => {
-    navigate('/postupload'); // 이동할 페이지의 경로를 지정
-  };
-
   const handleOptionClick = () => {
     navigate('/setting');
   };
@@ -420,7 +339,11 @@ const UserPage = () => {
       ></PageText>
       <ProfileWrapper>
         <ProfileSet1>
-          <ProfileImg src={profilePicUrl}></ProfileImg>
+          {profilePicUrl ? (
+            <ProfileImg src={profilePicUrl}></ProfileImg>
+          ) : (
+            <FaUserCircle size="7rem" color="gray" />
+          )}
           <NickName>{nickname}</NickName>
         </ProfileSet1>
         <ProfileSet2>
@@ -438,25 +361,7 @@ const UserPage = () => {
         </ProfileSet2>
       </ProfileWrapper>
       <ProBr />
-      <Post>
-        <SelectPost>
-          <PlanButton>
-            <PlanIcon name="grid" size="20"></PlanIcon>
-          </PlanButton>
-          <GoalButton>
-            <GoalIcon name="calendar" size="20"></GoalIcon>
-          </GoalButton>
-        </SelectPost>
-        <UserPost>
-          <EmptyPost name="camera" size="70"></EmptyPost>
-          <EmptyText>게시물 없음</EmptyText>
-          <WriteButtonPost
-            onClick={navigateToAnotherPage}
-            name="plus"
-            size="40"
-          ></WriteButtonPost>
-        </UserPost>
-      </Post>
+      <ProfilePost userId={id} />
       {showFolList && (
         <BackGround>
           <FolDelte onClick={handleFollowingBGClick}></FolDelte>

@@ -107,7 +107,7 @@ const PostDetailPage = () => {
       </PostSnsWrapper>
       <PostContentWrapper>
         <PostNickname>{post?.author}</PostNickname>
-        <PostTag>#{post?.tag}</PostTag>
+        <PostTag>{post?.tag?.map((tag) => `#${tag} `)}</PostTag>
       </PostContentWrapper>
       <PostContent>{post?.content}</PostContent>
     </PostDetailContainer>

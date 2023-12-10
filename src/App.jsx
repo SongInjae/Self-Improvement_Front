@@ -10,7 +10,6 @@ const Background = styled.div`
   border: 1px solid black;
   margin: 0 auto;
   position: relative;
-  box-sizing: border-box;
 `;
 
 const App = () => {

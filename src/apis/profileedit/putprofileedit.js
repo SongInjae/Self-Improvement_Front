@@ -5,6 +5,7 @@ const putProfileEdit = async ({
   profileImageUrl,
   selfIntroduction,
 }) => {
+  console.log(memberName, profileImageUrl, selfIntroduction);
   const formData = new FormData();
   const dataRequest = {
     memberName,

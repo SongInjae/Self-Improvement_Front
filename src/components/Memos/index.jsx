@@ -38,7 +38,6 @@ const TodoItem = styled.div`
 `;
 
 const Memos = ({ posts }) => {
-  console.log(posts);
   return (
     <MemosContainer>
       {posts &&

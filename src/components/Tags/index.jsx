@@ -33,7 +33,12 @@ const Tags = ({ setPosts, ...props }) => {
   useEffect(() => {
     const getTagPlanAPI = async ({ tag }) => {
       const data = await getInterestPlan({ interests: tag });
-      setPosts(data);
+
+      if (data?.schedules) {
+        setPosts(data?.schedules);
+      } else {
+        setPosts(null);
+      }
     };
     getTagPlanAPI({ tag });
   }, [tag]);

@@ -248,6 +248,16 @@ const ProfileEditPage = () => {
     getprofile();
   }, []);
 
+  useEffect(() => {
+    const getprofile = async () => {
+      const data = await getProfileEdit();
+      setProfilePicUrl(data.myProfileImageURL);
+      setNickname(data.memberName);
+      setIntro(data.selfIntroduction);
+    };
+    getprofile();
+  }, []);
+
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     setProfilePicUrl(file);

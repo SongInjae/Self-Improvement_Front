@@ -6,8 +6,11 @@ import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
 import getProfileEdit from '../../apis/profileedit/getprofileedit';
+import getOtherUserPage from '../../apis/otheruser/getotheruser';
+import { useParams } from 'react-router-dom';
 import getFollowing from '../../apis/Following/getFollowing';
 import getFollower from '../../apis/follower/getFollower';
+import postApplyFollwer from '../../apis/applyfollow/applyfollow';
 
 const Wrapper = styled.div`
   display: flex;
@@ -115,6 +118,22 @@ const Follower = styled.div`
   cursor: pointer;
 `;
 
+const FolButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 35px;
+  cursor: pointer;
+  margin-top: 8px;
+  border-radius: 5px;
+  border: none;
+  background-color: ${({ color, isFollowing }) =>
+    isFollowing ? 'gray' : color};
+  color: ${({ isFollowing }) => (isFollowing ? 'black' : 'white')};
+`;
+
 const FolText = styled.div`
   margin-top: 4px;
 `;
@@ -124,7 +143,7 @@ const FolNum = styled.div``;
 const ProBr = styled.div`
   &::before {
     content: '';
-    margin: 20px 0px 0px 0px;
+    margin: 5px 0px 0px 0px;
     display: block;
     height: 2px;
     background-color: ${ORIGINAL_YELLOW};
@@ -196,22 +215,6 @@ const EmptyText = styled.div`
   font-size: 20px;
   margin: 20px;
   opacity: 0.2;
-`;
-
-const WriteButtonPost = styled(Icon)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  background-color: white;
-  border-radius: 100%;
-  padding: 15px;
-  z-index: 0;
-  position: absolute;
-  bottom: 50px; /* 조정 가능한 값 */
-  right: 20px; /* 조정 가능한 값 */
-  cursor: pointer;
 `;
 
 const BackGround = styled.div`
@@ -308,30 +311,31 @@ const FLPNickName = styled.div`
   font-size: 18px;
 `;
 
-const FLPButton = styled.button`
+const FLPFollowing = styled.div`
   margin: 0px 30px 0px 0px;
-  width: 80px;
+  width: 70px;
   height: 35px;
+  background-color: ${({ color }) => color};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 20px;
   margin-left: auto;
-  border: none;
-  font-size: 15px;
-  font-weight: bold;
 `;
 
-const FLPFollowing = styled(FLPButton)`
-  background-color: ${({ isFollowing, color }) =>
-    isFollowing ? 'gray' : color};
-  color: ${({ isFollowing }) => (isFollowing ? 'white' : 'black')};
-`;
-
-const FLPFollower = styled(FLPButton)`
+const FLPFollower = styled.div`
+  margin: 0px 30px 0px 0px;
+  width: 70px;
+  height: 35px;
   background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  margin-left: auto;
 `;
-const UserPage = () => {
+
+const OUserPage = () => {
   const navigate = useNavigate();
   const { state, action } = useContext(ColorContext);
 
@@ -343,14 +347,15 @@ const UserPage = () => {
 
   const [showBackGround, setShowBackGround] = useState(false);
   const [profilePicUrl, setProfilePicUrl] = useState();
-  const [nickname, setNickname] = useState('');
+  const [memberName, setNickname] = useState('');
   const [intro, setIntro] = useState('');
-  const [id, setId] = useState('');
+  const [articleCount, setarticleCount] = useState('');
+  const { id } = useParams();
 
   const [follower, setFollower] = useState('');
   const [following, setFollowing] = useState('');
 
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState('');
 
   useEffect(() => {
     const getFollowingAPI = async () => {
@@ -369,17 +374,17 @@ const UserPage = () => {
   }, [id]);
 
   useEffect(() => {
-    const getprofile = async () => {
-      const data = await getProfileEdit();
+    const getOtherUser = async () => {
+      const data = await getOtherUserPage({ Id: id });
       setProfilePicUrl(data.myProfileImageUrl);
       setNickname(data.memberName);
       setIntro(data.selfIntroduction);
       setShowFolCount(data.followCount);
       setShowFolerCount(data.followerCount);
-      setId(data.memberId);
+      setarticleCount(articleCount);
     };
-    getprofile();
-  }, []);
+    getOtherUser();
+  }, [isFollowing]);
 
   const navigateToAnotherPage = () => {
     navigate('/postupload'); // 이동할 페이지의 경로를 지정
@@ -406,22 +411,22 @@ const UserPage = () => {
     setshowFolerList(false);
   };
 
-  const handleFollowingButtonClick = () => {
-    setIsFollowing(!isFollowing); // Toggle the following state
+  const handleFollowingBtnClick = (e) => {
+    postApplyFollwer({ id });
+    setIsFollowing((prevState) => !prevState);
   };
 
   return (
     <Wrapper>
       <PageText
         isKorean
-        isOption
-        title="마이 페이지"
+        title={memberName}
         onClick={handleOptionClick}
       ></PageText>
       <ProfileWrapper>
         <ProfileSet1>
           <ProfileImg src={profilePicUrl}></ProfileImg>
-          <NickName>{nickname}</NickName>
+          <NickName>{memberName}</NickName>
         </ProfileSet1>
         <ProfileSet2>
           <Follow>
@@ -434,9 +439,17 @@ const UserPage = () => {
               <FolText>팔로워</FolText>
             </Follower>
           </Follow>
+
           <Introduce>{intro}</Introduce>
         </ProfileSet2>
       </ProfileWrapper>
+      <FolButton
+        color={state.color}
+        isFollowing={isFollowing}
+        onClick={handleFollowingBtnClick}
+      >
+        {isFollowing ? '팔로잉' : '팔로우'}
+      </FolButton>
       <ProBr />
       <Post>
         <SelectPost>
@@ -450,11 +463,6 @@ const UserPage = () => {
         <UserPost>
           <EmptyPost name="camera" size="70"></EmptyPost>
           <EmptyText>게시물 없음</EmptyText>
-          <WriteButtonPost
-            onClick={navigateToAnotherPage}
-            name="plus"
-            size="40"
-          ></WriteButtonPost>
         </UserPost>
       </Post>
       {showFolList && (
@@ -473,13 +481,7 @@ const UserPage = () => {
                     {follower.some(
                       (follower) => follower.memberName === memberName,
                     ) ? (
-                      <FLPFollowing
-                        color={state.color}
-                        isFollowing={isFollowing}
-                        onClick={handleFollowingButtonClick}
-                      >
-                        {isFollowing ? '팔로우' : '팔로잉'}
-                      </FLPFollowing>
+                      <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
                     ) : (
                       <FLPFollower>팔로우</FLPFollower>
                     )}
@@ -505,12 +507,7 @@ const UserPage = () => {
                     {follower.some(
                       (follower) => follower.memberName === memberName,
                     ) ? (
-                      <FLPFollowing
-                        color={state.color}
-                        isFollowing={isFollowing}
-                      >
-                        {isFollowing ? '팔로우' : '팔로잉'}
-                      </FLPFollowing>
+                      <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
                     ) : (
                       <FLPFollower>팔로우</FLPFollower>
                     )}
@@ -525,4 +522,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default OUserPage;

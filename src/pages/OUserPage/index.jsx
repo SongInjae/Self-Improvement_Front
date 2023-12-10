@@ -6,6 +6,11 @@ import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
 import getProfileEdit from '../../apis/profileedit/getprofileedit';
+import getOtherUserPage from '../../apis/otheruser/getotheruser';
+import { useParams } from 'react-router-dom';
+import getFollowing from '../../apis/Following/getFollowing';
+import getFollower from '../../apis/follower/getFollower';
+import postApplyFollwer from '../../apis/applyfollow/applyfollow';
 
 const Wrapper = styled.div`
   display: flex;
@@ -113,6 +118,22 @@ const Follower = styled.div`
   cursor: pointer;
 `;
 
+const FolButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 35px;
+  cursor: pointer;
+  margin-top: 8px;
+  border-radius: 5px;
+  border: none;
+  background-color: ${({ color, isFollowing }) =>
+    isFollowing ? 'gray' : color};
+  color: ${({ isFollowing }) => (isFollowing ? 'black' : 'white')};
+`;
+
 const FolText = styled.div`
   margin-top: 4px;
 `;
@@ -122,7 +143,7 @@ const FolNum = styled.div``;
 const ProBr = styled.div`
   &::before {
     content: '';
-    margin: 20px 0px 0px 0px;
+    margin: 5px 0px 0px 0px;
     display: block;
     height: 2px;
     background-color: ${ORIGINAL_YELLOW};
@@ -194,22 +215,6 @@ const EmptyText = styled.div`
   font-size: 20px;
   margin: 20px;
   opacity: 0.2;
-`;
-
-const WriteButtonPost = styled(Icon)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  background-color: white;
-  border-radius: 100%;
-  padding: 15px;
-  z-index: 0;
-  position: absolute;
-  bottom: 50px; /* 조정 가능한 값 */
-  right: 20px; /* 조정 가능한 값 */
-  cursor: pointer;
 `;
 
 const BackGround = styled.div`
@@ -342,20 +347,45 @@ const OUserPage = () => {
 
   const [showBackGround, setShowBackGround] = useState(false);
   const [profilePicUrl, setProfilePicUrl] = useState();
-  const [nickname, setNickname] = useState('');
+  const [memberName, setNickname] = useState('');
   const [intro, setIntro] = useState('');
+  const [articleCount, setarticleCount] = useState('');
+  const { id } = useParams();
+
+  const [follower, setFollower] = useState('');
+  const [following, setFollowing] = useState('');
+
+  const [isFollowing, setIsFollowing] = useState('');
 
   useEffect(() => {
-    const getprofile = async () => {
-      const data = await getProfileEdit();
+    const getFollowingAPI = async () => {
+      const data = await getFollowing({ userId: id });
+      setFollowing(data);
+    };
+    if (id !== '') getFollowingAPI();
+  }, [id]);
+
+  useEffect(() => {
+    const getFollowerAPI = async () => {
+      const data = await getFollower({ userId: id });
+      setFollower(data);
+    };
+    if (id !== '') getFollowerAPI();
+  }, [id]);
+
+  useEffect(() => {
+    const getOtherUser = async () => {
+      const data = await getOtherUserPage({ Id: id });
       setProfilePicUrl(data.myProfileImageUrl);
       setNickname(data.memberName);
       setIntro(data.selfIntroduction);
       setShowFolCount(data.followCount);
       setShowFolerCount(data.followerCount);
+      setarticleCount(articleCount);
     };
-    getprofile();
-  }, []);
+    getOtherUser();
+  }, [isFollowing]);
+
   const navigateToAnotherPage = () => {
     navigate('/postupload'); // 이동할 페이지의 경로를 지정
   };
@@ -381,18 +411,22 @@ const OUserPage = () => {
     setshowFolerList(false);
   };
 
+  const handleFollowingBtnClick = (e) => {
+    postApplyFollwer({ id });
+    setIsFollowing((prevState) => !prevState);
+  };
+
   return (
     <Wrapper>
       <PageText
         isKorean
-        isOption
-        title="마이 페이지"
+        title={memberName}
         onClick={handleOptionClick}
       ></PageText>
       <ProfileWrapper>
         <ProfileSet1>
           <ProfileImg src={profilePicUrl}></ProfileImg>
-          <NickName>{nickname}</NickName>
+          <NickName>{memberName}</NickName>
         </ProfileSet1>
         <ProfileSet2>
           <Follow>
@@ -405,9 +439,17 @@ const OUserPage = () => {
               <FolText>팔로워</FolText>
             </Follower>
           </Follow>
+
           <Introduce>{intro}</Introduce>
         </ProfileSet2>
       </ProfileWrapper>
+      <FolButton
+        color={state.color}
+        isFollowing={isFollowing}
+        onClick={handleFollowingBtnClick}
+      >
+        {isFollowing ? '팔로잉' : '팔로우'}
+      </FolButton>
       <ProBr />
       <Post>
         <SelectPost>
@@ -421,11 +463,6 @@ const OUserPage = () => {
         <UserPost>
           <EmptyPost name="camera" size="70"></EmptyPost>
           <EmptyText>게시물 없음</EmptyText>
-          <WriteButtonPost
-            onClick={navigateToAnotherPage}
-            name="plus"
-            size="40"
-          ></WriteButtonPost>
         </UserPost>
       </Post>
       {showFolList && (
@@ -436,41 +473,20 @@ const OUserPage = () => {
             <FLPText>팔로잉 목록</FLPText>
             <FLPBr></FLPBr>
             <FLPList>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>songinjae</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>kimhakyoung</FLPNickName>
-                <FLPFollowing color={state.color}>팔로우</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>kimhakyoung</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>hellokr</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollower color={state.color}>팔로우</FLPFollower>
-              </FLPUser>
+              {following &&
+                following.map(({ myProfileImageUrl, memberName, memberId }) => (
+                  <FLPUser key={memberId}>
+                    <FLPProfile src={myProfileImageUrl}></FLPProfile>
+                    <FLPNickName>{memberName}</FLPNickName>
+                    {follower.some(
+                      (follower) => follower.memberName === memberName,
+                    ) ? (
+                      <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
+                    ) : (
+                      <FLPFollower>팔로우</FLPFollower>
+                    )}
+                  </FLPUser>
+                ))}
             </FLPList>
           </FolListPage>
         </BackGround>
@@ -483,41 +499,20 @@ const OUserPage = () => {
             <FLPText>팔로워 목록</FLPText>
             <FLPBr></FLPBr>
             <FLPList>
-              <FLPUser>
-                <FLPProfile src={profilePicUrl}></FLPProfile>
-                <FLPNickName>songinjae</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>kimhakyoung</FLPNickName>
-                <FLPFollowing color={state.color}>팔로우</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>kimhakyoung</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>hellokr</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollower color={state.color}>팔로우</FLPFollower>
-              </FLPUser>
+              {follower &&
+                follower.map(({ myProfileImageUrl, memberName, memberId }) => (
+                  <FLPUser key={memberId}>
+                    <FLPProfile src={myProfileImageUrl}></FLPProfile>
+                    <FLPNickName>{memberName}</FLPNickName>
+                    {follower.some(
+                      (follower) => follower.memberName === memberName,
+                    ) ? (
+                      <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
+                    ) : (
+                      <FLPFollower>팔로우</FLPFollower>
+                    )}
+                  </FLPUser>
+                ))}
             </FLPList>
           </FolListPage>
         </BackGround>

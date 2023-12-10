@@ -86,7 +86,7 @@ export const router = createBrowserRouter([
         element: <ProfileEditPage />,
       },
       {
-        path: 'otheruser',
+        path: 'otheruser/:id',
         element: <OUserPage />,
       },
     ],

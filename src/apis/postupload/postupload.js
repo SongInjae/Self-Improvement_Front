@@ -4,7 +4,7 @@ const postpostUpload = async ({ content, imageUrl, tag }) => {
   const formData = new FormData();
   const dataRequest = {
     content,
-    tag: tag.join(),
+    tag,
   };
   const data = new Blob([JSON.stringify(dataRequest)], {
     type: 'application/json',

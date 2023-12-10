@@ -6,6 +6,8 @@ import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
 import getProfileEdit from '../../apis/profileedit/getprofileedit';
+import getFollowing from '../../apis/Following/getFollowing';
+import getFollower from '../../apis/follower/getFollower';
 
 const Wrapper = styled.div`
   display: flex;
@@ -306,30 +308,29 @@ const FLPNickName = styled.div`
   font-size: 18px;
 `;
 
-const FLPFollowing = styled.div`
+const FLPButton = styled.button`
   margin: 0px 30px 0px 0px;
-  width: 70px;
+  width: 80px;
   height: 35px;
-  background-color: ${({ color }) => color};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 20px;
   margin-left: auto;
+  border: none;
+  font-size: 15px;
+  font-weight: bold;
 `;
 
-const FLPFollower = styled.div`
-  margin: 0px 30px 0px 0px;
-  width: 70px;
-  height: 35px;
+const FLPFollowing = styled(FLPButton)`
+  background-color: ${({ isFollowing, color }) =>
+    isFollowing ? 'gray' : color};
+  color: ${({ isFollowing }) => (isFollowing ? 'white' : 'black')};
+`;
+
+const FLPFollower = styled(FLPButton)`
   background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  margin-left: auto;
 `;
-
 const UserPage = () => {
   const navigate = useNavigate();
   const { state, action } = useContext(ColorContext);
@@ -344,6 +345,28 @@ const UserPage = () => {
   const [profilePicUrl, setProfilePicUrl] = useState();
   const [nickname, setNickname] = useState('');
   const [intro, setIntro] = useState('');
+  const [id, setId] = useState('');
+
+  const [follower, setFollower] = useState('');
+  const [following, setFollowing] = useState('');
+
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    const getFollowingAPI = async () => {
+      const data = await getFollowing({ userId: id });
+      setFollowing(data);
+    };
+    if (id !== '') getFollowingAPI();
+  }, [id]);
+
+  useEffect(() => {
+    const getFollowerAPI = async () => {
+      const data = await getFollower({ userId: id });
+      setFollower(data);
+    };
+    if (id !== '') getFollowerAPI();
+  }, [id]);
 
   useEffect(() => {
     const getprofile = async () => {
@@ -353,9 +376,11 @@ const UserPage = () => {
       setIntro(data.selfIntroduction);
       setShowFolCount(data.followCount);
       setShowFolerCount(data.followerCount);
+      setId(data.memberId);
     };
     getprofile();
   }, []);
+
   const navigateToAnotherPage = () => {
     navigate('/postupload'); // 이동할 페이지의 경로를 지정
   };
@@ -379,6 +404,10 @@ const UserPage = () => {
 
   const handleFollowerBGClick = () => {
     setshowFolerList(false);
+  };
+
+  const handleFollowingButtonClick = () => {
+    setIsFollowing(!isFollowing); // Toggle the following state
   };
 
   return (
@@ -436,41 +465,26 @@ const UserPage = () => {
             <FLPText>팔로잉 목록</FLPText>
             <FLPBr></FLPBr>
             <FLPList>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>songinjae</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>kimhakyoung</FLPNickName>
-                <FLPFollowing color={state.color}>팔로우</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>kimhakyoung</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>hellokr</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollower color={state.color}>팔로우</FLPFollower>
-              </FLPUser>
+              {following &&
+                following.map(({ myProfileImageUrl, memberName, memberId }) => (
+                  <FLPUser key={memberId}>
+                    <FLPProfile src={myProfileImageUrl}></FLPProfile>
+                    <FLPNickName>{memberName}</FLPNickName>
+                    {follower.some(
+                      (follower) => follower.memberName === memberName,
+                    ) ? (
+                      <FLPFollowing
+                        color={state.color}
+                        isFollowing={isFollowing}
+                        onClick={handleFollowingButtonClick}
+                      >
+                        {isFollowing ? '팔로우' : '팔로잉'}
+                      </FLPFollowing>
+                    ) : (
+                      <FLPFollower>팔로우</FLPFollower>
+                    )}
+                  </FLPUser>
+                ))}
             </FLPList>
           </FolListPage>
         </BackGround>
@@ -483,41 +497,25 @@ const UserPage = () => {
             <FLPText>팔로워 목록</FLPText>
             <FLPBr></FLPBr>
             <FLPList>
-              <FLPUser>
-                <FLPProfile src={profilePicUrl}></FLPProfile>
-                <FLPNickName>songinjae</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>kimhakyoung</FLPNickName>
-                <FLPFollowing color={state.color}>팔로우</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>kimhakyoung</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>hellokr</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-              </FLPUser>
-              <FLPUser>
-                <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-                <FLPNickName>ipohe</FLPNickName>
-                <FLPFollower color={state.color}>팔로우</FLPFollower>
-              </FLPUser>
+              {follower &&
+                follower.map(({ myProfileImageUrl, memberName, memberId }) => (
+                  <FLPUser key={memberId}>
+                    <FLPProfile src={myProfileImageUrl}></FLPProfile>
+                    <FLPNickName>{memberName}</FLPNickName>
+                    {follower.some(
+                      (follower) => follower.memberName === memberName,
+                    ) ? (
+                      <FLPFollowing
+                        color={state.color}
+                        isFollowing={isFollowing}
+                      >
+                        {isFollowing ? '팔로우' : '팔로잉'}
+                      </FLPFollowing>
+                    ) : (
+                      <FLPFollower>팔로우</FLPFollower>
+                    )}
+                  </FLPUser>
+                ))}
             </FLPList>
           </FolListPage>
         </BackGround>

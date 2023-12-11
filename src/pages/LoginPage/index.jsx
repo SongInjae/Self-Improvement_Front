@@ -100,6 +100,11 @@ export const SubmitButton = styled.button`
   color: white;
   font-family: 'MainText';
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: revert;
+  }
 `;
 export const TextWrapper = styled.div`
   display: flex;

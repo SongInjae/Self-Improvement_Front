@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import { ORIGINAL_YELLOW } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
 import getProfileEdit from '../../apis/profileedit/getprofileedit';
 import getFollowing from '../../apis/Following/getFollowing';
@@ -374,7 +373,7 @@ const UserPage = () => {
         </ProfileSet2>
       </ProfileWrapper>
       <ProBr />
-      <ProfilePost userId={id} />
+      <ProfilePost userId={id} isMyProfile={true} />
       {showFolList && (
         <BackGround>
           <FolDelte onClick={handleFollowingBGClick}></FolDelte>

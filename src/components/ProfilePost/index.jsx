@@ -66,7 +66,7 @@ const WritePostButton = styled(Icon)`
   cursor: pointer;
 `;
 
-const ProfilePost = ({ userId }) => {
+const ProfilePost = ({ userId, isMyProfile }) => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
@@ -101,7 +101,9 @@ const ProfilePost = ({ userId }) => {
             <EmptyText>게시물 없음</EmptyText>
           </EmptyWrapper>
         )}
-        <WritePostButton onClick={handlePlusClick} name="plus" size="2rem" />
+        {isMyProfile && (
+          <WritePostButton onClick={handlePlusClick} name="plus" size="2rem" />
+        )}
       </UserPost>
     </ProfilePostContainer>
   );

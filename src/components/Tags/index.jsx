@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import React, { useContext, useEffect, useState } from 'react';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import { INTEREST_LIST } from '../../constants/interest';
 import getInterestPlan from '../../apis/sharePlan/getInterestPlan';
+import getAllInterestPlan from '../../apis/sharePlan/getAllInterestPlan';
 import ColorContext from '../../context/SettingColor';
 
 const TagContainer = styled.div`
@@ -25,7 +25,7 @@ const Tag = styled.div`
   cursor: pointer;
 `;
 
-const Tags = ({ setPosts, ...props }) => {
+const Tags = ({ posts, setPosts, ...props }) => {
   const [tags, setTags] = useState([
     { interest: '전체', checked: true },
     ...INTEREST_LIST,
@@ -34,8 +34,11 @@ const Tags = ({ setPosts, ...props }) => {
   const { state } = useContext(ColorContext);
 
   useEffect(() => {
-    const getTagPlanAPI = async ({ tag }) => {
-      const data = await getInterestPlan({ interests: tag });
+    const getTagPlanAPI = async () => {
+      const data =
+        tag === '전체'
+          ? await getAllInterestPlan()
+          : await getInterestPlan({ interests: tag });
 
       if (data?.schedules) {
         setPosts(data?.schedules);
@@ -43,8 +46,8 @@ const Tags = ({ setPosts, ...props }) => {
         setPosts(null);
       }
     };
-    getTagPlanAPI({ tag });
-  }, [tag]);
+    if (posts === null) getTagPlanAPI();
+  }, [tag, posts]);
 
   const handleTagClick = async (e) => {
     const value = e.target.textContent;

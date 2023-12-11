@@ -36,16 +36,21 @@ const TodoItem = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+const NoPostItem = styled.div`
+  align-self: center;
+  margin-top: 1rem;
+  color: gray;
+`;
 
 const Memos = ({ posts }) => {
   return (
     <MemosContainer>
-      {posts &&
+      {posts ? (
         posts.map((post) => (
           <Memo>
             <UserInfo
               userId={post?.userId}
-              userName={post?.user}
+              userName={post?.username}
               userProfileUrl={post?.profile}
               //userFollwer={post.follwerCount} TODO: follower 숫자 내려오면 주석 해제하기
             />
@@ -57,20 +62,10 @@ const Memos = ({ posts }) => {
               </TodoWrapper>
             </TodoList>
           </Memo>
-        ))}
-      <Memo>
-        <UserInfo isFollwer />
-        <TodoList>
-          <TodoWrapper>
-            <TodoItem>
-              해커스 토익 풀기해커스 토익 풀기해커스 토익 풀기해커스 토익
-              풀기해커스 토익 풀기
-            </TodoItem>
-            <TodoItem>헬스장 가기</TodoItem>
-            <TodoItem>로그인 UI 구현하기</TodoItem>
-          </TodoWrapper>
-        </TodoList>
-      </Memo>
+        ))
+      ) : (
+        <NoPostItem>게시글이 없습니다.</NoPostItem>
+      )}
     </MemosContainer>
   );
 };

@@ -40,8 +40,8 @@ const Tags = ({ posts, setPosts, ...props }) => {
           ? await getAllInterestPlan()
           : await getInterestPlan({ interests: tag });
 
-      if (data?.schedules) {
-        setPosts(data?.schedules);
+      if (data?.userSchedules) {
+        setPosts(data?.userSchedules);
       } else {
         setPosts(null);
       }

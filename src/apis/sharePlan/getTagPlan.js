@@ -1,7 +1,7 @@
 import { axiosClient } from '../axiosClient';
 
-const getTagPlan = ({ tags }) => {
-  const { data } = axiosClient.get('api/schedule/findByTags', {
+const getTagPlan = async ({ tags }) => {
+  const { data } = await axiosClient.get('api/schedule/findByTags', {
     params: { tags },
   });
 

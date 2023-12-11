@@ -14,8 +14,11 @@ const SharePlanPage = () => {
   const [posts, setPosts] = useState(null);
 
   const handleChangeInput = async ({ debounceValue }) => {
-    if (debounceValue) setPosts(await getTagBoard({ tags: debounceValue }));
-    else setPosts(null);
+    if (debounceValue) {
+      const data = await getTagBoard({ tags: debounceValue });
+
+      setPosts(data?.userSchedules);
+    } else setPosts(null);
   };
 
   return (

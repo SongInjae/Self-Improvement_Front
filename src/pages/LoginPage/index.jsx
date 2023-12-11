@@ -121,8 +121,12 @@ const LoginPage = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    await postLogin({ email: id, password: pwd });
-    navigate('/main');
+    try {
+      await postLogin({ email: id, password: pwd });
+      navigate('/main');
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (

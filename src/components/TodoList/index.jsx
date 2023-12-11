@@ -5,7 +5,7 @@ import getTodayPlan from '../../apis/schedule/getTodayPlan';
 import CalendarContext from '../../context/CalendarContext';
 import { transformDate } from '../../utils/transform';
 import styled from '@emotion/styled';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
+import ColorContext from '../../context/SettingColor';
 
 const TodoWrapper = styled.div`
   position: relative;
@@ -16,21 +16,12 @@ const TodoWrapper = styled.div`
   padding: 1rem 1.5rem;
   border-radius: 2rem;
   box-sizing: border-box;
-  background-color: ${({ check }) => (check ? ORIGINAL_YELLOW : PASTEL_ORANGE)};
+  background-color: ${({ color }) => color};
+  opacity: ${({ check }) => (check ? '1' : '0.4')};
 `;
 const TodoItem = styled.div`
   color: white;
   font-family: 'MainBold';
-`;
-const TagWrapper = styled.div`
-  display: flex;
-  margin-top: 0.3rem;
-`;
-const Tag = styled.div`
-  font-size: 0.5rem;
-  border-radius: 0.5rem;
-  background-color: lightgray;
-  padding: 0.3rem;
 `;
 const Checkbox = styled.div`
   position: absolute;
@@ -39,7 +30,7 @@ const Checkbox = styled.div`
   transform: translateY(50%);
   width: 1.5rem;
   height: 1.5rem;
-  color: ${ORIGINAL_YELLOW};
+  color: ${({ color }) => color};
   border-radius: 0.25rem;
   background-color: white;
   cursor: pointer;
@@ -58,7 +49,7 @@ const AddTodo = styled.div`
   margin: 0 auto;
   line-height: 3rem;
   border-radius: 2rem;
-  color: ${ORIGINAL_YELLOW};
+  color: ${({ color }) => color};
   background-color: rgba(232, 232, 232, 0.6);
   text-align: center;
   font-size: 2rem;
@@ -69,12 +60,13 @@ const TodoList = () => {
   const [todoList, setTodoList] = useState([]);
   const navigate = useNavigate();
   const { state } = useContext(CalendarContext);
+  const { state: colorState } = useContext(ColorContext);
   const { selectDay } = state;
 
   useEffect(() => {
     const getData = async () => {
       const data = await getTodayPlan({ date: transformDate(selectDay) });
-      setTodoList(data);
+      if (data) setTodoList(data.schedules);
     };
 
     getData();
@@ -85,7 +77,7 @@ const TodoList = () => {
       const newState = [...prevState];
       newState[idx] = {
         ...newState[idx],
-        checked: !prevState[idx].checked,
+        isDone: !prevState[idx].isDone,
       };
 
       return newState;
@@ -93,16 +85,24 @@ const TodoList = () => {
   };
   return (
     <>
-      {todoList.map((item, idx) => (
-        <TodoWrapper key={item.title} check={item.checked}>
-          <TodoItem>{item.title}</TodoItem>
-          <Checkbox
-            check={item.checked}
-            onClick={() => handleCheckChange(idx)}
-          />
-        </TodoWrapper>
-      ))}
-      <AddTodo onClick={() => navigate('/todayplan')}>+</AddTodo>
+      {todoList &&
+        todoList.map((item, idx) => (
+          <TodoWrapper
+            key={item.headline}
+            check={item.isDone}
+            color={colorState.color}
+          >
+            <TodoItem>{item.headline}</TodoItem>
+            <Checkbox
+              check={item.isDone}
+              color={colorState.color}
+              onClick={() => handleCheckChange(idx)}
+            />
+          </TodoWrapper>
+        ))}
+      <AddTodo color={colorState.color} onClick={() => navigate('/todayplan')}>
+        +
+      </AddTodo>
     </>
   );
 };

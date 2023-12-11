@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
 import RepeatModal from '../../components/RepeatModal';
 import Header from '../../components/Header';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import { INTEREST_LIST } from '../../constants/interest';
 import postTodayPlan from '../../apis/schedule/postTodayPlan';
 import { transformDate } from '../../utils/transform';
+import ColorContext from '../../context/SettingColor';
 
 const TodayPlanContainer = styled.form`
   display: flex;
@@ -18,12 +18,12 @@ const InputStyled = styled.input`
   width: 100%;
   box-sizing: border-box;
   border: none;
-  border-bottom: 1px solid ${ORIGINAL_YELLOW};
+  border-bottom: 1px solid ${({ color }) => color};
   outline: none;
   padding: 1rem;
 
   &:nth-child(2) {
-    border: 1px solid ${ORIGINAL_YELLOW};
+    border: 1px solid ${({ color }) => color};
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
   }
@@ -44,8 +44,8 @@ const HalfInput = styled(InputStyled)`
 
   &:first-child {
     border: none;
-    border-bottom: 1px solid ${ORIGINAL_YELLOW};
-    border-right: 1px solid ${ORIGINAL_YELLOW};
+    border-bottom: 1px solid ${({ color }) => color};
+    border-right: 1px solid ${({ color }) => color};
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
@@ -65,13 +65,13 @@ const RepeatInput = styled.div`
   align-items: center;
   width: 50%;
   height: 3.5rem;
-  border-bottom: 1px solid ${ORIGINAL_YELLOW};
+  border-bottom: 1px solid ${({ color }) => color};
   box-sizing: border-box;
   color: gray;
   padding-left: 1rem;
 `;
 const FieldSet = styled.div`
-  border-bottom: 1px solid ${ORIGINAL_YELLOW};
+  border-bottom: 1px solid ${({ color }) => color};
   padding: 1rem;
 `;
 const Title = styled.div``;
@@ -83,7 +83,8 @@ const RadioWrapper = styled.div`
   margin-top: 0.5rem;
 `;
 const Radio = styled.div`
-  background-color: ${({ check }) => (check ? ORIGINAL_YELLOW : PASTEL_ORANGE)};
+  background-color: ${({ color }) => color};
+  opacity: ${({ check }) => (check ? '1' : '0.4')};
   padding: 0.5rem 1rem;
   color: white;
   cursor: pointer;
@@ -93,7 +94,7 @@ const Radio = styled.div`
 `;
 const RadioInput = styled.input`
   width: 3rem;
-  background-color: ${ORIGINAL_YELLOW};
+  background-color: ${({ color }) => color};
   padding: 0 1rem;
   color: white;
   font-size: 0.8rem;
@@ -113,7 +114,7 @@ const SubmitButton = styled.button`
   margin-top: 1rem;
   margin-right: 1rem;
   padding: 0.5rem 1rem;
-  background-color: ${ORIGINAL_YELLOW};
+  background-color: ${({ color }) => color};
   color: white;
   border: none;
   border-radius: 1rem;
@@ -123,6 +124,7 @@ const SubmitButton = styled.button`
 
 const TodayPlanPage = () => {
   const navigate = useNavigate();
+  const { state } = useContext(ColorContext);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
 
@@ -191,12 +193,14 @@ const TodayPlanPage = () => {
           type="text"
           placeholder="계획 제목 추가"
           value={title}
+          color={state.color}
           onChange={(e) => setTitle(e.target.value)}
         />
         <InputStyled
           type="text"
           placeholder="세부 계획 추가"
           value={detail}
+          color={state.color}
           onChange={(e) => setDetail(e.target.value)}
         />
         <HalfInputWrapper>
@@ -204,19 +208,21 @@ const TodayPlanPage = () => {
             type="time"
             placeholder="시간 설정"
             value={alarmTime}
+            color={state.color}
             onChange={(e) => setAlarmTime(e.target.value)}
           />
-          <RepeatInput onClick={() => setShowModal(true)}>
+          <RepeatInput color={state.color} onClick={() => setShowModal(true)}>
             {repeatDays.length !== 0 ? repeatDays.join(', ') : '반복'}
           </RepeatInput>
         </HalfInputWrapper>
-        <FieldSet>
+        <FieldSet color={state.color}>
           <Title>관심사 선택</Title>
           <RadioWrapper>
             {filteredList.map(({ interest, checked }) => (
               <Radio
                 key={interest}
                 check={checked}
+                color={state.color}
                 onClick={() => setSelectedInterest(interest)}
               >
                 {interest}
@@ -224,13 +230,14 @@ const TodayPlanPage = () => {
             ))}
           </RadioWrapper>
         </FieldSet>
-        <FieldSet>
+        <FieldSet color={state.color}>
           <Title>태그 추가</Title>
           <RadioWrapper>
             {tags.map((_, idx) => (
               <RadioInput
                 key={idx}
                 type="text"
+                color={state.color}
                 onBlur={(e) => handleInputBlur(e, idx)}
               />
             ))}
@@ -238,7 +245,9 @@ const TodayPlanPage = () => {
           </RadioWrapper>
         </FieldSet>
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        <SubmitButton onClick={handleFormSubmit}>완료</SubmitButton>
+        <SubmitButton color={state.color} onClick={handleFormSubmit}>
+          완료
+        </SubmitButton>
       </TodayPlanContainer>
       <RepeatModal
         showModal={showModal}

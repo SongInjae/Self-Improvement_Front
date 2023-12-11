@@ -6,6 +6,9 @@ const MemosContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  height: calc(100% - 6.5rem);
+  overflow: auto;
   margin-top: 1rem;
   font-family: 'MainMedium';
 `;
@@ -34,9 +37,27 @@ const TodoItem = styled.div`
   white-space: nowrap;
 `;
 
-const Memos = () => {
+const Memos = ({ posts }) => {
   return (
     <MemosContainer>
+      {posts &&
+        posts.map((post) => (
+          <Memo>
+            <UserInfo
+              userId={post?.userId}
+              userName={post?.user}
+              userProfileUrl={post?.profile}
+              //userFollwer={post.follwerCount} TODO: follower 숫자 내려오면 주석 해제하기
+            />
+            <TodoList>
+              <TodoWrapper>
+                {post?.headlines?.map((headline) => (
+                  <TodoItem>{headline}</TodoItem>
+                ))}
+              </TodoWrapper>
+            </TodoList>
+          </Memo>
+        ))}
       <Memo>
         <UserInfo isFollwer />
         <TodoList>

@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import ColorContext from '../../context/SettingColor';
+import putPassword from '../../apis/pwedit/putpassword';
+import postPwCheck from '../../apis/pwcheck/postpwcheck';
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,17 +18,17 @@ const PEWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 750px;
+  height:data:image/svg+xml;base64,%20PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNSIgaGVpZ2h0PSIyNSIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWFycm93LXJpZ2h0Ij48bGluZSB4MT0iNSIgeTE9IjEyIiB4Mj0iMTkiIHkyPSIxMiI+PC9saW5lPjxwb2x5bGluZSBwb2ludHM9IjEyIDUgMTkgMTIgMTIgMTkiPjwvcG9seWxpbmU+PC9zdmc+ 750px;
 `;
 
 const CurrentPW = styled.div`
-  margin: 50px 0px 0px 0px;
+  margin: 50px 0px 40px 0px;
 `;
 
 const NewPW = styled.div``;
 
 const CheckPW = styled.div`
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 `;
 
 const PWTxt = styled.div`
@@ -43,7 +45,7 @@ const CurrentPWBox = styled.input`
   background-color: rgba(128, 128, 128, 0.1);
   font-size: 13px;
   border: 1px solid rgba(128, 128, 128, 0);
-  margin-bottom: 45px;
+  margin-bottom: 0px;
   padding-left: 20px;
   outline: none;
 `;
@@ -127,8 +129,16 @@ const SaveButton = styled.button`
   font-weight: bold;
 `;
 
+const CurrrentPwCautionTxt = styled.div`
+  margin-top: 10px;
+  margin-left: 2px;
+  font-size: 11px;
+  color: red;
+  margin-bottom: 0px;
+`;
 const PwEditPage = () => {
   const navigate = useNavigate();
+  const [currentPassword, setcurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
   const [validationStatus, setValidationStatus] = useState(null);
@@ -140,14 +150,15 @@ const PwEditPage = () => {
     const passwordRegex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     const isValid = passwordRegex.test(newPassword);
-
+    console.log(validationStatus);
     // Update validation status and return result
     setValidationStatus(isValid);
     return isValid;
   };
 
   const handleBlur = () => {
-    validatePassword();
+    const isValid = validatePassword();
+    console.log(isValid); // 수정된 부분
   };
 
   const handleCheckPasswordChange = (e) => {
@@ -156,24 +167,71 @@ const PwEditPage = () => {
   };
 
   const navigateToAnotherPage = () => {
-    navigate('/user');
+    navigate('/setting');
   };
 
   const [pwd, setPwd] = useState('');
 
+  const [comments, setComments] = useState(state);
+  const [newComment, setNewComment] = useState('');
+
+  /*
+  const handleCurrentPw = (e) => {
+    e.preventDefault();
+    const newPasswordValue = e.target.value;
+    setNewComment(newPasswordValue);
+    console.log(newComment);
+    const postBoardCommentAPI = async () => {
+      const data = await postPwCheck({ password: newComment });
+      setComments(data);
+      console.log(data);
+    };
+    postBoardCommentAPI();
+  };*/
+  const [errPwd, setErrPwd] = useState(true);
+  const handleCurrentPw = async (e) => {
+    e.preventDefault();
+    const newPasswordValue = e.target.value;
+    setcurrentPassword(newPasswordValue);
+    const data = await postPwCheck({ password: newPasswordValue });
+    setErrPwd(data);
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    await postLogin({ email: id, password: pwd });
-    navigate('/main');
+    console.log(errPwd);
+    console.log(validationStatus);
+    console.log(passwordMatch);
+    if (!errPwd || !validationStatus || !passwordMatch) return;
+
+    try {
+      await putPassword({
+        changePassword1: newPassword,
+        changePassword2: checkPassword,
+      });
+
+      navigate('/setting');
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
   };
 
   return (
     <Wrapper>
-      <SettingTitle title="비밀번호 변경"></SettingTitle>
+      <SettingTitle isKorean title="비밀번호 변경"></SettingTitle>
       <PEWrapper>
         <CurrentPW>
           <PWTxt>현재 비밀번호</PWTxt>
-          <CurrentPWBox type="password" id="NowPwTxt"></CurrentPWBox>
+          <CurrentPWBox
+            type="password"
+            onBlur={handleCurrentPw}
+            required
+          ></CurrentPWBox>
+          {!errPwd && (
+            <CurrrentPwCautionTxt>
+              비밀번호가 일치하지 않습니다.
+            </CurrrentPwCautionTxt>
+          )}
         </CurrentPW>
         <NewPW>
           <PWTxt>새 비밀번호</PWTxt>
@@ -210,7 +268,9 @@ const PwEditPage = () => {
         </CheckPW>
         <Button>
           <CancelButton onClick={navigateToAnotherPage}>취소</CancelButton>
-          <SaveButton color={state.color}>저장</SaveButton>
+          <SaveButton color={state.color} onClick={handleFormSubmit}>
+            저장
+          </SaveButton>
         </Button>
       </PEWrapper>
     </Wrapper>

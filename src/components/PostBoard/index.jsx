@@ -1,76 +1,35 @@
 import styled from '@emotion/styled';
-import React from 'react';
-import Drop from '../../assets/image/dropdownArrow.svg';
+import { useState, useEffect } from 'react';
 import { FaFileImage } from 'react-icons/fa6';
+import getBoard from '../../apis/board/getBoard';
+import { useNavigate } from 'react-router-dom';
+import GridPost from './GridPost';
 
 const PostBoardContainer = styled.div`
   clear: right;
   width: 100%;
   height: calc(100% - 5rem);
 `;
-const PostWrapper = styled.div`
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  overflow: auto;
-`;
-const PostImg = styled.img`
-  width: 100%;
-  height: 10rem;
-`;
-const DefaultImageWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  height: 10rem;
-  background-color: lightgray;
-  justify-content: center;
-  align-items: center;
-`;
 
-const PostBoard = () => {
+const PostBoard = ({ data, sortStandard }) => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const getBoardAPI = async () => {
+      const data = await getBoard({ method: sortStandard });
+      setPosts(data);
+    };
+
+    if (data === null) getBoardAPI();
+  }, [data, sortStandard]);
+
+  useEffect(() => {
+    setPosts(data);
+  }, [data]);
+
   return (
     <PostBoardContainer>
-      <PostWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-        <DefaultImageWrapper>
-          <FaFileImage size={'40%'} />
-        </DefaultImageWrapper>
-      </PostWrapper>
+      <GridPost posts={posts} />
     </PostBoardContainer>
   );
 };

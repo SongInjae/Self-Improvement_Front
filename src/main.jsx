@@ -5,8 +5,7 @@ import { router } from './routes';
 import './index.css';
 import { worker } from './mocks/broswer';
 
-if (process.env.NODE_ENV === 'development') {
-  console.log('22');
+if (import.meta.env.NODE_ENV === 'development') {
   worker.start();
 }
 

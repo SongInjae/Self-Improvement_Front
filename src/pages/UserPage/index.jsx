@@ -1,33 +1,25 @@
-import React, { useContext, useState } from 'react';
-import Icon from '../../components/common/Icon';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import ColorContext from '../../context/SettingColor';
-import setProfilePicUrl from '../PostUploadPage';
+import getProfileEdit from '../../apis/profileedit/getprofileedit';
+import getFollowing from '../../apis/Following/getFollowing';
+import getFollower from '../../apis/follower/getFollower';
+import { FaUserCircle } from 'react-icons/fa';
+import ProfilePost from '../../components/ProfilePost';
+import postApplyFollwer from '../../apis/applyfollow/applyfollow';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: calc(100% - 5rem);
 `;
 
-const TopWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const PageText = styled(Header)`
   width: 100%;
-  background-color: blue;
-`;
-
-const PageText = styled(Header)``;
-
-const Setting = styled.img`
-  width: 32px;
-  height: 32px;
-  margin: 10px 0px 0px 350px;
 `;
 
 const ProfileWrapper = styled.div`
@@ -43,48 +35,36 @@ const ProfileWrapper = styled.div`
 const ProfileSet1 = styled.div`
   flex-direction: column;
   display: flex;
-  margin: 30px 0px 0px 0px;
+  margin: 20px 0px 0px 10px;
   align-items: center;
-  width: 150px;
+  width: 130px;
   height: 200px;
 `;
 
 const ProfileImg = styled.img`
-  width: 100px;
-  height: 100px;
-  margin: 0px 20px;
+  width: 7rem;
+  height: 7rem;
   border-radius: 50%;
   border: 6px solid white;
 `;
 
-const Interest = styled.div`
-  width: 100%;
-  height: 50px;
-  border-radius: 30px;
+const ProfileSet2 = styled.div`
   display: flex;
-  justify-content: center;
-  margin: 5px 0px 5px 0px;
+  flex-direction: column;
   align-items: center;
+  width: 100%;
+  height: 100%;
 `;
 
-const IntText = styled.span`
-  width: 60px;
-  height: 40px;
-  border-radius: 30px 30px;
+const Introduce = styled.div`
+  width: 90%;
+  height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: white;
-  margin-right: 10px;
-  border: 2px solid rgba(0, 0, 0, 0.5);
-`;
-
-const ProfileSet2 = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin-top: 50px;
-  margin-left: 5px;
+  border-radius: 20px;
+  margin-top: 20px;
 `;
 
 const NickName = styled.div`
@@ -109,7 +89,8 @@ const Follow = styled.div`
   background-color: white;
   border-radius: 20px;
   align-items: center;
-  margin-bottom: 10px;
+  margin-top: 40px;
+  margin-bottom: 20px;
 `;
 
 const Following = styled.div`
@@ -119,6 +100,7 @@ const Following = styled.div`
   align-items: center;
   width: 55px;
   height: 55px;
+  cursor: pointer;
 `;
 
 const Follower = styled.div`
@@ -128,6 +110,7 @@ const Follower = styled.div`
   align-items: center;
   width: 55px;
   height: 55px;
+  cursor: pointer;
 `;
 
 const FolText = styled.div`
@@ -136,63 +119,20 @@ const FolText = styled.div`
 
 const FolNum = styled.div``;
 
-const Introduce = styled.div`
-  display: flex;
-  width: 380px;
-  height: 28px;
-  border-radius: 30px;
-  align-items: center;
-  background-color: ${ORIGINAL_YELLOW};
-  margin: 2px 0px 0px 22.5px;
-  font-size: 13px;
-  ::before {
-    content: 'ㅤㅤ';
-  }
-`;
-
 const ProBr = styled.div`
   &::before {
     content: '';
     margin: 20px 0px 0px 0px;
     display: block;
     height: 2px;
-    background-color: ${ORIGINAL_YELLOW};
+    background-color: ${({ color }) => color};
   }
 `;
-
-const Post = styled.div`
-  position: relative;
-`;
-
-const SelectPost = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid rgba(128, 128, 128, 0.3);
+const BackGround = styled.div`
+  position: absolute;
+  height: 100%;
   width: 100%;
-  height: 45px;
-  justify-content: space-between; /* 양 옆으로 나누기 */
-`;
-
-const PlanButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-`;
-
-const GoalButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-`;
-const PlanIcon = styled(Icon)`
-  width: 25px;
-  height: 25px;
-  margin: 0px 0px 0px 94px;
-`;
-const GoalIcon = styled(Icon)`
-  width: 20px;
-  height: 20px;
-  margin: 0px 98px 0px 0px;
+  z-index: 0;
 `;
 
 const Btm = styled.div`
@@ -200,59 +140,28 @@ const Btm = styled.div`
   bottom: 0;
   width: 425px;
   height: 83px;
-  background-color: ${ORIGINAL_YELLOW};
+  background-color: ${({ color }) => color};
 `;
 
-const UserPost = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 425px;
-  height: 600px;
-  background-color: rgba(128, 128, 128, 0.08);
-  flex-direction: column;
-`;
-
-const EmptyPost = styled(Icon)`
-  opacity: 0.2;
-`;
-
-const EmptyText = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  margin: 20px;
-  opacity: 0.2;
-`;
-
-const WriteButtonPost = styled(Icon)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  background-color: white;
-  border-radius: 100%;
-  padding: 15px;
-  z-index: 0;
+const FolDelte = styled.div`
   position: absolute;
-  bottom: 50px; /* 조정 가능한 값 */
-  right: 20px; /* 조정 가능한 값 */
+  height: 20%;
+  width: 100%;
+  z-index: 1;
 `;
 
 const FolListPage = styled.div`
   width: 425px;
-  height: 800px;
+  height: 80%;
   background-color: white;
-  right: 237.5px;
-  top: 33px;
-  opacity: 0.9;
+
   z-index: 1;
   border-radius: 30px 30px 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: fixed;
+  bottom: 0;
 `;
 
 const FLPText = styled.div`
@@ -293,7 +202,7 @@ const FLPList = styled.div`
   align-items: center;
   overflow-y: auto;
   width: 425px;
-  max-height: 650px;
+  max-height: 100vh;
   background-color: white;
 `;
 
@@ -314,6 +223,7 @@ const FLPProfile = styled.img`
   height: 60px;
   border-radius: 100%;
   margin: 0px 0px 0px 20px;
+  border: 1px solid rgba(128, 128, 128, 0.8);
 `;
 
 const FLPNickName = styled.div`
@@ -321,136 +231,187 @@ const FLPNickName = styled.div`
   font-size: 18px;
 `;
 
-const FLPFollowing = styled.div`
+const FLPButton = styled.button`
   margin: 0px 30px 0px 0px;
-  width: 70px;
+  width: 80px;
   height: 35px;
-  background-color: ${({ color }) => color};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 20px;
   margin-left: auto;
+  border: none;
+  font-size: 15px;
+  font-weight: bold;
 `;
 
-const FLPFollower = styled.div`
-  margin: 0px 30px 0px 0px;
-  width: 70px;
-  height: 35px;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  margin-left: auto;
+const FLPFollowing = styled(FLPButton)`
+  background-color: ${({ isFollowing, color }) =>
+    isFollowing ? 'gray' : color};
+  color: ${({ isFollowing }) => (isFollowing ? 'white' : 'black')};
 `;
 
+const FLPFollower = styled(FLPButton)`
+  background-color: ${({ isFollowing, color }) =>
+    isFollowing ? 'gray' : color};
+  color: ${({ isFollowing }) => (isFollowing ? 'white' : 'black')};
+`;
 const UserPage = () => {
   const navigate = useNavigate();
   const { state, action } = useContext(ColorContext);
 
-  const navigateToAnotherPage = () => {
-    navigate('/postupload'); // 이동할 페이지의 경로를 지정
-  };
+  const [showFolList, setShowFolList] = useState(false);
+  const [showFolerList, setshowFolerList] = useState(false);
+
+  const [showFolCount, setShowFolCount] = useState();
+  const [showFolerCount, setShowFolerCount] = useState();
+
+  const [showBackGround, setShowBackGround] = useState(false);
+  const [profilePicUrl, setProfilePicUrl] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [intro, setIntro] = useState('');
+  const [id, setId] = useState('');
+
+  const [follower, setFollower] = useState('');
+  const [following, setFollowing] = useState('');
+
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    const getFollowingAPI = async () => {
+      const data = await getFollowing({ userId: id });
+      setFollowing(data);
+    };
+    if (id !== '') getFollowingAPI();
+  }, [id, isFollowing]);
+
+  useEffect(() => {
+    const getFollowerAPI = async () => {
+      const data = await getFollower({ userId: id });
+      setFollower(data);
+    };
+    if (id !== '') getFollowerAPI();
+  }, [id, isFollowing]);
+
+  useEffect(() => {
+    const getprofile = async () => {
+      const data = await getProfileEdit();
+      setProfilePicUrl(data.myProfileImageUrl);
+      setNickname(data.memberName);
+      setIntro(data.selfIntroduction);
+      setShowFolCount(data.followCount);
+      setShowFolerCount(data.followerCount);
+      setId(data.memberId);
+    };
+    getprofile();
+  });
 
   const handleOptionClick = () => {
     navigate('/setting');
   };
 
+  const handleFollowingClick = () => {
+    setShowFolList(!showFolList);
+  };
+
+  const handleFollowerClick = () => {
+    setshowFolerList(!showFolerList);
+  };
+
+  const handleFollowingBGClick = (e) => {
+    //e.stopPropagation();
+    setShowFolList(false);
+  };
+
+  const handleFollowerBGClick = () => {
+    setshowFolerList(false);
+  };
+
+  const fetchData = async () => {
+    const followingData = await getFollowing({ userId: id });
+    setFollowing(followingData);
+
+    const followerData = await getFollower({ userId: id });
+    setFollower(followerData);
+  };
+
+  const handleFollowingBtnClick = async (memberId) => {
+    await postApplyFollwer({ memberId });
+    setIsFollowing((prevState) => !prevState); // 팔로우 상태 토글
+    fetchData(); // 데이터 다시 불러오기
+  };
+
   return (
     <Wrapper>
       <PageText
-        isOption={true}
+        isKorean
+        isOption
         title="마이 페이지"
         onClick={handleOptionClick}
       ></PageText>
       <ProfileWrapper>
         <ProfileSet1>
-          <ProfileImg src={'src/assets/image/profileimg.png'}></ProfileImg>
-          <NickName>jxxhyo22</NickName>
+          {profilePicUrl ? (
+            <ProfileImg src={profilePicUrl}></ProfileImg>
+          ) : (
+            <FaUserCircle size="7rem" color="gray" />
+          )}
+          <NickName>{nickname}</NickName>
         </ProfileSet1>
         <ProfileSet2>
           <Follow>
-            <Following>
-              <FolNum>20</FolNum>
+            <Following onClick={handleFollowingClick}>
+              <FolNum>{showFolerCount}</FolNum>
               <FolText>팔로잉</FolText>
             </Following>
-            <Follower>
-              <FolNum>20</FolNum>
+            <Follower onClick={handleFollowerClick}>
+              <FolNum>{showFolCount}</FolNum>
               <FolText>팔로워</FolText>
             </Follower>
           </Follow>
-          <Interest>
-            <IntText>코딩</IntText>
-            <IntText>토익</IntText>
-            <IntText>헬스</IntText>
-          </Interest>
+          <Introduce>{intro}</Introduce>
         </ProfileSet2>
       </ProfileWrapper>
       <ProBr />
-      <Post>
-        <SelectPost>
-          <PlanButton>
-            <PlanIcon name="grid" size="20"></PlanIcon>
-          </PlanButton>
-          <GoalButton>
-            <GoalIcon name="calendar" size="20"></GoalIcon>
-          </GoalButton>
-        </SelectPost>
-        <UserPost>
-          <EmptyPost name="camera" size="70"></EmptyPost>
-          <EmptyText>게시물 없음</EmptyText>
-          <WriteButtonPost
-            onClick={navigateToAnotherPage}
-            name="plus"
-            size="40"
-          ></WriteButtonPost>
-        </UserPost>
-      </Post>
-      <FolListPage>
-        <FLPTopBar></FLPTopBar>
-        <FLPText>팔로잉 목록</FLPText>
-        <FLPBr></FLPBr>
-        <FLPList>
-          <FLPUser>
-            <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-            <FLPNickName>songinjae</FLPNickName>
-            <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-          </FLPUser>
-          <FLPUser>
-            <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-            <FLPNickName>kimhakyoung</FLPNickName>
-            <FLPFollowing color={state.color}>팔로우</FLPFollowing>
-          </FLPUser>
-          <FLPUser>
-            <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-            <FLPNickName>kimhakyoung</FLPNickName>
-            <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-          </FLPUser>
-          <FLPUser>
-            <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-            <FLPNickName>hellokr</FLPNickName>
-            <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-          </FLPUser>
-          <FLPUser>
-            <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-            <FLPNickName>ipohe</FLPNickName>
-            <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-          </FLPUser>
-          <FLPUser>
-            <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-            <FLPNickName>ipohe</FLPNickName>
-            <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-          </FLPUser>
-          <FLPUser>
-            <FLPProfile src="src/assets/image/profileimg.png"></FLPProfile>
-            <FLPNickName>ipohe</FLPNickName>
-            <FLPFollower color={state.color}>팔로우</FLPFollower>
-          </FLPUser>
-        </FLPList>
-      </FolListPage>
-
-      <Btm></Btm>
+      <ProfilePost userId={id} isMyProfile={true} />
+      {showFolList && (
+        <BackGround>
+          <FolDelte onClick={handleFollowingBGClick}></FolDelte>
+          <FolListPage>
+            <FLPTopBar></FLPTopBar>
+            <FLPText>팔로잉 목록</FLPText>
+            <FLPBr></FLPBr>
+            <FLPList>
+              {following &&
+                following.map(({ myProfileImageUrl, memberName, memberId }) => (
+                  <FLPUser key={memberId}>
+                    <FLPProfile src={myProfileImageUrl}></FLPProfile>
+                    <FLPNickName>{memberName}</FLPNickName>
+                  </FLPUser>
+                ))}
+            </FLPList>
+          </FolListPage>
+        </BackGround>
+      )}
+      {showFolerList && (
+        <BackGround>
+          <FolDelte onClick={handleFollowerBGClick}></FolDelte>
+          <FolListPage>
+            <FLPTopBar></FLPTopBar>
+            <FLPText>팔로워 목록</FLPText>
+            <FLPBr></FLPBr>
+            <FLPList>
+              {follower &&
+                follower.map(({ myProfileImageUrl, memberName, memberId }) => (
+                  <FLPUser key={memberId}>
+                    <FLPProfile src={myProfileImageUrl}></FLPProfile>
+                    <FLPNickName>{memberName}</FLPNickName>
+                  </FLPUser>
+                ))}
+            </FLPList>
+          </FolListPage>
+        </BackGround>
+      )}
     </Wrapper>
   );
 };

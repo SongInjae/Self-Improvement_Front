@@ -1,9 +1,12 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../components/Header';
 import UserInfo from '../../components/UserInfo';
 import { FaUserCircle } from 'react-icons/fa';
 import { BsFillSendFill } from 'react-icons/bs';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import postBoardComment from '../../apis/board/postBoardComment';
+import deleteBoardComment from '../../apis/board/deleteBoardComment';
 
 const PostCommentContainer = styled.div`
   display: flex;
@@ -48,21 +51,74 @@ const SendInput = styled.input`
 const SendButton = styled(BsFillSendFill)`
   cursor: pointer;
 `;
+const NoInfo = styled.div`
+  color: gray;
+  text-align: center;
+`;
 
 const PostCommentPage = () => {
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const { id } = useParams();
+  const [comments, setComments] = useState(state);
+  const [newComment, setNewComment] = useState('');
+  const userId = localStorage.getItem('userId');
+
+  const handleDeleteComment = async ({ commentId }) => {
+    await deleteBoardComment({ articleId: id, commentId });
+    navigate(-1);
+  };
+
+  const handleSubmitComment = (e) => {
+    e.preventDefault();
+    const postBoardCommentAPI = async () => {
+      const data = await postBoardComment({
+        articleId: id,
+        comment: newComment,
+      });
+      setComments(data);
+      console.log(data);
+    };
+    postBoardCommentAPI();
+    setNewComment('');
+  };
+
   return (
     <PostCommentContainer>
       <HeaderStyled title="댓글" isPrev isKorean />
       <UserCommentWrapper>
-        <UserCommentItem>
-          <UserInfo />
-          <UserComment>안녕하세요</UserComment>
-        </UserCommentItem>
+        {comments.length ? (
+          comments.map(
+            ({
+              content,
+              commentAuthor,
+              commentAuthorId,
+              commentAuthorProfileImageUrl,
+              commentId,
+            }) => (
+              <UserCommentItem>
+                <UserInfo
+                  userName={commentAuthor}
+                  userProfileUrl={commentAuthorProfileImageUrl}
+                  isDelete={parseInt(userId) === commentAuthorId}
+                  onDelete={() => handleDeleteComment({ commentId })}
+                  style={{ padding: '0.25rem' }}
+                />
+                <UserComment>{content}</UserComment>
+              </UserCommentItem>
+            ),
+          )
+        ) : (
+          <NoInfo>댓글이 없습니다.</NoInfo>
+        )}
       </UserCommentWrapper>
       <SendCommentWrapper>
         <FaUserCircle />
-        <SendInput />
-        <SendButton />
+        <SendInput
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+        />
+        <SendButton onClick={handleSubmitComment} />
       </SendCommentWrapper>
     </PostCommentContainer>
   );

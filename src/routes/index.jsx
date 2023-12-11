@@ -17,6 +17,7 @@ import {
   PostUploadPage,
   ProfileEditPage,
   PostCommentPage,
+  OUserPage,
 } from '../pages';
 
 export const router = createBrowserRouter([
@@ -25,7 +26,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: 'login',
+        path: '',
         element: <LoginPage />,
       },
       {
@@ -83,6 +84,10 @@ export const router = createBrowserRouter([
       {
         path: 'profileedit',
         element: <ProfileEditPage />,
+      },
+      {
+        path: 'otheruser/:id',
+        element: <OUserPage />,
       },
     ],
   },

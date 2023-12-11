@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../common/Icon';
+import ColorContext from '../../context/SettingColor';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -9,6 +10,7 @@ const HeaderContainer = styled.div`
   justify-content: center;
   position: relative;
   height: 3rem;
+
   padding: 1rem 0;
 `;
 
@@ -32,7 +34,7 @@ const LeftComponent = styled(Component)`
 `;
 
 const RightComponent = styled(Component)`
-  right: -8.5rem;
+  right: 1rem;
   cursor: ${({ isOption }) => (isOption ? 'pointer' : 'default')};
 `;
 
@@ -40,33 +42,29 @@ const IconStyled = styled(Icon)`
   cursor: pointer;
 `;
 
-const Header = ({
-  title,
-  isKorean,
-  isPrev,
-  isPlus,
-  isOption,
-  onClick,
-  ...props
-}) => {
+const Header = ({ title, isKorean, isPrev, isPlus, isOption, ...props }) => {
   const navigate = useNavigate();
 
-  const handlePrevClick = () => {
-    // Prev 아이콘이 클릭되었을 때 GoalPage로 이동
-    navigate(-1);
-  };
-
-  const handlePlusClick = () => {
-    // Plus 아이콘이 클릭되었을 때 AddGoalPage로 이동
-    navigate('/addgoal');
-  };
-
   const Plus = (
-    <IconStyled name="plus-circle" size="1.3rem" onClick={handlePlusClick} />
+    <IconStyled
+      name="plus-circle"
+      size="1.8rem"
+      onClick={() => navigate('/addgoal')}
+    />
   );
-  const Option = <IconStyled name="settings" size="1.5rem" onClick={onClick} />;
+  const Option = (
+    <IconStyled
+      name="settings"
+      size="1.5rem"
+      onClick={() => navigate('/setting')}
+    />
+  );
   const Prev = (
-    <IconStyled name="chevron-left" size="1.5rem" onClick={handlePrevClick} />
+    <IconStyled
+      name="chevron-left"
+      size="1.5rem"
+      onClick={() => navigate(-1)}
+    />
   );
 
   return (

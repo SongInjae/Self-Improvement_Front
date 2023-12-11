@@ -6,6 +6,7 @@ import { FaHeart, FaRegHeart, FaRegComment } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import getBoardDetail from '../../apis/board/getBoardDetail';
 import postBoardLike from '../../apis/board/postBoardLike';
+import deleteBoardDetail from '../../apis/board/deleteBoardDetail';
 
 const PostDetailContainer = styled.div`
   height: calc(100% - 5rem);
@@ -63,6 +64,7 @@ const PostDetailPage = () => {
   const [post, setPost] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const getBoardDetailAPI = async () => {
@@ -72,6 +74,11 @@ const PostDetailPage = () => {
 
     getBoardDetailAPI();
   }, []);
+
+  const handleDeletePost = async () => {
+    await deleteBoardDetail({ articleId: post.articleId });
+    navigate('/board');
+  };
 
   const handleLikeClick = () => {
     postBoardLike({ articleId: id });
@@ -91,6 +98,8 @@ const PostDetailPage = () => {
         userId={post?.authorId}
         userName={post?.author}
         userProfileUrl={post?.authorProfileImageUrl}
+        isDelete={parseInt(userId) === post?.authorId}
+        onDelete={handleDeletePost}
       />
       <PostImg src={post?.imageUrl} />
       <PostSnsWrapper>

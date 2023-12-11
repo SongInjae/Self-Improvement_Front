@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Icon from '../common/Icon';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ColorContext from '../../context/SettingColor';
+import { ORIGINAL_YELLOW } from '../../constants/color';
 
 const NavigationContainer = styled.div`
   display: flex;
@@ -22,7 +23,16 @@ const IconStyled = styled(Icon)`
 `;
 
 const BottomNavigation = () => {
+  const { state } = useContext(ColorContext);
+  const [color, setColor] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/' || location.pathname === '/register') {
+      setColor(ORIGINAL_YELLOW);
+    } else setColor(state.color);
+  }, [location.pathname, state.color]);
 
   const navigateToGoal = () => {
     navigate('/goal');
@@ -43,9 +53,9 @@ const BottomNavigation = () => {
   const navigateToUser = () => {
     navigate('/user');
   };
-  const { state, action } = useContext(ColorContext);
+
   return (
-    <NavigationContainer color={state.color}>
+    <NavigationContainer color={color}>
       <IconStyled
         name="calendar"
         onClick={navigateToGoal}

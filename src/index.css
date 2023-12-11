@@ -22,3 +22,7 @@
   font-family: 'MainLight';
   src: url('/src/assets/font/GothicA1-Light.ttf');
 }
+
+* {
+  font-family: 'MainMedium';
+}

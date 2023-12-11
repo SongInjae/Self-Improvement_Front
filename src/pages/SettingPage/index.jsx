@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import { Github } from '@uiw/react-color';
 import ColorContext from '../../context/SettingColor';
+import logout from '../../apis/auth/logout';
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,65 +44,9 @@ const SettingButtonWrapper = styled.div`
   font-weight: bold;
 `;
 
-const PublicPrivate = styled(SettingButtonWrapper)`
-  margin-top: 40px;
-`;
-
-const Logout = styled.button`
-  display: flex;
-  width: 20.5rem;
-  height: 3.5rem;
-  border-radius: 20px;
-  align-items: center;
-  background-color: ${({ color }) => color};
-  font-size: 13px;
-  border: 0px solid gray;
-  margin: 40px 0px 80px 0px;
-  justify-content: center;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
-const LogoutButton = styled.div`
-  font-size: 16px;
-`;
-
 const ButtonText = styled.div`
   font-size: 15px;
   margin-left: 20px;
-`;
-
-const PPButton = styled.label`
-  position: relative;
-  cursor: pointer;
-  width: 50px;
-  height: 30px;
-  margin-right: 20px;
-`;
-
-const ToggleSwitch = styled.div`
-  width: 50px;
-  height: 30px;
-  display: block;
-  position: relative;
-  border-radius: 30px;
-  background-color: #fff;
-  cursor: pointer;
-`;
-
-const ToggleButton = styled.div`
-  width: 22px;
-  height: 22px;
-  position: absolute;
-  top: 50%;
-  left: ${({ isActive }) => (isActive ? 'calc(100% - 27px)' : '5px')};
-  transform: translateY(-50%);
-  border-radius: 50%;
-  background: ${({ isActive, color }) => (isActive ? '#CCCCCC' : color)};
-  transition: all 0.2s ease-in;
-`;
-const ToggleInput = styled.input`
-  display: none;
 `;
 
 const NextIcon = styled(Icon)`
@@ -139,10 +84,6 @@ const SettingPage = () => {
     navigate('/pwedit');
   };
 
-  const handleToggle = () => {
-    setIsActive(!isActive);
-  };
-
   const handleColorChoiceClick = () => {
     setShowSketch(!showSketch);
   };
@@ -155,9 +96,10 @@ const SettingPage = () => {
     localStorage.setItem('mainColor', selectedColor);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    //await logout();
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -169,19 +111,6 @@ const SettingPage = () => {
         onClick={handlePrevClick}
       ></SettingTitle>
       <SettingWrapper>
-        <PublicPrivate color={state.color}>
-          <ButtonText>공개 / 비공개</ButtonText>
-          <PPButton>
-            <ToggleInput type="checkbox" id="toggle" onClick={handleToggle} />
-            <ToggleSwitch htmlFor="toggle" className="toggleSwitch">
-              <ToggleButton
-                color={state.color}
-                isActive={isActive}
-                className="toggleButton"
-              />
-            </ToggleSwitch>
-          </PPButton>
-        </PublicPrivate>
         <SettingButtonWrapper>
           <ButtonText>프로필 수정</ButtonText>
           <NextIcon name="arrow-right" t size="25" onClick={ProfieClick} />
@@ -213,17 +142,3 @@ const SettingPage = () => {
   );
 };
 export default SettingPage;
-
-/*        <PublicPrivate color={state.color}>
-          <ButtonText>공개 / 비공개</ButtonText>
-          <PPButton>
-            <ToggleInput type="checkbox" id="toggle" onClick={handleToggle} />
-            <ToggleSwitch htmlFor="toggle" className="toggleSwitch">
-              <ToggleButton
-                color={state.color}
-                isActive={isActive}
-                className="toggleButton"
-              />
-            </ToggleSwitch>
-          </PPButton>
-        </PublicPrivate> */

@@ -115,7 +115,7 @@ const RegisterPage = () => {
       </SubmitButton>
       <TextWrapper>
         <NoValueText>이미 회원이신가요?</NoValueText>
-        <NoValueLink to="/login">로그인</NoValueLink>
+        <NoValueLink to="/">로그인</NoValueLink>
       </TextWrapper>
     </BoxWrapper>
   );

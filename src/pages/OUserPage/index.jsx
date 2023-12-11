@@ -372,7 +372,7 @@ const OUserPage = () => {
         {isFollowing ? '팔로잉' : '팔로우'}
       </FolButton>
       <ProBr />
-      <ProfilePost userId={id} />
+      <ProfilePost userId={id} isMyProfile={false} />
       {showFolList && (
         <BackGround>
           <FolDelte onClick={handleFollowingBGClick}></FolDelte>

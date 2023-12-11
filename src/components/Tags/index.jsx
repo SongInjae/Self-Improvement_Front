@@ -25,7 +25,7 @@ const Tag = styled.div`
   cursor: pointer;
 `;
 
-const Tags = ({ setPosts, ...props }) => {
+const Tags = ({ posts, setPosts, ...props }) => {
   const [tags, setTags] = useState([
     { interest: '전체', checked: true },
     ...INTEREST_LIST,

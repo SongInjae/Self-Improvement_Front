@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import { Github } from '@uiw/react-color';
 import ColorContext from '../../context/SettingColor';
+import logout from '../../apis/auth/logout';
 
 const Wrapper = styled.div`
   display: flex;
@@ -157,6 +158,7 @@ const SettingPage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    logout();
     navigate('/login');
   };
 

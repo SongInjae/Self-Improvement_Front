@@ -241,7 +241,9 @@ const TodayPlanPage = () => {
                 onBlur={(e) => handleInputBlur(e, idx)}
               />
             ))}
-            <Radio onClick={() => handlePlusClick()}>+</Radio>
+            <Radio color={state.color} onClick={() => handlePlusClick()}>
+              +
+            </Radio>
           </RadioWrapper>
         </FieldSet>
         {error && <ErrorMessage>{error}</ErrorMessage>}

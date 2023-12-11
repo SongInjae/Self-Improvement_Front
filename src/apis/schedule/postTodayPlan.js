@@ -19,7 +19,7 @@ const postTodayPlan = async ({
     daysOfWeek: transformDay(repeatDays),
     repeatEndDate: lastDate,
     interests: [selectedInterest],
-    tags: tags.join(),
+    tags,
     date,
   });
 };

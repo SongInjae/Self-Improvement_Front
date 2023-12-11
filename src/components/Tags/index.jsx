@@ -46,8 +46,8 @@ const Tags = ({ posts, setPosts, ...props }) => {
         setPosts(null);
       }
     };
-    if (posts === null) getTagPlanAPI();
-  }, [tag, posts]);
+    getTagPlanAPI();
+  }, [tag]);
 
   const handleTagClick = async (e) => {
     const value = e.target.textContent;

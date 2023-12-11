@@ -66,7 +66,7 @@ const RegisterPage = () => {
 
     try {
       await postRegister({ email: id, password: pwd, name: nickName });
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       alert(error);
     }

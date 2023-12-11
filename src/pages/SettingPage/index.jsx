@@ -100,10 +100,10 @@ const SettingPage = () => {
     localStorage.setItem('mainColor', selectedColor);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logout();
     localStorage.removeItem('token');
-    logout();
-    navigate('/login');
+    navigate('/');
   };
 
   return (

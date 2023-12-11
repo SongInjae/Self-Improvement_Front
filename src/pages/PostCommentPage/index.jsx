@@ -4,8 +4,9 @@ import Header from '../../components/Header';
 import UserInfo from '../../components/UserInfo';
 import { FaUserCircle } from 'react-icons/fa';
 import { BsFillSendFill } from 'react-icons/bs';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import postBoardComment from '../../apis/board/postBoardComment';
+import deleteBoardComment from '../../apis/board/deleteBoardComment';
 
 const PostCommentContainer = styled.div`
   display: flex;
@@ -56,10 +57,17 @@ const NoInfo = styled.div`
 `;
 
 const PostCommentPage = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const { id } = useParams();
   const [comments, setComments] = useState(state);
   const [newComment, setNewComment] = useState('');
+  const userId = localStorage.getItem('userId');
+
+  const handleDeleteComment = async ({ commentId }) => {
+    await deleteBoardComment({ articleId: id, commentId });
+    navigate(-1);
+  };
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
@@ -81,11 +89,20 @@ const PostCommentPage = () => {
       <UserCommentWrapper>
         {comments.length ? (
           comments.map(
-            ({ content, commentAuthor, commentAuthorProfileImageUrl }) => (
+            ({
+              content,
+              commentAuthor,
+              commentAuthorId,
+              commentAuthorProfileImageUrl,
+              commentId,
+            }) => (
               <UserCommentItem>
                 <UserInfo
                   userName={commentAuthor}
                   userProfileUrl={commentAuthorProfileImageUrl}
+                  isDelete={parseInt(userId) === commentAuthorId}
+                  onDelete={() => handleDeleteComment({ commentId })}
+                  style={{ padding: '0.25rem' }}
                 />
                 <UserComment>{content}</UserComment>
               </UserCommentItem>

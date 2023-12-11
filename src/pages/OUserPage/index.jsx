@@ -147,14 +147,6 @@ const ProBr = styled.div`
   }
 `;
 
-const Btm = styled.div`
-  position: fixed;
-  bottom: 0;
-  width: 425px;
-  height: 83px;
-  background-color: ${ORIGINAL_YELLOW};
-`;
-
 const BackGround = styled.div`
   position: absolute;
   height: 100%;
@@ -446,7 +438,6 @@ const OUserPage = () => {
           </FolListPage>
         </BackGround>
       )}
-      <Btm></Btm>
     </Wrapper>
   );
 };

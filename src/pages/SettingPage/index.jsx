@@ -129,6 +129,7 @@ const SettingPage = () => {
     setHex(selectedColor);
     setSelectedColor(selectedColor);
     action.setColor(selectedColor);
+    localStorage.setItem('mainColor', selectedColor);
   };
 
   const handleLogout = () => {

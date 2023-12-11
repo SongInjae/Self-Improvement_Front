@@ -137,13 +137,6 @@ const Btm = styled.div`
   background-color: ${ORIGINAL_YELLOW};
 `;
 
-const BackGround = styled.div`
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  z-index: 0;
-`;
-
 const FolDelte = styled.div`
   position: absolute;
   height: 20%;
@@ -425,7 +418,6 @@ const UserPage = () => {
           </FolListPage>
         </BackGround>
       )}
-      <Btm></Btm>
     </Wrapper>
   );
 };

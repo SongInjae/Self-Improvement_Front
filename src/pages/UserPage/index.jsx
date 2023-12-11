@@ -129,6 +129,12 @@ const ProBr = styled.div`
     background-color: ${({ color }) => color};
   }
 `;
+const BackGround = styled.div`
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+`;
 
 const Btm = styled.div`
   position: fixed;

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../common/Icon';
+import ColorContext from '../../context/SettingColor';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -9,6 +10,7 @@ const HeaderContainer = styled.div`
   justify-content: center;
   position: relative;
   height: 3rem;
+
   padding: 1rem 0;
 `;
 

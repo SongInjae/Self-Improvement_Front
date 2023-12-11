@@ -37,7 +37,7 @@ const BottomNavigation = () => {
   };
 
   const navigateToTodayPlan = () => {
-    navigate('/todayplan');
+    navigate('/main');
   };
 
   const navigateToUser = () => {

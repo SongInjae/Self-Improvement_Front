@@ -10,9 +10,12 @@ import ColorContext from '../../context/SettingColor';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
 `;
 
 const SettingTitle = styled(Header)`
+  width: 100%;
   cursor: ${({ isPrev }) => (isPrev ? 'pointer' : 'default')};
 `;
 
@@ -20,7 +23,10 @@ const SettingWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 750px;
+
+  margin-top: 100px;
+  width: 100%;
+  height: 100%;
 `;
 
 const SettingButtonWrapper = styled.div`
@@ -39,6 +45,25 @@ const SettingButtonWrapper = styled.div`
 
 const PublicPrivate = styled(SettingButtonWrapper)`
   margin-top: 40px;
+`;
+
+const Logout = styled.button`
+  display: flex;
+  width: 20.5rem;
+  height: 3.5rem;
+  border-radius: 20px;
+  align-items: center;
+  background-color: ${({ color }) => color};
+  font-size: 13px;
+  border: 0px solid gray;
+  margin: 40px 0px 80px 0px;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+`;
+
+const LogoutButton = styled.div`
+  font-size: 16px;
 `;
 
 const ButtonText = styled.div`
@@ -92,9 +117,7 @@ const ColorChoiceIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const ColorChoice = styled(Github)`
-  background-color: red;
-`;
+const ColorChoice = styled(Github)``;
 
 const SettingPage = () => {
   const navigate = useNavigate();
@@ -190,3 +213,17 @@ const SettingPage = () => {
   );
 };
 export default SettingPage;
+
+/*        <PublicPrivate color={state.color}>
+          <ButtonText>공개 / 비공개</ButtonText>
+          <PPButton>
+            <ToggleInput type="checkbox" id="toggle" onClick={handleToggle} />
+            <ToggleSwitch htmlFor="toggle" className="toggleSwitch">
+              <ToggleButton
+                color={state.color}
+                isActive={isActive}
+                className="toggleButton"
+              />
+            </ToggleSwitch>
+          </PPButton>
+        </PublicPrivate> */

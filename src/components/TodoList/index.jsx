@@ -66,6 +66,7 @@ const TodoList = () => {
   useEffect(() => {
     const getData = async () => {
       const data = await getTodayPlan({ date: transformDate(selectDay) });
+
       if (data) setTodoList(data.schedules);
     };
 

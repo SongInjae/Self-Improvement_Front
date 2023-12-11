@@ -32,7 +32,10 @@ const UserInfo = ({
   const navigate = useNavigate();
 
   return (
-    <UserInfoWrapper onClick={() => navigate(`/page/${userId}`)} {...props}>
+    <UserInfoWrapper
+      onClick={() => navigate(`/otheruser/${userId}`)}
+      {...props}
+    >
       {userProfileUrl ? <UserProfile src={userProfileUrl} /> : <FaUserCircle />}
       <UserName>{userName ? userName : '사용자 없음'}</UserName>
       {userFollwer && <UserFollower>{userFollwer} Follwer</UserFollower>}

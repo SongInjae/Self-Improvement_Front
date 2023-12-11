@@ -84,10 +84,6 @@ const SettingPage = () => {
     navigate('/pwedit');
   };
 
-  const handleToggle = () => {
-    setIsActive(!isActive);
-  };
-
   const handleColorChoiceClick = () => {
     setShowSketch(!showSketch);
   };
@@ -101,7 +97,7 @@ const SettingPage = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
+    //await logout();
     localStorage.removeItem('token');
     navigate('/');
   };

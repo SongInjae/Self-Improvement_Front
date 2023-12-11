@@ -45,7 +45,7 @@ const RegisterPage = () => {
   const [pwdCheckError, setPwdCheckError] = useState('');
   const [nickNameError, setNickNameError] = useState('');
 
-  const checkValidation = () => {
+  const checkValidation = async () => {
     if (!validatePwd(pwd)) {
       setPwdError(AUTH.PASSWORD);
     } else {
@@ -61,12 +61,15 @@ const RegisterPage = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    checkValidation();
+    await checkValidation();
+    if (pwdError || pwdCheckError || nickNameError) return;
 
-    if (pwdError !== '' || nickNameError !== '') return;
-
-    await postRegister({ email: id, password: pwd, name: nickName });
-    navigate('/login');
+    try {
+      await postRegister({ email: id, password: pwd, name: nickName });
+      navigate('/login');
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -104,7 +107,12 @@ const RegisterPage = () => {
         />
         {nickNameError && <ErrorMessage>{nickNameError}</ErrorMessage>}
       </FormBox>
-      <SubmitButton onClick={handleFormSubmit}>회원가입 하기</SubmitButton>
+      <SubmitButton
+        disabled={!Boolean(id && pwd && nickName)}
+        onClick={handleFormSubmit}
+      >
+        회원가입 하기
+      </SubmitButton>
       <TextWrapper>
         <NoValueText>이미 회원이신가요?</NoValueText>
         <NoValueLink to="/login">로그인</NoValueLink>

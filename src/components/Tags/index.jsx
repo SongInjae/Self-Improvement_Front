@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import { INTEREST_LIST } from '../../constants/interest';
 import getInterestPlan from '../../apis/sharePlan/getInterestPlan';
+import ColorContext from '../../context/SettingColor';
 
 const TagContainer = styled.div`
   display: flex;
@@ -15,7 +16,8 @@ const TagContainer = styled.div`
 const Tag = styled.div`
   flex-shrink: 0;
   padding: 0.5rem 1rem;
-  background-color: ${({ check }) => (check ? ORIGINAL_YELLOW : PASTEL_ORANGE)};
+  background-color: ${({ color }) => color};
+  opacity: ${({ check }) => (check ? '1' : '0.4')};
   color: white;
   border-radius: 1rem;
   font-size: 0.8rem;
@@ -29,6 +31,7 @@ const Tags = ({ setPosts, ...props }) => {
     ...INTEREST_LIST,
   ]);
   const [tag, setTag] = useState('전체');
+  const { state } = useContext(ColorContext);
 
   useEffect(() => {
     const getTagPlanAPI = async ({ tag }) => {
@@ -62,7 +65,12 @@ const Tags = ({ setPosts, ...props }) => {
   return (
     <TagContainer>
       {tags.map((tag) => (
-        <Tag check={tag.checked} onClick={handleTagClick} {...props}>
+        <Tag
+          check={tag.checked}
+          onClick={handleTagClick}
+          color={state.color}
+          {...props}
+        >
           {tag.interest}
         </Tag>
       ))}

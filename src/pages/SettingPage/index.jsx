@@ -4,18 +4,7 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
-import {
-  Slider,
-  Sketch,
-  Material,
-  Colorful,
-  Compact,
-  Circle,
-  Wheel,
-  Block,
-  Github,
-  Chrome,
-} from '@uiw/react-color';
+import { Github } from '@uiw/react-color';
 import ColorContext from '../../context/SettingColor';
 
 const Wrapper = styled.div`
@@ -34,8 +23,9 @@ const SettingWrapper = styled.div`
   height: 750px;
 `;
 
-const PublicPrivate = styled.div`
+const SettingButtonWrapper = styled.div`
   display: flex;
+  justify-content: space-between;
   width: 350px;
   height: 60px;
   border-radius: 20px;
@@ -43,57 +33,17 @@ const PublicPrivate = styled.div`
   background-color: rgba(128, 128, 128, 0.1);
   font-size: 13px;
   border: 1px solid gray;
-  margin: 80px 0px 40px 0px;
-  justify-content: space-between;
-  font-weight: bold;
-\\
-`;
-
-const ProfileEdit = styled.div`
-  display: flex;
-  width: 350px;
-  height: 60px;
-  border-radius: 20px;
-  align-items: center;
-  background-color: rgba(128, 128, 128, 0.1);
-  font-size: 13px;
-  border: 1px solid gray;
-  margin: 0px 0px 40px 0px;
-  justify-content: space-between;
+  margin-bottom: 40px;
   font-weight: bold;
 `;
 
-const PwEdit = styled.div`
-  display: flex;
-  width: 350px;
-  height: 60px;
-  border-radius: 20px;
-  align-items: center;
-  background-color: rgba(128, 128, 128, 0.1);
-  font-size: 13px;
-  border: 1px solid gray;
-  margin: 0px 0px 40px 0px;
-  justify-content: space-between;
-  font-weight: bold;
-`;
-
-const ThemeColor = styled.div`
-  display: flex;
-  width: 350px;
-  height: 60px;
-  border-radius: 20px;
-  align-items: center;
-  background-color: rgba(128, 128, 128, 0.1);
-  font-size: 13px;
-  border: 1px solid gray;
-  margin: 0px 0px 40px 0px;
-  justify-content: space-between;
-  font-weight: bold;
+const PublicPrivate = styled(SettingButtonWrapper)`
+  margin-top: 40px;
 `;
 
 const ButtonText = styled.div`
   font-size: 15px;
-  margin: 0px 0px 0px 20px;
+  margin-left: 20px;
 `;
 
 const PPButton = styled.label`
@@ -129,12 +79,7 @@ const ToggleInput = styled.input`
   display: none;
 `;
 
-const ProfileNextIcon = styled(Icon)`
-  margin-right: 20px;
-  cursor: pointer;
-`;
-
-const PwNextIcon = styled(Icon)`
+const NextIcon = styled(Icon)`
   margin-right: 20px;
   cursor: pointer;
 `;
@@ -184,6 +129,12 @@ const SettingPage = () => {
     setHex(selectedColor);
     setSelectedColor(selectedColor);
     action.setColor(selectedColor);
+    localStorage.setItem('mainColor', selectedColor);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   return (
@@ -208,33 +159,27 @@ const SettingPage = () => {
             </ToggleSwitch>
           </PPButton>
         </PublicPrivate>
-        <ProfileEdit>
+        <SettingButtonWrapper>
           <ButtonText>프로필 수정</ButtonText>
-          <ProfileNextIcon
-            name="arrow-right"
-            t
-            size="25"
-            onClick={ProfieClick}
-          ></ProfileNextIcon>
-        </ProfileEdit>
-        <PwEdit>
+          <NextIcon name="arrow-right" t size="25" onClick={ProfieClick} />
+        </SettingButtonWrapper>
+        <SettingButtonWrapper>
           <ButtonText>비밀번호 변경</ButtonText>
-          <PwNextIcon
-            name="arrow-right"
-            t
-            size="25"
-            onClick={PwClick}
-          ></PwNextIcon>
-        </PwEdit>
-        <ThemeColor>
+          <NextIcon name="arrow-right" t size="25" onClick={PwClick} />
+        </SettingButtonWrapper>
+        <SettingButtonWrapper>
           <ButtonText>테마 색상 변경</ButtonText>
           <ColorChoiceIcon
             name="triangle"
             selectedColor={selectedColor} // 추가: 선택된 컬러 상태 전달
             onClick={handleColorChoiceClick}
             color={state.color}
-          ></ColorChoiceIcon>
-        </ThemeColor>
+          />
+        </SettingButtonWrapper>
+        <SettingButtonWrapper>
+          <ButtonText>로그아웃</ButtonText>
+          <NextIcon name="arrow-right" t size="25" onClick={handleLogout} />
+        </SettingButtonWrapper>
         {showSketch && (
           <ColorChoice
             onChange={handleColorChange} // 업데이트: 색상 변경 핸들러 추가

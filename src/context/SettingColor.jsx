@@ -11,7 +11,8 @@ const ColorContext = createContext({
 });
 
 const ColorContexttProvider = ({ children }) => {
-  const [color, setColor] = useState(ORIGINAL_YELLOW);
+  const mainColor = localStorage.getItem('mainColor');
+  const [color, setColor] = useState(mainColor ?? ORIGINAL_YELLOW);
 
   const value = useMemo(
     () => ({

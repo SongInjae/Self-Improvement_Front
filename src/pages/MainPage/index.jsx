@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import Calendar from '../../components/Calendar';
 import styled from '@emotion/styled';
 import { CalendarContextProvider } from '../../context/CalendarContext';

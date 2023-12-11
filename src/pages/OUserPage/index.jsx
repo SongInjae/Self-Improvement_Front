@@ -143,7 +143,7 @@ const ProBr = styled.div`
     margin: 5px 0px 0px 0px;
     display: block;
     height: 2px;
-    background-color: ${ORIGINAL_YELLOW};
+    background-color: ${({ color }) => color};
   }
 `;
 
@@ -165,7 +165,7 @@ const FolListPage = styled.div`
   width: 425px;
   height: 80%;
   background-color: white;
-  opacity: 0.9;
+  opacity: 1;
   z-index: 1;
   border-radius: 30px 30px 0 0;
   display: flex;
@@ -233,36 +233,13 @@ const FLPProfile = styled.img`
   width: 60px;
   height: 60px;
   border-radius: 100%;
+  border: 1px solid rgba(128, 128, 128, 0.8);
   margin: 0px 0px 0px 20px;
 `;
 
 const FLPNickName = styled.div`
   margin: 0px 0px 0px 17px;
   font-size: 18px;
-`;
-
-const FLPFollowing = styled.div`
-  margin: 0px 30px 0px 0px;
-  width: 70px;
-  height: 35px;
-  background-color: ${({ color }) => color};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  margin-left: auto;
-`;
-
-const FLPFollower = styled.div`
-  margin: 0px 30px 0px 0px;
-  width: 70px;
-  height: 35px;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  margin-left: auto;
 `;
 
 const OUserPage = () => {
@@ -316,6 +293,14 @@ const OUserPage = () => {
     getOtherUser();
   }, [isFollowing]);
 
+  const fetchData = async () => {
+    const followingData = await getFollowing({ userId: id });
+    setFollowing(followingData);
+
+    const followerData = await getFollower({ userId: id });
+    setFollower(followerData);
+  };
+
   const navigateToAnotherPage = () => {
     navigate('/postupload'); // 이동할 페이지의 경로를 지정
   };
@@ -341,15 +326,17 @@ const OUserPage = () => {
     setshowFolerList(false);
   };
 
-  const handleFollowingBtnClick = (e) => {
-    postApplyFollwer({ id });
+  const handleFollowingBtnClick = async () => {
+    await postApplyFollwer({ id });
     setIsFollowing((prevState) => !prevState);
+    fetchData(); // Call the fetchData function to reload the data
   };
   console.log(profilePicUrl);
   return (
     <Wrapper>
       <PageText
         isKorean
+        isPrev
         title={memberName}
         onClick={handleOptionClick}
       ></PageText>
@@ -365,11 +352,11 @@ const OUserPage = () => {
         <ProfileSet2>
           <Follow>
             <Following onClick={handleFollowingClick}>
-              <FolNum>{showFolCount}</FolNum>
+              <FolNum>{showFolerCount}</FolNum>
               <FolText>팔로잉</FolText>
             </Following>
             <Follower onClick={handleFollowerClick}>
-              <FolNum>{showFolerCount}</FolNum>
+              <FolNum>{showFolCount}</FolNum>
               <FolText>팔로워</FolText>
             </Follower>
           </Follow>
@@ -399,13 +386,6 @@ const OUserPage = () => {
                   <FLPUser key={memberId}>
                     <FLPProfile src={myProfileImageUrl}></FLPProfile>
                     <FLPNickName>{memberName}</FLPNickName>
-                    {follower.some(
-                      (follower) => follower.memberName === memberName,
-                    ) ? (
-                      <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-                    ) : (
-                      <FLPFollower>팔로우</FLPFollower>
-                    )}
                   </FLPUser>
                 ))}
             </FLPList>
@@ -425,13 +405,6 @@ const OUserPage = () => {
                   <FLPUser key={memberId}>
                     <FLPProfile src={myProfileImageUrl}></FLPProfile>
                     <FLPNickName>{memberName}</FLPNickName>
-                    {follower.some(
-                      (follower) => follower.memberName === memberName,
-                    ) ? (
-                      <FLPFollowing color={state.color}>팔로잉</FLPFollowing>
-                    ) : (
-                      <FLPFollower>팔로우</FLPFollower>
-                    )}
                   </FLPUser>
                 ))}
             </FLPList>

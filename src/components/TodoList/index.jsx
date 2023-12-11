@@ -62,10 +62,14 @@ const TodoList = () => {
   const { state } = useContext(CalendarContext);
   const { state: colorState } = useContext(ColorContext);
   const { selectDay } = state;
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getTodayPlan({ date: transformDate(selectDay) });
+      const data = await getTodayPlan({
+        date: transformDate(selectDay),
+        userId,
+      });
       if (data) setTodoList(data.schedules);
     };
 

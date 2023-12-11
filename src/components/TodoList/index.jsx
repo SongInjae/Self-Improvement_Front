@@ -6,6 +6,7 @@ import CalendarContext from '../../context/CalendarContext';
 import { transformDate } from '../../utils/transform';
 import styled from '@emotion/styled';
 import ColorContext from '../../context/SettingColor';
+import putTodayPlan from '../../apis/schedule/putTodayPlan';
 
 const TodoWrapper = styled.div`
   position: relative;
@@ -83,7 +84,7 @@ const TodoList = () => {
         ...newState[idx],
         isDone: !prevState[idx].isDone,
       };
-
+      putTodayPlan({ data: newState[idx] });
       return newState;
     });
   };

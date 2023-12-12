@@ -84,7 +84,7 @@ const TodoList = () => {
         ...newState[idx],
         isDone: !prevState[idx].isDone,
       };
-      putTodayPlan({ data: newState[idx] });
+      putTodayPlan({ data: newState[idx], selectDay });
       return newState;
     });
   };

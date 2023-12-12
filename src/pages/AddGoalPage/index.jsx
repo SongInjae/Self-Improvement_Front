@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import postAddGoal from '../../apis/Goal/postAddGoal';
+import postCreateYearGoal from '../../apis/Goal/postCreateYearGoal';
+import postCreateMonGoal from '../../apis/Goal/postCreateMonGoal'
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { ORIGINAL_YELLOW } from '../../constants/color';
@@ -41,7 +42,7 @@ const YearButton = styled.button`
     ${({ isClicked }) => (isClicked ? ORIGINAL_YELLOW : 'lightgray')};
   border-radius: 40px;
   cursor: pointer;
-  font-family: 'MainBold';
+  font-family: 'MainMedium';
 `;
 
 const MonthButton = styled.button`
@@ -55,7 +56,7 @@ const MonthButton = styled.button`
     ${({ isClicked }) => (isClicked ? ORIGINAL_YELLOW : 'lightgray')};
   border-radius: 40px;
   cursor: pointer;
-  font-family: 'MainBold';
+  font-family: 'MainMedium';
 `;
 
 const HorizontalLine = styled.hr`
@@ -184,6 +185,9 @@ const AddGoalPage = () => {
   const [year, setYear] = useState(2023);
   const [yearGoal, setYearGoal] = useState('');
   const [monthGoals, setMonthGoals] = useState(Array(12).fill(''));
+  const [nextId, setNextId] = useState(1);
+  const [yearIsDone, setYearIsDone]=useState(false);
+  const [monthIsDone, setMonthIsDone]=useState(false);
 
   const [visibleYear, setVisibleYear] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState(false);
@@ -203,18 +207,40 @@ const AddGoalPage = () => {
     e.preventDefault();
 
     try {
-      const result = await postAddGoal({
-        year,
-        yearGoal,
-        monthGoals,
-      });
-
-      console.log('Result from server:', result);
+      // 연간 목표만 저장
+      if (isYearButtonClicked) {
+        const result1 = await postCreateYearGoal({
+          id: nextId,
+          year: year,
+          yearGoal: yearGoal,
+          isDone: yearIsDone,
+        });
+  
+        console.log('Result from server (Year Goal):', result1);
+      }
+  
+      // 월간 목표만 저장
+      if (isMonthButtonClicked) {
+        for (let month = 1; month <= 12; month++) {
+          const result2 = await postCreateMonGoal({
+            id: nextId,
+            year: year,
+            month: month,
+            monGoal: monthGoals[month - 1],
+            isDone: monthIsDone,
+          });
+  
+          console.log('Result from server (Month Goal):', result2);
+        }
+      }
+      
+      setNextId((prevId) => prevId + 1);
 
       // 성공적으로 서버에 저장되었다면 페이지 이동
       navigate('/goal');
     } catch (error) {
-      console.error('Error submitting goal:', error);
+      console.error('목표 제출 중 오류:', error);
+      console.log('자세한 Axios 응답:', error.response);
       // 에러가 발생했을 경우 처리
     }
   };
@@ -266,7 +292,14 @@ const AddGoalPage = () => {
         )}
         {visibleMonth && (
           <div>
-            <Title>월간 목표</Title>
+            <TitleBox>
+              <Title>월간 목표</Title>
+              <CounterBox>
+                <CounterButton onClick={handleDecrement}>-</CounterButton>
+                {year}
+                <CounterButton onClick={handleIncrement}>+</CounterButton>
+              </CounterBox>
+            </TitleBox>
             <MonthInputBox>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month, index) => (
                 <React.Fragment key={index}>

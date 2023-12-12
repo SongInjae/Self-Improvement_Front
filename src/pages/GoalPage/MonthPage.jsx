@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+//import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import GoalList from './GoalList';
+import MonthGoalList from './MonthGoalList';
+import getfindMonthGoal from '../../apis/Goal/getfindMonthGoal';
+import deleteMonGoal from '../../apis/Goal/deleteMonGoal';
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
+import { SlRocket } from 'react-icons/sl';
 
 const BoxWrapper = styled.div`
     display: flex;
@@ -46,12 +50,21 @@ const Icon = styled.button`
     }
 `;
 
+const Year = styled.div`
+    text-align: center;
+    font-size: 20px;
+    margin-left: 70px;
+    margin-right: 5px;
+    margin-top: 10px;
+    color: black;
+`;
+
 const Month = styled.div`
     text-align: center;
     font-size: 30px;
-    margin-left: 80px;
+    margin-left: 0px;
     margin-right: 80px;
-    margin-top: 8px;
+    margin-top: 5px;
     color: black;
 `;
 
@@ -61,30 +74,75 @@ const monthNames = [
 ];
 
 const MonthPage = () => {
-    const [currentMonth, setCurrentMonth] = useState(10); 
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); 
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()); 
+    const [monthGoals, setMonthGoals] = useState([]);
+
+    const userId = localStorage.getItem('userId');
+
+    useEffect(() => {
+        const getMonthData = async () => {
+            try {
+              const monthData = await getfindMonthGoal({month: currentMonth+1, id: userId});
+              const filteredMonthData = monthData.filter(data => data.year === currentYear);
+              setMonthGoals(filteredMonthData);
+            } catch (error) {
+              console.error("Error fetching goal data:", error);
+            }
+          };
+        getMonthData();
+      }, [currentMonth]);
 
     const handleMonthChange = (amount) => {
-        const newMonth = currentMonth + amount;
-        if (newMonth >= 0 && newMonth < monthNames.length) {
-            setCurrentMonth(newMonth);
+        let newMonth = currentMonth + amount;
+        let newYear = currentYear;
+
+        if (newMonth < 0) {
+            newMonth = 11; // 0부터 시작하는 인덱스로 변경
+            newYear -= 1;
+        } else if (newMonth > 11) {
+            newMonth = 0;
+            newYear += 1;
         }
+
+        setCurrentMonth(newMonth);
+        setCurrentYear(newYear);
     };
 
+    const handleDelete = async (id) => {
+        try {
+          await deleteMonGoal(id);
+          
+          const updatedMonthData = await getfindMonthGoal({ month: currentMonth, id: userId});
+          setMonthGoals(updatedMonthData);
+
+          console.log(`Month goal with ID ${id} deleted successfully.`);
+        } catch (error) {
+          console.error('Error deleting month goal:', error);
+        }
+      };
+
+    console.log('z', monthGoals);
     return (
         <BoxWrapper>
             <IconWrapper>
-            <Icon onClick={() => handleMonthChange(-1)} disabled={currentMonth === 0}>
+                <Icon onClick={() => handleMonthChange(-1)}>
                     <CiCircleChevLeft size={40} />
                 </Icon>
+                <Year>
+                    {currentYear}
+                </Year>
                 <Month>
                     {monthNames[currentMonth]}
                 </Month>
-                <Icon onClick={() => handleMonthChange(1)} disabled={currentMonth === monthNames.length - 1}>
+                <Icon onClick={() => handleMonthChange(1)}>
                     <CiCircleChevRight size={40} />
                 </Icon>
             </IconWrapper>
             <GoalWrapper>
-                <GoalList Goals={Goals} />
+                {monthGoals.length ?
+                (<MonthGoalList  monthGoals={monthGoals} onDelete={handleDelete}/>) :
+                 (<SlRocket size={200} style={{ color: 'Gainsboro', marginLeft: '20%', marginTop: '36%' }} />)}   
             </GoalWrapper>
         </BoxWrapper>
     );

@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import getAddGoal from '../../apis/Goal/getAddGoal';
+import getfindYearGoal from '../../apis/Goal/getfindYearGoal';
+import getYearAndMonthGoal from '../../apis/Goal/getYearAndMonthGoal';
+import deleteYearGoal from '../../apis/Goal/deleteYearGoal';
 import styled from '@emotion/styled';
-import GoalList from './GoalList';
+import YearGoalList from './YearGoalList';
+import MonthGoalList from './MonthGoalList';
+import { SlRocket } from 'react-icons/sl';
+import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 import {
     CircularProgressbarWithChildren
   } from "react-circular-progressbar";
   import 'react-circular-progressbar/dist/styles.css';
+import getfindMonthGoal from '../../apis/Goal/getfindMonthGoal';
 
 const BoxWrapper = styled.div`
     display: flex;
@@ -110,34 +116,136 @@ const customStyles = [
     },
 ];
 
+const IconWrapper = styled.div`
+    margin-left: 15%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    color: Gainsboro;
+`;
+
+const Icon = styled.button`
+    cursor: pointer;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    &:hover {
+        color: #000; /* 마우스 오버 시 색상 변경 가능 */
+    }
+`;
+
+const Year = styled.div`
+    text-align: center;
+    font-size: 30px;
+    margin-left: 80px;
+    margin-right: 80px;
+    margin-top: 8px;
+    color: black;
+`;
+
 const AllPage = () => {
-    const [Goals, setGoals] = useState([]);
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [yearGoals, setYearGoals] = useState([]);
+    const [monthGoals, setMonthGoals] = useState([]);
+    const [onlyMonthGoals, setOnlyMonthGoals] = useState([]);
+
+    const [completedCount, setCompletedCount] = useState(0);
+    const [allPercent, setAllPercent]=useState(0);
+    const [yearPercent, setYearPercent]=useState(0); 
+    const [monthPercent, setMonthPercent]=useState(0);
+
+    const userId = localStorage.getItem('userId');
+
+    console.log(yearGoals, onlyMonthGoals);
+
+    const handleYearChange = (amount) => {
+        const newYear = currentYear + amount;
+        setCurrentYear(newYear);
+    };
 
     useEffect(() => {
-        const getData = async () => {
+        const getYearData = async () => {
           try {
-            // Call the getAddGoal function with the appropriate parameters
-            const data = await getAddGoal({ year: 2023, yearGoal: 'exampleGoal', monthGoals: 'exampleMonth' });
-            setGoals(data); // Set the goal data in the state
+            const yearData = await getfindYearGoal({year: currentYear, id: userId});
+            setYearGoals(yearData);
           } catch (error) {
-            // Handle errors if needed
             console.error("Error fetching goal data:", error);
           }
         };
+        const getMonthData = async () => {
+            try {
+              const monthData = await getYearAndMonthGoal({year: currentYear, id: userId});
+              setMonthGoals(monthData);
+            } catch (error) {
+              console.error("Error fetching goal data:", error);
+            }
+          };
+        getYearData();
+        getMonthData();
+      }, [currentYear]);
+
+    const combinedGoals = yearGoals && yearGoals.map((yearGoal) => {
+        const matchingMonthGoals = monthGoals ? monthGoals.filter(
+            (monthGoal) => monthGoal.id === yearGoal.id
+        ):[];
+        return { ...yearGoal, matchingMonthGoals };
+    });
+
+    const deleteCombinedGoal = async (id) => {
+        try {
+          // Call the API to delete the combined goal
+          await deleteYearGoal(id);
     
-        getData(); // Call the fetchData function when selectDay changes
-      }, []);
+          // Assuming you need to update state after deletion
+          // Fetch the updated year goals after deletion and set the state
+          const updatedYearData = await getfindYearGoal({ year: currentYear, id: userId});
+          setYearGoals(updatedYearData);
+          
+          console.log(`Successfully deleted combined goal with ID ${id}`);
+        } catch (error) {
+          console.error('Error deleting combined goal:', error);
+          // Handle the error, e.g., show a notification to the user
+        }
+    };
+
+    useEffect(() => {
+        const calculatePercentages = () => {
+            if (yearGoals && yearGoals.length > 0) {
+                const completedYearGoals = yearGoals.filter(goal => goal.IsDone).length;
+                const yearPercentage = (completedYearGoals / yearGoals.length) * 100;
+                setYearPercent(yearPercentage);
+                setCompletedCount((prevState) => prevState + completedYearGoals);
+            } else setYearPercent(0);
+
+            if (monthGoals && monthGoals.length > 0) {
+                const completedMonthGoals = monthGoals.filter(goal => goal.monIsDone).length;
+                const monthPercentage = (completedMonthGoals / monthGoals.length) * 100;
+                setMonthPercent(monthPercentage);
+                setCompletedCount((prevState) => prevState + completedMonthGoals);
+            } else setMonthPercent(0);
+
+            if(yearGoals?.length > 0 || monthGoals?.length > 0) {
+                const allPercentage = (completedCount / (yearGoals?.length + monthGoals?.length)) * 100;
+                setAllPercent(allPercentage);
+            } else {
+                setAllPercent(0);
+            }
+        };
+    
+        calculatePercentages();
+    }, [yearGoals, monthGoals]);
 
     return (
         <BoxWrapper>
             <HeadBox>
                 <ProgressGraph>
                     <CircularProgressbarWithChildren 
-                        value={44}
+                        value={allPercent}
                         styles={customStyles[0]}
                     >
                         <div style={{ fontSize: 18}}>
-                            44%<br/>
+                            {allPercent}%<br/>
                         </div>
                         <div style={{ fontSize: 12, marginTop: 5 }}>
                             All<br/> progress
@@ -146,11 +254,11 @@ const AllPage = () => {
                 </ProgressGraph>
                 <ProgressGraph>
                     <CircularProgressbarWithChildren 
-                        value={55}
+                        value={yearPercent}
                         styles={customStyles[1]}
                     >
                         <div style={{ fontSize: 18}}>
-                            55%<br/>
+                            {yearPercent}%<br/>
                         </div>
                         <div style={{ fontSize: 12, marginTop: 5 }}>
                             Year<br/> progress
@@ -159,11 +267,11 @@ const AllPage = () => {
                 </ProgressGraph>
                 <ProgressGraph>
                     <CircularProgressbarWithChildren 
-                        value={66}
+                        value={monthPercent}
                         styles={customStyles[2]}
                     >
                         <div style={{ fontSize: 18}}>
-                            66%<br/>
+                            {monthPercent}%<br/>
                         </div>
                         <div style={{ fontSize: 12, marginTop: 5 }}>
                             Month<br/> progress
@@ -172,8 +280,34 @@ const AllPage = () => {
                 </ProgressGraph>
             </HeadBox>
             <HorizontalLine />
+            <IconWrapper>
+                <Icon onClick={() => handleYearChange(-1)}>
+                    <CiCircleChevLeft size={40} />
+                </Icon>
+                <Year>{currentYear}</Year>
+                <Icon onClick={() => handleYearChange(1)}>
+                    <CiCircleChevRight size={40} />
+                </Icon>
+            </IconWrapper>
             <GoalWrapper>
-                <GoalList Goals={Goals} />
+            {
+                (combinedGoals && !onlyMonthGoals) ? (
+                    // yearGoals가 있고 monthGoals가 없을 때
+                    <YearGoalList combinedGoals={combinedGoals} onDelete={deleteCombinedGoal}/>
+                ) : (!combinedGoals && onlyMonthGoals) ? (
+                    // yearGoals가 없고 monthGoals가 있을 때
+                    <MonthGoalList monthGoals={onlyMonthGoals} setmonthGoals={setOnlyMonthGoals}/>
+                ) : (combinedGoals && onlyMonthGoals) ? (
+                    // yearGoals와 monthGoals가 둘 다 있을 때
+                    <>
+                    <YearGoalList combinedGoals={combinedGoals} onDelete={deleteCombinedGoal}/>
+                    <MonthGoalList monthGoals={onlyMonthGoals} setmonthGoals={setOnlyMonthGoals}/>
+                    </>
+                ) : (
+                    // yearGoals와 monthGoals가 둘 다 없을 때
+                    <SlRocket size={200} style={{ color: 'Gainsboro', marginLeft: '20%', marginTop: '10%' }} />
+                )
+            }
             </GoalWrapper>
         </BoxWrapper>
     );

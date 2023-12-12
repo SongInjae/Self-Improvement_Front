@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import getAddGoal from '../../apis/Goal/getAddGoal';
 import styled from '@emotion/styled';
 import AllPage from './AllPage';
 import YearPage from './YearPage';
@@ -66,7 +64,6 @@ const ContentsBox = styled.div`
 `;
 
 const GoalPage = () => {
-    const navigate = useNavigate();
     const [visibleAllPage, setVisibleAllPage] = useState(true);
     const [visibleYearPage, setVisibleYearPage] = useState(false);
     const [visibleMonthPage, setVisibleMonthPage] = useState(false);

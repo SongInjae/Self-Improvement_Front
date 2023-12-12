@@ -13,3 +13,4 @@ export { default as SettingPage } from './SettingPage';
 export { default as PwEditPage } from './PwEditPage';
 export { default as PostUploadPage } from './PostUploadPage';
 export { default as ProfileEditPage } from './ProfileEditPage';
+export { default as OUserPage } from './OUserPage';

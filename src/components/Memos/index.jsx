@@ -6,6 +6,9 @@ const MemosContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  height: calc(100% - 6.5rem);
+  overflow: auto;
   margin-top: 1rem;
   font-family: 'MainMedium';
 `;
@@ -33,23 +36,36 @@ const TodoItem = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+const NoPostItem = styled.div`
+  align-self: center;
+  margin-top: 1rem;
+  color: gray;
+`;
 
-const Memos = () => {
+const Memos = ({ posts }) => {
   return (
     <MemosContainer>
-      <Memo>
-        <UserInfo isFollwer />
-        <TodoList>
-          <TodoWrapper>
-            <TodoItem>
-              해커스 토익 풀기해커스 토익 풀기해커스 토익 풀기해커스 토익
-              풀기해커스 토익 풀기
-            </TodoItem>
-            <TodoItem>헬스장 가기</TodoItem>
-            <TodoItem>로그인 UI 구현하기</TodoItem>
-          </TodoWrapper>
-        </TodoList>
-      </Memo>
+      {posts ? (
+        posts.map((post) => (
+          <Memo>
+            <UserInfo
+              userId={post?.userId}
+              userName={post?.username}
+              userProfileUrl={post?.profile}
+              //userFollwer={post.follwerCount} TODO: follower 숫자 내려오면 주석 해제하기
+            />
+            <TodoList>
+              <TodoWrapper>
+                {post?.headlines?.map((headline) => (
+                  <TodoItem>{headline}</TodoItem>
+                ))}
+              </TodoWrapper>
+            </TodoList>
+          </Memo>
+        ))
+      ) : (
+        <NoPostItem>게시글이 없습니다.</NoPostItem>
+      )}
     </MemosContainer>
   );
 };

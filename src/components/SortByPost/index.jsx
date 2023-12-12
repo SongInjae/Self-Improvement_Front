@@ -17,29 +17,27 @@ const SortText = styled.div`
   }
 `;
 
-const SortByPost = () => {
-  const [checkedSort, setChekedSort] = useState('추천순');
-
-  const handleRecommendClick = () => {
-    setChekedSort('추천순');
+const SortByPost = ({ sortStandard, setSortStandard }) => {
+  const handleRecommendClick = (e) => {
+    setSortStandard(e.target.textContent);
   };
-  const handleFollowerClick = () => {
-    setChekedSort('팔로워');
+  const handleFollowerClick = (e) => {
+    setSortStandard(e.target.textContent);
   };
 
   return (
     <SortByPostContainer>
       <SortText
-        checked={checkedSort === '추천순'}
+        checked={sortStandard === '추천순'}
         onClick={handleRecommendClick}
       >
         추천순
       </SortText>
       <SortText
-        checked={checkedSort === '팔로워'}
+        checked={sortStandard === '팔로워순'}
         onClick={handleFollowerClick}
       >
-        팔로워
+        팔로워순
       </SortText>
     </SortByPostContainer>
   );

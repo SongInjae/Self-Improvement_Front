@@ -12,6 +12,7 @@ import {
 } from 'date-fns';
 import { ORIGINAL_YELLOW } from '../../constants/color';
 import CalendarContext from '../../context/CalendarContext';
+import ColorContext from '../../context/SettingColor';
 
 const Wrapper = styled.tbody`
   width: 100%;
@@ -38,15 +39,16 @@ const Day = styled.td`
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
   color: ${({ disabled }) => disabled && 'lightgray'};
 
-  background-color: ${({ today }) => today && `${ORIGINAL_YELLOW}`};
+  background-color: ${({ today, color }) => today && color};
   color: ${({ today }) => today && 'white'};
   border-radius: ${({ today }) => today && '100px'};
 
-  background-color: ${({ selectDay }) => selectDay && `${ORIGINAL_YELLOW}`};
+  background-color: ${({ selectDay, color }) => selectDay && color};
 `;
 
 const Days = () => {
   const { state, action } = useContext(CalendarContext);
+  const { state: colorState } = useContext(ColorContext);
   const { current, selectDay, year, month } = state;
   const { setSelectDay } = action;
 
@@ -72,6 +74,7 @@ const Days = () => {
         disabled={isDisabled}
         today={isToday(day)}
         selectDay={isSameDay(day, selectDay)}
+        color={colorState.color}
         onClick={handleDayClick}
       >
         {format(day, 'd')}

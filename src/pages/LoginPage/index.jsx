@@ -100,6 +100,11 @@ export const SubmitButton = styled.button`
   color: white;
   font-family: 'MainText';
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: revert;
+  }
 `;
 export const TextWrapper = styled.div`
   display: flex;
@@ -121,8 +126,12 @@ const LoginPage = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    await postLogin({ email: id, password: pwd });
-    navigate('/main');
+    try {
+      await postLogin({ email: id, password: pwd });
+      navigate('/main');
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (

@@ -1,10 +1,17 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import UserInfo from '../../components/UserInfo';
 import Header from '../../components/Header';
-import { FaRegHeart, FaRegComment } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaRegComment } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
+import getBoardDetail from '../../apis/board/getBoardDetail';
+import postBoardLike from '../../apis/board/postBoardLike';
+import deleteBoardDetail from '../../apis/board/deleteBoardDetail';
 
-const PostDetailContainer = styled.div``;
+const PostDetailContainer = styled.div`
+  height: calc(100% - 5rem);
+  overflow: auto;
+`;
 const HeaderStyled = styled(Header)`
   border-bottom: 1px solid gray;
 `;
@@ -14,61 +21,104 @@ const UserInfoStyled = styled(UserInfo)`
 const PostImg = styled.img`
   width: 100%;
   height: 30rem;
-  background-color: red;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
 `;
 const PostSnsWrapper = styled.div`
   display: flex;
+  align-items: center;
   gap: 1rem;
   margin-top: 1rem;
   padding: 0 1rem;
 `;
-const PostLikeWrapper = styled.div`
+const PostSnsItemWrapper = styled.div`
   display: flex;
   gap: 0.5rem;
+  cursor: pointer;
 `;
-const PostLikeText = styled.div``;
-const PostCommentWrapper = styled.div``;
+const PostSnsText = styled.div``;
 const PostContentWrapper = styled.div`
   display: flex;
-  margin-top: 1rem;
+  margin: 1rem 0;
   padding: 0 1rem;
 `;
 const PostNickname = styled.div`
-  width: 10rem;
+  max-width: 10rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-family: 'MainMedium';
 `;
-const PostContent = styled.div`
+const PostTag = styled.div`
+  margin-left: 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+const PostContent = styled.div`
+  padding: 0 1rem;
+  white-space: pre-wrap;
+`;
 
 const PostDetailPage = () => {
+  const [post, setPost] = useState('');
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    const getBoardDetailAPI = async () => {
+      const data = await getBoardDetail({ articleId: id });
+      setPost(data);
+    };
+
+    getBoardDetailAPI();
+  }, []);
+
+  const handleDeletePost = async () => {
+    await deleteBoardDetail({ articleId: post.articleId });
+    navigate('/board');
+  };
+
+  const handleLikeClick = () => {
+    postBoardLike({ articleId: id });
+    setPost((prevState) => {
+      const newState = Object.assign({}, prevState);
+      if (prevState.isLiked === false) newState.likeCount++;
+      else newState.likeCount--;
+      newState.isLiked = !prevState.isLiked;
+      return newState;
+    });
+  };
+
   return (
     <PostDetailContainer>
       <HeaderStyled title="피드" isPrev isKorean />
-      <UserInfoStyled />
-      <PostImg />
+      <UserInfoStyled
+        userId={post?.authorId}
+        userName={post?.author}
+        userProfileUrl={post?.authorProfileImageUrl}
+        isDelete={parseInt(userId) === post?.authorId}
+        onDelete={handleDeletePost}
+      />
+      <PostImg src={post?.imageUrl} />
       <PostSnsWrapper>
-        <PostLikeWrapper>
-          <FaRegHeart />
-          <PostLikeText>134</PostLikeText>
-        </PostLikeWrapper>
-        <PostCommentWrapper>
+        <PostSnsItemWrapper onClick={handleLikeClick}>
+          {post.isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+          <PostSnsText>{post?.likeCount}</PostSnsText>
+        </PostSnsItemWrapper>
+        <PostSnsItemWrapper
+          onClick={() => navigate('comment', { state: post?.comments })}
+        >
           <FaRegComment />
-        </PostCommentWrapper>
+          <PostSnsText>{post?.comments?.length}</PostSnsText>
+        </PostSnsItemWrapper>
       </PostSnsWrapper>
       <PostContentWrapper>
-        <PostNickname>인재dk1234</PostNickname>
-        <PostContent>
-          aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        </PostContent>
+        <PostNickname>{post?.author}</PostNickname>
+        <PostTag>{post?.tag?.map((tag) => `#${tag} `)}</PostTag>
       </PostContentWrapper>
+      <PostContent>{post?.content}</PostContent>
     </PostDetailContainer>
   );
 };

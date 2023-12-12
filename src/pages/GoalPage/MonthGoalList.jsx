@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import GoalComponent from './GoalComponent';
+import MonthGoalComponent from './MonthGoalComponent';
 
 const GoalWrapper = styled.div`
 display: flex;
@@ -9,11 +9,17 @@ margin-bottom: 30px;
 margin-left: 10px;
 `;
 
-const MonthGoalList = ({Goals}) => {
+const MonthGoalList = ({monthGoals, onDelete}) => {
   return (
     <GoalWrapper className="GoalList">
-      {Goals.map(todo => (
-        <GoalComponent todo={todo} />
+      {monthGoals && monthGoals.map(monthGoal => (
+        <MonthGoalComponent 
+          id={monthGoal.id}
+          year={monthGoal.year}
+          monthTodo={monthGoal.monGoal}
+          monthIsDone={monthGoal.isDone} 
+          onDelete={onDelete}
+        />
       ))}
     </GoalWrapper>
   );

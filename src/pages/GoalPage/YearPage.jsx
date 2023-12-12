@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+//import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import YearGoalList from './YearGoalList';
+import getfindYearGoal from '../../apis/Goal/getfindYearGoal';
+import getYearAndMonthGoal from '../../apis/Goal/getYearAndMonthGoal';
+import deleteYearGoal from '../../apis/Goal/deleteYearGoal';
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 import { SlRocket } from 'react-icons/sl';
 
@@ -53,31 +57,65 @@ const Year = styled.div`
 `;
 
 const YearPage = () => {
-    const [Goals, setGoals] = useState([]);
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [yearGoals, setYearGoals] = useState([]);
+    const [monthGoals, setMonthGoals] = useState([]);
+    const userId = localStorage.getItem('userId');
+
 
     useEffect(() => {
-        const getData = async () => {
+        const getYearData = async () => {
           try {
-            // Call the getAddGoal function with the appropriate parameters
-            const data = await getAddGoal({ year: 2023, yearGoal: 'exampleGoal', monthGoals: 'exampleMonth' });
-            setGoals(data); // Set the goal data in the state
+            const yearData = await getfindYearGoal({year: currentYear, id: userId});
+            setYearGoals(yearData);
           } catch (error) {
-            // Handle errors if needed
             console.error("Error fetching goal data:", error);
           }
         };
-    
-        getData(); // Call the fetchData function when selectDay changes
-      }, []);
+        const getMonthData = async () => {
+            try {
+              const monthData = await getYearAndMonthGoal({year: currentYear, id: userId});
+              setMonthGoals(monthData);
+            } catch (error) {
+              console.error("Error fetching goal data:", error);
+            }
+          };
+        getYearData();
+        getMonthData();
+      }, [currentYear]);
 
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+      const combinedGoals = yearGoals && yearGoals.map((yearGoal) => {
+        const matchingMonthGoals = monthGoals ? monthGoals.filter(
+          (monthGoal) => {
+            console.log('checkt', yearGoal, monthGoal);
+            return monthGoal.id === yearGoal.id}
+        ):[];
+        return { ...yearGoal, matchingMonthGoals };
+      });
 
     const handleYearChange = (amount) => {
         const newYear = currentYear + amount;
         setCurrentYear(newYear);
     };
 
+    const deleteCombinedGoal = async (id) => {
+      try {
+        // Call the API to delete the combined goal
+        await deleteYearGoal(id);
+  
+        // Assuming you need to update state after deletion
+        // Fetch the updated year goals after deletion and set the state
+        const updatedYearData = await getfindYearGoal({ year: currentYear, id: userId});
+        setYearGoals(updatedYearData);
+        
+        console.log(`Successfully deleted combined goal with ID ${id}`);
+      } catch (error) {
+        console.error('Error deleting combined goal:', error);
+        // Handle the error, e.g., show a notification to the user
+      }
+    };
 
+console.log(combinedGoals);
     return (
         <BoxWrapper>
             <IconWrapper>
@@ -90,9 +128,9 @@ const YearPage = () => {
                 </Icon>
             </IconWrapper>
             <GoalWrapper>
-                {Goals == null ?
-                (<YearGoalList  Goals={Goals} />):
-                (<SlRocket size={200} style={{ color: 'Gainsboro', marginLeft: '20%', marginTop: '10%' }} />)}
+                {yearGoals?.length ?
+                (<YearGoalList  combinedGoals={yearGoals} onDelete={deleteCombinedGoal} />):
+                (<SlRocket size={200} style={{ color: 'Gainsboro', marginLeft: '20%', marginTop: '36%' }} />)}
             </GoalWrapper>
         </BoxWrapper>
     );

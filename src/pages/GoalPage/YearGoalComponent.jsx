@@ -1,16 +1,17 @@
 import React from 'react';
-import getAddGoal from '../../apis/Goal/getAddGoal';
 import styled from '@emotion/styled';
+import postCreateYearGoal from '../../apis/Goal/postCreateYearGoal';
+import putUpdateYearGoal from '../../apis/Goal/putUpdateYearGoal';
 import { ORIGINAL_YELLOW } from '../../constants/color';
 import { useState } from 'react';
 import { SlRocket } from 'react-icons/sl';
 import { CgMoreAlt } from 'react-icons/cg';
+import { id } from 'date-fns/esm/locale';
 
 const GoalComponentBox = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
-  margin-left: 10px;
 `;
 
 const CompleteBox = styled.button`
@@ -91,58 +92,79 @@ const Icon = styled.button`
   }
 `;
 
-const GoalComponent = ({ todo }) => {
-  const [isCompleted, setIsCompleted] = useState(false);
+const YearGoalComponent = ({ id, yearTodo, matchingMonthGoals, onDelete, yearIsDone}) => {
+  if (yearTodo === '') {
+    onDelete(id);
+    return null;
+  }
+  const [isCompleted, setIsCompleted] = useState(yearIsDone);
   const [marginLeft, setMarginLeft] = useState(0);
   const [visibleDetail, setVisibleDetail] = useState(false);
 
-  const{year, yearGoal, MonthGoals}=todo;
+  const monthGoal = Array(12).fill(null).map(() => []);
+  
+  // matchingMonthGoals를 순회하면서 month에 따라 monthGoal 배열에 저장
+  // matchingMonthGoals.forEach(({ month, monGoal }) => {
+  //   monthGoal[month - 1].push(monGoal);
+  // });
 
   const handleIconClick = () => {
     const shouldDelete = window.confirm('삭제하시겠습니까?');
     if (shouldDelete) {
-      onDelete(); // Call the onDelete prop to delete the GoalComponent
+      onDelete(id); // Call the onDelete prop to delete the GoalComponent
+    }
+  };
+
+  const handleCompleteBox= async () => {
+    setMarginLeft(marginLeft === 0 ? 285 : 0);
+    setIsCompleted(!isCompleted);
+
+    try {
+      // 여기서 해당 API를 호출하여 isDone을 서버에 업데이트
+      const result = await putUpdateYearGoal({
+        id,
+        updatedYearGoal: yearTodo,
+        isDone: !yearIsDone, // 현재 상태의 반대값으로 업데이트
+      });
+
+      console.log('Result from server (Year Goal):', result);
+    } catch (error) {
+      console.error('목표 제출 중 오류:', error);
+      console.log('자세한 Axios 응답:', error.response);
+      // 에러가 발생했을 경우 처리
     }
   };
 
   return (
     <GoalComponentBox>
-      {year != null ? (
-        <GoalBox isClicked={isCompleted}>
-          {isCompleted ? 'C O M P L E T E ! ! !' : yearGoal}
-        </GoalBox>
-      ) : (
-        <GoalBox isClicked={isCompleted}>
-          {isCompleted
-            ? 'C O M P L E T E ! ! !'
-            : monthGoals[month - 1]}{' '}
-          {/* Assuming monthGoals is an object with a month property */}
-        </GoalBox>
-      )}
+      <GoalBox isClicked={isCompleted}>
+        {isCompleted ? 'C O M P L E T E ! ! !' : yearTodo}
+      </GoalBox>
       <Icon onClick={handleIconClick}>
         <CgMoreAlt size={40} />
       </Icon>
       <CompleteBox
         marginLeft={marginLeft}
-        onClick={() => {
-          setMarginLeft(marginLeft === 0 ? 285 : 0);
-          setIsCompleted(!isCompleted);
-        }}
+        onClick={handleCompleteBox}
       >
         <SlRocket size={30} />
       </CompleteBox>
-      {year != null
+      { monthGoal == null
         ? null
         : visibleDetail && (
             <DetailGoal>
-              {goalData &&
-                goalData.monthGoals.map((monthGoal, index) => (
-                  <React.Fragment key={index}>
-                    {index !== 0 && <br />}{' '}
-                    {/* Add a line break except for the first item */}
-                    {`${index + 1}월\n${monthGoal}`}
-                  </React.Fragment>
-                ))}
+              1월: {monthGoal[0]} <br/>
+              2월: {monthGoal[1]} <br/>
+              3월: {monthGoal[2]} <br/>
+              4월: {monthGoal[3]} <br/>
+              5월: {monthGoal[4]} <br/>
+              6월: {monthGoal[5]} <br/>
+              7월: {monthGoal[6]} <br/>
+              8월: {monthGoal[7]} <br/>
+              9월: {monthGoal[8]} <br/>
+              10월: {monthGoal[9]} <br/>
+              11월: {monthGoal[10]} <br/>
+              12월: {monthGoal[11]} <br/>
             </DetailGoal>
           ) && (
             <DetailButton onClick={() => setVisibleDetail(!visibleDetail)} />
@@ -151,4 +173,4 @@ const GoalComponent = ({ todo }) => {
   );
 };
 
-export default GoalComponent;
+export default YearGoalComponent;

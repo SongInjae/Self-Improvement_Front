@@ -16,15 +16,16 @@ const SharePlanPage = () => {
   const handleChangeInput = async ({ debounceValue }) => {
     if (debounceValue) {
       const data = await getTagBoard({ tags: debounceValue });
-
       setPosts(data?.userSchedules);
-    } else setPosts(null);
+    } else {
+      setPosts(null);
+    }
   };
 
   return (
     <SharePlanPageWrapper>
       <SearchInput onChange={handleChangeInput} />
-      <Tags posts={posts} setPosts={setPosts} />
+      <Tags setPosts={setPosts} />
       <Memos posts={posts} />
     </SharePlanPageWrapper>
   );

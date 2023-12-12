@@ -25,7 +25,7 @@ const SharePlanPage = () => {
   return (
     <SharePlanPageWrapper>
       <SearchInput onChange={handleChangeInput} />
-      <Tags posts={posts} setPosts={setPosts} />
+      <Tags setPosts={setPosts} />
       <Memos posts={posts} />
     </SharePlanPageWrapper>
   );

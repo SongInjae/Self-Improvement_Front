@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import React, { useContext, useEffect, useState } from 'react';
-import { ORIGINAL_YELLOW, PASTEL_ORANGE } from '../../constants/color';
 import { INTEREST_LIST } from '../../constants/interest';
 import getInterestPlan from '../../apis/sharePlan/getInterestPlan';
+import getAllInterestPlan from '../../apis/sharePlan/getAllInterestPlan';
 import ColorContext from '../../context/SettingColor';
 
 const TagContainer = styled.div`
@@ -34,16 +34,19 @@ const Tags = ({ setPosts, ...props }) => {
   const { state } = useContext(ColorContext);
 
   useEffect(() => {
-    const getTagPlanAPI = async ({ tag }) => {
-      const data = await getInterestPlan({ interests: tag });
+    const getTagPlanAPI = async () => {
+      const data =
+        tag === '전체'
+          ? await getAllInterestPlan()
+          : await getInterestPlan({ interests: tag });
 
-      if (data?.schedules) {
-        setPosts(data?.schedules);
+      if (data?.userSchedules) {
+        setPosts(data?.userSchedules);
       } else {
         setPosts(null);
       }
     };
-    getTagPlanAPI({ tag });
+    getTagPlanAPI();
   }, [tag]);
 
   const handleTagClick = async (e) => {

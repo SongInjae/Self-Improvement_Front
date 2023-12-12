@@ -6,6 +6,7 @@ import CalendarContext from '../../context/CalendarContext';
 import { transformDate } from '../../utils/transform';
 import styled from '@emotion/styled';
 import ColorContext from '../../context/SettingColor';
+import putTodayPlan from '../../apis/schedule/putTodayPlan';
 
 const TodoWrapper = styled.div`
   position: relative;
@@ -62,10 +63,14 @@ const TodoList = () => {
   const { state } = useContext(CalendarContext);
   const { state: colorState } = useContext(ColorContext);
   const { selectDay } = state;
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getTodayPlan({ date: transformDate(selectDay) });
+      const data = await getTodayPlan({
+        date: transformDate(selectDay),
+        userId,
+      });
       if (data) setTodoList(data.schedules);
     };
 
@@ -79,7 +84,7 @@ const TodoList = () => {
         ...newState[idx],
         isDone: !prevState[idx].isDone,
       };
-
+      putTodayPlan({ data: newState[idx] });
       return newState;
     });
   };
